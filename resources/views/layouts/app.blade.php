@@ -17,14 +17,12 @@
     
    
     </head>
-    <body class="light">
+    <body id="page-top">
        
         <div class="app" id="app">
             {{-- Main Navigation or menu --}}
-            @include('layouts.navbar')
-            
-           
-             <main class="py-4">
+
+             <main>
                 @yield('content')
             </main>
             
@@ -36,7 +34,7 @@
     --- Footer Part - Use Jquery anywhere at page.
     --- http://writing.colin-gourlay.com/safely-using-ready-before-including-jquery/
     -->
-    <script src={{asset('js/app.js')}}></script>
+   
     
     <script src={{asset('js/jquery.min.js')}}></script>
     <script src={{asset('js/bootstrap.bundle.min.js')}}></script>
