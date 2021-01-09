@@ -21,15 +21,22 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-                    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
-                        For more information about DataTables, please visit the <a target="_blank"
-                            href="https://datatables.net">official DataTables documentation</a>.</p>
+                    <h1 class="h3 mb-2 text-gray-800">Estudiantes</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <div class="row">
+                                <div class="col-lg-12 margin-tb">
+                                    <div class="pull-left">
+                                        <h6 class="m-0 font-weight-bold text-uft">Listado Estudiantes</h6>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="{{ route('estudiantes.create') }}" class="btn btn-uft" role="button"><i class="fas fa-plus pr-2"></i>Agregar Estudiante</a>
+                                    </div>
+                                </div>
+                            </div>
+                           
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
