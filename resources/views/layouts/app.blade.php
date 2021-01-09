@@ -41,6 +41,11 @@
     <script src={{asset('js/jquery.easing.min.js')}}></script>
     <script src={{asset('js/sb-admin-2.min.js')}}></script>
 
+    <!-- Page level plugins -->
+    <script src={{asset('js/jquery.dataTables.min.js')}}></script>
+    <script src={{asset('js/dataTables.bootstrap4.min.js')}}></script>
 
+    <!-- Page level custom scripts -->
+    <script src={{asset('js/datatables-demo.js')}}></script>
 </html>
 @yield('js')
