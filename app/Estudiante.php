@@ -9,6 +9,6 @@ class Estudiante extends Model
     protected $table = 'students';
 
     protected $fillable = [
-       'cedula','phone','lapse','country_id','user_id'
+       'first_name','last_name','identification_card','email','phone','lapse_id','country_id','equivalency'
     ];
 }

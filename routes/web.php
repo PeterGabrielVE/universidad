@@ -28,4 +28,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('rol', 'RolController');
 	Route::resource('permission', 'PermissionController');
 	Route::resource('estudiantes', 'EstudiantesController');
+	Route::resource('lapso', 'LapsoController');
+
 });
