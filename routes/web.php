@@ -20,3 +20,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['middleware' => 'auth'], function () {
+	
+	// users, roles, presmissions
+	Route::resource('user', 'UserController');
+	Route::resource('rol', 'RolController');
+	Route::resource('permission', 'PermissionController');
+	Route::resource('estudiantes', 'EstudiantesController');
+});
