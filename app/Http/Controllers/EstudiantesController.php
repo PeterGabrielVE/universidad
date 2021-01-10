@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Estudiante;
+use App\Lapso;
+use App\Pais;
 use Illuminate\Http\Request;
 
 class EstudiantesController extends Controller
@@ -23,7 +25,9 @@ class EstudiantesController extends Controller
      */
     public function create()
     {
-        return view('pages.estudiantes.create');
+        $lapso = Lapso::latest('id')->first();
+        $paises = Pais::get()->pluck('name','id');
+        return view('pages.estudiantes.create',compact('lapso','paises'));
     }
 
 
@@ -35,15 +39,21 @@ class EstudiantesController extends Controller
      */
     public function store(Request $request)
     {
-    	dd($request->all());
+    	
         $request->validate([
-            'name' => 'required',
-            'detail' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'identification_card' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'lapse_id' => 'required',
+            'country_id' => 'required',
+            'equivalency' => 'required',
         ]);
   
         Estudiante::create($request->all());
    
-        return redirect()->route('products.index')
-                        ->with('success','Product created successfully.');
+        return redirect()->route('estudiantes.index')
+                        ->with('success','Estudiante guardado exitosamente.');
     }
 }

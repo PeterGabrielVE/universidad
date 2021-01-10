@@ -15,8 +15,7 @@
     <link rel="stylesheet" href=  {{asset('css/sb-admin-2.min.css')}}>
     <link rel="stylesheet" href=  {{asset('css/styles.css')}}>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    
-   
+ 
     </head>
     <body id="page-top">
        

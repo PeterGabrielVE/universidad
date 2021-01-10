@@ -62,19 +62,19 @@
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        @foreach ($estudiantes as $product)
+                                        @foreach ($estudiantes as $estudiante)
                                         <tr>
-                                            <td>{{ ++$i }}</td>
-                                            <td>{{ $product->name }}</td>
-                                            <td>{{ $product->detail }}</td>
-                                            <td>{{ $product->name }}</td>
-                                            <td>{{ $product->detail }}</td>
+                                            <td>{{ $estudiante->identification_card ?? '' }}</td>
+                                            <td>{{ $estudiante->first_name ?? '' }} {{ $estudiante->last_name ?? '' }}</td>
+                                            <td>{{ $estudiante->phone ?? '' }}</td>
+                                            <td>{{ $estudiante->name }}</td>
+                                            <td>{{ $estudiante->detail }}</td>
                                             <td>
-                                                <form action="{{ route('estudiantes.destroy',$product->id) }}" method="POST">
+                                                <form action="{{ route('estudiantes.destroy',$estudiante->id) }}" method="POST">
                                    
-                                                    <a class="btn btn-info" href="{{ route('estudiantes.show',$product->id) }}">Show</a>
+                                                    <a class="btn btn-info" href="{{ route('estudiantes.show',$estudiante->id) }}">Show</a>
                                     
-                                                    <a class="btn btn-primary" href="{{ route('estudiantes.edit',$product->id) }}">Edit</a>
+                                                    <a class="btn btn-primary" href="{{ route('estudiantes.edit',$estudiante->id) }}">Edit</a>
                                    
                                                     @csrf
                                                     @method('DELETE')

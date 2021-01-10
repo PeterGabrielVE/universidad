@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+{{-- modal create --}}
+@include('pages.lapsos.create')
 <div id="wrapper">
 
         <!-- Sidebar -->
@@ -21,7 +23,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Estudiantes</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Lapsos Acádemicos</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -29,10 +31,10 @@
                             <div class="row">
                                 <div class="col-lg-12 margin-tb">
                                     <div class="pull-left">
-                                        <h6 class="m-0 font-weight-bold text-uft">Listado Estudiantes</h6>
+                                        <h6 class="m-0 font-weight-bold text-uft">Lapsos</h6>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="{{ route('estudiantes.create') }}" class="btn btn-uft" role="button"><i class="fas fa-plus pr-2"></i>Agregar Estudiante</a>
+                                        <a href="#" class="btn btn-uft" role="button" data-toggle="modal" data-target="#create"><i class="fas fa-plus pr-2"></i>Crear Nuevo Lapso</a>
                                     </div>
                                 </div>
                             </div>
@@ -43,38 +45,32 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Cedula</th>
-                                            <th>Nombre Completo</th>
-                                            <th>Telefono</th>
-                                            <th>País</th>
                                             <th>Lapso</th>
+                                            <th>Fecha Inicio</th>
+                                            <th>Fecha Final</th>
                                             <th>Opciones</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>Cedula</th>
-                                            <th>Nombre Completo</th>
-                                            <th>Telefono</th>
-                                            <th>País</th>
                                             <th>Lapso</th>
+                                            <th>Fecha Inicio</th>
+                                            <th>Fecha Final</th>
                                             <th>Opciones</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        @foreach ($lapsos as $product)
+                                        @foreach ($lapsos as $lapso)
                                         <tr>
-                                            <td>{{ ++$i }}</td>
-                                            <td>{{ $product->name }}</td>
-                                            <td>{{ $product->detail }}</td>
-                                            <td>{{ $product->name }}</td>
-                                            <td>{{ $product->detail }}</td>
+                                            <td>{{ $lapso->name }}</td>
+                                            <td>{{ $lapso->start_lapse }}</td>
+                                            <td>{{ $lapso->end_lapse }}</td>
                                             <td>
-                                                <form action="{{ route('estudiantes.destroy',$product->id) }}" method="POST">
+                                                <form action="{{ route('lapso.destroy',$lapso->id) }}" method="POST">
                                    
-                                                    <a class="btn btn-info" href="{{ route('estudiantes.show',$product->id) }}">Show</a>
+                                                    <a class="btn btn-info" href="{{ route('lapso.show',$lapso->id) }}">Show</a>
                                     
-                                                    <a class="btn btn-primary" href="{{ route('estudiantes.edit',$product->id) }}">Edit</a>
+                                                    <a class="btn btn-primary" href="{{ route('lapso.edit',$lapso->id) }}">Edit</a>
                                    
                                                     @csrf
                                                     @method('DELETE')

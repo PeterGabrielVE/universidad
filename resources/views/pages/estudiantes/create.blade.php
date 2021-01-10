@@ -69,8 +69,24 @@
                                                         id="phone" name="phone" placeholder="Télefono">
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <input type="password" class="form-control form-control-user"
-                                                        id="exampleRepeatPassword" placeholder="Repeat Password">
+                                                    <input type="text" class="form-control form-control-user"
+                                                        id="lapse_name" placeholder="Lapso de Ingreso" value="{{ $lapso->name }}" readonly="true">
+                                                    <input type="hidden" class="form-control form-control-user"
+                                                        id="lapse_id" 
+                                                        name="lapse_id" 
+                                                        placeholder="Lapso de Ingreso" value="{{ $lapso->id }}"> 
+                                                    <input type="hidden" class="form-control form-control-user"
+                                                        id="status" 
+                                                        name="status" 
+                                                         value="Activo">       
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                 <div class="col-sm-6 mb-3 mb-sm-0">
+                                                    {!! Form::select('country_id', $paises, null, ['class'=>'form-control', 'id'=>'country_id']) !!}
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    {!! Form::select('equivalency', ['0'=>'No','1'=>'Si'], null, ['class'=>'form-control', 'id'=>'equivalency']) !!}
                                                 </div>
                                             </div>
                                             <div class="form-group row">
