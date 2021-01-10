@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Lapso;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LapsoController extends Controller
@@ -15,7 +16,7 @@ class LapsoController extends Controller
     public function index()
     {
         $lapsos = Lapso::latest()->paginate(5);
-  
+        
         return view('pages.lapsos.index',compact('lapsos'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -39,7 +40,18 @@ class LapsoController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $name = 'Lapso Enero 2021-Marzo 2021';
+        $fecha1 =  strtotime($request->start_lapse);
+        $mes1 = date("m", $fecha1);
+        $mes1 = $this->obtenerMes($mes1);
+        $anno1 = date("Y", $fecha1);
+
+        $fecha2 =  strtotime($request->end_lapse);
+        $mes2 = date("m", $fecha2);
+        $mes2 = $this->obtenerMes($mes2);
+        $anno2 = date("Y", $fecha2);
+    
+        $name = 'Lapso '.$mes1.' '.$anno1.'-'.$mes2.' '.$anno2;
+        
         $name = array('name'=>$name);
         $data = array_replace($data,$name);
 
@@ -122,5 +134,49 @@ class LapsoController extends Controller
             $date_val_0 = date("Y-m-d H:i:s", strtotime($date_val_1));
             return $date_val_0;
         }
-}
+    }
+
+    public function obtenerMes($mes){
+
+        switch ($mes) {
+            case 01:
+                return "Enero";
+                break;
+            case 02:
+                return "Febrero";
+                break;
+            case 03:
+                return "Marzo";
+                break;
+            case 04:
+                return "Abril";
+                break;
+            case 05:
+                return "Mayo";
+                break;
+             case 06:
+                return "Junio";
+                break;
+            case 07:
+                return "Julio";
+                break;
+            case '08':
+                return "Agosto";
+                break;
+             case '09':
+                return "Septiembre";
+                break;
+            case '10':
+                return "Octubre";
+                break;
+            case '11':
+                return "Noviembre";
+                break;
+             case '12':
+                return "Diciembre";
+                break;
+            default:
+                break;   
+        }
+    }
 }
