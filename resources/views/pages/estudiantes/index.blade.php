@@ -43,43 +43,45 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>Nombres y Apellidos</th>
                                             <th>Cedula</th>
-                                            <th>Nombre Completo</th>
                                             <th>Telefono</th>
+                                            <th>Correo Electronico</th>
+                                            <th>Equivalencia</th>
                                             <th>País</th>
-                                            <th>Lapso</th>
-                                            <th>Opciones</th>
+                                            <th style="width:25%">Lapso</th>
+                                            <th style="width:16%">Opciones</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Cedula</th>
-                                            <th>Nombre Completo</th>
-                                            <th>Telefono</th>
-                                            <th>País</th>
-                                            <th>Lapso</th>
-                                            <th>Opciones</th>
-                                        </tr>
-                                    </tfoot>
+                                   
                                     <tbody>
                                         @foreach ($estudiantes as $estudiante)
                                         <tr>
-                                            <td>{{ $estudiante->identification_card ?? '' }}</td>
+                                            
                                             <td>{{ $estudiante->first_name ?? '' }} {{ $estudiante->last_name ?? '' }}</td>
+                                            <td>{{ $estudiante->identification_card ?? '' }}</td>
                                             <td>{{ $estudiante->phone ?? '' }}</td>
-                                            <td>{{ $estudiante->name }}</td>
-                                            <td>{{ $estudiante->detail }}</td>
+                                            <td>{{ $estudiante->email ?? '' }}</td>
+                                            <td>
+                                            @if ($estudiante->equivalency == '1')
+                                              Si
+                                            @else
+                                              No
+                                            @endif
+                                        </td>
+                                            <td>{{ $estudiante->paises->name ?? '' }}</td>
+                                            <td>{{ $estudiante->lapsos->name ?? '' }}</td>
                                             <td>
                                                 <form action="{{ route('estudiantes.destroy',$estudiante->id) }}" method="POST">
                                    
-                                                    <a class="btn btn-info" href="{{ route('estudiantes.show',$estudiante->id) }}">Show</a>
+                                                    <a class="btn btn-uft btn-sm" href="{{ route('estudiantes.show',$estudiante->id) }}"><i class="fas fa-eye"></i></a>
                                     
-                                                    <a class="btn btn-primary" href="{{ route('estudiantes.edit',$estudiante->id) }}">Edit</a>
+                                                    <a class="btn btn-uft btn-sm" href="{{ route('estudiantes.edit',$estudiante->id) }}"><i class="fas fa-edit"></i></a>
                                    
                                                     @csrf
                                                     @method('DELETE')
                                       
-                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                    <button type="submit" class="btn btn-uft btn-sm"><i class="fas fa-trash"></i></button>
                                                 </form>
                                             </td>
                                         </tr>
