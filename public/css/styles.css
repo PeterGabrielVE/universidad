@@ -13,3 +13,10 @@
 	color:#FFFFFF;
 	background-color: #7d1414;
 }
+
+.bg-login-image-uft{
+	background:url(../img/logouft.jpg);
+	background-position:center;
+	background-size:cover;
+	padding-top: 10px;
+}
