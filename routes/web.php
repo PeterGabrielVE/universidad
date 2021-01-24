@@ -31,3 +31,5 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('lapso', 'LapsoController');
 
 });
+
+Route::get('/inscripcion', 'InscripcionController@index')->name('inscripcion');
