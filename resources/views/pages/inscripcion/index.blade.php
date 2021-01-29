@@ -38,19 +38,17 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Lapso de Estudiante:</h6>
                                 </div>
                                 <div class="card-body">
-                                   <form action="" method="post" target="_blank">
+                                   <form action="{{ route('buscar.estudiante') }}" method="POST">
+                                     @csrf
+                                    <div class="form-inline">
+                                      <label for="name">Buscar estudiante: </label> <input type="search" class="form-control ml-2 mr-2 col-2" name="consulta">
 
-                                      <p>
+                                      <input  type="submit" value="Buscar">
 
-                                        Buscar estudiante: <input type="search" name="busquedamodelos" list="listamodelos">
-
-                                        <input type="submit" value="Buscar">
-
-                                      </p>
-
+                                    </div>
                                 </form>
                                  <div class="content">
-                                                                         <ul class="nav nav-tabs">
+                                    <ul class="nav nav-tabs">
                                       <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
                                       <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
                                       <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>

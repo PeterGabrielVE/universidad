@@ -56,4 +56,13 @@ class EstudiantesController extends Controller
         return redirect()->route('estudiantes.index')
                         ->with('success','Estudiante guardado exitosamente.');
     }
+
+    public function buscarEstudiante(Request $request){
+
+        //dd($request->all());
+        $query = $request->consulta;
+        $estudiante = Estudiante::where('identification_card',$query)->get();
+        dd($estudiante);
+
+    }
 }
