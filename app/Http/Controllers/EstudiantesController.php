@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Estudiante;
 use App\Lapso;
+use App\Lapso_Estudiante;
 use App\Pais;
 use Illuminate\Http\Request;
 
@@ -61,8 +62,9 @@ class EstudiantesController extends Controller
 
         //dd($request->all());
         $query = $request->consulta;
-        $estudiante = Estudiante::where('identification_card',$query)->get();
-        dd($estudiante);
-
+        $estudiante = Estudiante::where('identification_card',$query)->first();
+        $carga = Lapso_Estudiante::where('student_id',$estudiante->id)->get();
+        //dd($carga);
+        return view('pages.inscripcion.index',compact('estudiante','carga'));
     }
 }

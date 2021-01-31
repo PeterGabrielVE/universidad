@@ -47,29 +47,101 @@
 
                                     </div>
                                 </form>
+                                @if(isset($estudiante))
                                  <div class="content">
                                     <ul class="nav nav-tabs">
-                                      <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-                                      <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
-                                      <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+                                      <li class="active"><a data-toggle="tab" href="#home">Información</a></li>
+                                      <li><a data-toggle="tab" href="#menu1">Carga Academica</a></li>
+                                      <li><a data-toggle="tab" href="#menu2">Historial</a></li>
                                     </ul>
 
                                     <div class="tab-content">
-                                      <div id="home" class="tab-pane fade in active">
+                                      <div id="home" class="tab-pane active">
                                         <h3>HOME</h3>
-                                        <p>Some content.</p>
+                                                         <div class="card-body">
+                                                          <div class="row">
+                                                               <div class="col-lg-12">
+                                                                  <div>
+                                                      
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                                                    <input type="text" class="form-control form-control-user" id="name" name="first_name" 
+                                                                        placeholder="Nombres" value="{{ $estudiante->first_name }}">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control form-control-user" id="last_name" name="last_name" 
+                                                                        placeholder="Apellidos" value="{{ $estudiante->last_name }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                 <div class="col-sm-6 mb-3 mb-sm-0">
+                                                                    <input type="text" class="form-control form-control-user" id="identification_card" name="identification_card" 
+                                                                        placeholder="Cédula">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <input type="email" class="form-control form-control-user" id="email" name="email"
+                                                                    placeholder="Correo Electronico">
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                       </div>
                                       <div id="menu1" class="tab-pane fade">
-                                        <h3>Menu 1</h3>
-                                        <p>Some content in menu 1.</p>
+                                        <h3>Carga Academica</h3>
+                                        <div class="card-body">
+                                              <div class="table-responsive">
+                                                  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                      <thead>
+                                                          <tr>
+                                                              <th>Materia</th>
+                                                              <th>Nota</th>
+                                                              <th>Estatus</th>
+                                                              
+                                                              <th style="width:16%">Opciones</th>
+                                                          </tr>
+                                                      </thead>
+                                                     
+                                                      <tbody>
+                                                          @foreach ($carga as $c)
+                                                          <tr>
+                                                              
+                                                              <td>{{ $c->course_id ?? '' }}</td>
+                                                              <td>{{ $c->note ?? '' }}</td>
+                                                              <td>{{ $c->status ?? '' }}</td>
+                                                             
+                                                              <td>
+                                                                  <form action="{{ route('estudiantes.destroy',$c->id) }}" method="POST">
+                                                     
+                                                                      <a class="btn btn-uft btn-sm" href="{{ route('estudiantes.show',$c->id) }}"><i class="fas fa-eye"></i></a>
+                                                      
+                                                                      <a class="btn btn-uft btn-sm" href="{{ route('estudiantes.edit',$estudiante->id) }}"><i class="fas fa-edit"></i></a>
+                                                     
+                                                                      @csrf
+                                                                      @method('DELETE')
+                                                        
+                                                                      <button type="submit" class="btn btn-uft btn-sm"><i class="fas fa-trash"></i></button>
+                                                                  </form>
+                                                              </td>
+                                                          </tr>
+                                                          @endforeach
+                                                         
+                                                      </tbody>
+                                                  </table>
+                                                  
+                                              </div>
+                                          </div>
                                       </div>
                                       <div id="menu2" class="tab-pane fade">
-                                        <h3>Menu 2</h3>
+                                        <h3>Historial</h3>
                                         <p>Some content in menu 2.</p>
                                       </div>
                                     </div>
                                  </div>         
-                                    
+                                @endif    
                                 </div>
                             </div>
 
