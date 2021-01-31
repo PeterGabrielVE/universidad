@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Lapso_Estudiante;
 
 class InscripcionController extends Controller
 {
@@ -80,5 +81,30 @@ class InscripcionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getLapso($id){
+        $carga =Lapso_Estudiante::find($id);
+
+        $data = [];
+        //dd($carga->id);
+       
+            $data[] = [
+            'id' => $carga->id,
+            'course_id' => $carga->asignatura->name,
+            'note' => $carga->note
+            ];
+
+        return response()->json($data);
+    }
+
+    public function updateLapso(Request $request)
+    {
+        //dd($request->all());
+        $id = $request->id;
+        $data = $request->all();
+        $recambio = Lapso_Estudiante::find($id);
+        $recambio->update($data);
+        
     }
 }

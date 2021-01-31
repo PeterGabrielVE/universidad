@@ -34,3 +34,5 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::get('/inscripcion', 'InscripcionController@index')->name('inscripcion');
 Route::post('buscar.estudiante', 'EstudiantesController@buscarEstudiante')->name('buscar.estudiante');
+Route::get('getLapso/{id}', 'InscripcionController@getLapso')->name('getLapso');
+Route::post('updateLapso', 'InscripcionController@updateLapso')->name('updateLapso');

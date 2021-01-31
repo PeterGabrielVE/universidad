@@ -4,12 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Lapso_Estudiante extends Model
+class Asignatura extends Model
 {
-    protected $table = 'lapses_students';
+    protected $table = 'courses';
 
     protected $fillable = [
-       'student_id','lapse_id','course_id','note','status'
+       'id','cod','name','uc','semester_id','required'
     ];
 
     public function asignatura()

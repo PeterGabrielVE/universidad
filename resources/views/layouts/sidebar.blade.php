@@ -55,7 +55,7 @@
                         <h6 class="collapse-header">Custom Utilities:</h6>
                         <a class="collapse-item" href="utilities-color.html">Pensum</a>
                         <a class="collapse-item" href="{{ route('lapso.index') }}">Lapso</a>
-                         <a class="collapse-item" href="{{ route('inscripcion') }}">Inscripción</a>
+                         <a class="collapse-item" href="{{ route('inscripcion') }}">Semestre</a>
                         
                     </div>
                 </div>

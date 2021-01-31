@@ -21,4 +21,9 @@ class Estudiante extends Model
     {
         return $this->belongsTo('App\Lapso', 'lapse_id');
     }
+
+    public function pais()
+    {
+        return $this->belongsTo('App\Pais', 'country_id');
+    }
 }
