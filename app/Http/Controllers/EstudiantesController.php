@@ -67,4 +67,29 @@ class EstudiantesController extends Controller
         //dd($carga);
         return view('pages.inscripcion.index',compact('estudiante','carga'));
     }
+
+    public function edit($id)
+    {
+        $estudiante = Estudiante::find($id);
+        $lapso = Lapso::latest('id')->first();
+        $paises = Pais::get()->pluck('name','id');
+        return view('pages.estudiantes.edit',compact('estudiante','lapso','paises'));
+
+    }
+
+    public function update(Request $request, $id)
+    {
+        $data = $request->all();
+        $estudiante = Estudiante::find($id);
+        $estudiante->update($data);
+        $estudiante->save();
+        return back();
+    }
+
+     public function destroy(Request $request, $id)
+    {
+      $estudiante = Estudiante::find($id);
+      $estudiante->delete();
+      return back();
+    }
 }

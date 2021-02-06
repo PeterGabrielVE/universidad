@@ -73,9 +73,7 @@
                                             <td>{{ $estudiante->lapsos->name ?? '' }}</td>
                                             <td>
                                                 <form action="{{ route('estudiantes.destroy',$estudiante->id) }}" method="POST">
-                                   
-                                                    <a class="btn btn-uft btn-sm" href="{{ route('estudiantes.show',$estudiante->id) }}"><i class="fas fa-eye"></i></a>
-                                    
+                            
                                                     <a class="btn btn-uft btn-sm" href="{{ route('estudiantes.edit',$estudiante->id) }}"><i class="fas fa-edit"></i></a>
                                    
                                                     @csrf
