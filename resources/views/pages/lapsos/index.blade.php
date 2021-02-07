@@ -3,6 +3,7 @@
 @section('content')
 {{-- modal create --}}
 @include('pages.lapsos.create')
+@include('pages.lapsos.edit')
 <div id="wrapper">
 
         <!-- Sidebar -->
@@ -66,17 +67,19 @@
                                             <td>{{ $lapso->start_lapse }}</td>
                                             <td>{{ $lapso->end_lapse }}</td>
                                             <td>
+                                                @if($lapso->status=='presente')
                                                 <form action="{{ route('lapso.destroy',$lapso->id) }}" method="POST">
                                    
-                                                    <a class="btn btn-info" href="{{ route('lapso.show',$lapso->id) }}">Show</a>
+                                                  
                                     
-                                                    <a class="btn btn-primary" href="{{ route('lapso.edit',$lapso->id) }}">Edit</a>
+                                                    <a class="btn btn-uft" onclick="editLapso({{ $lapso->id }})"><i class="fas fa-edit"></i></a>
                                    
                                                     @csrf
                                                     @method('DELETE')
                                       
-                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                    <button type="submit" class="btn btn-uft"><i class="fas fa-trash"></i></button>
                                                 </form>
+                                                @endif
                                             </td>
                                         </tr>
                                         @endforeach
@@ -109,4 +112,26 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+@endsection
+@section('js')
+<script>
+ function editLapso(id){
+    $("#edit").modal("show");
+        
+        var url ="{{url('lapso')}}/"+id;
+          $.ajax({
+            type : 'get',
+            url  : url,
+            data : {'id':id},
+            success:function(data){
+              console.log(data);
+              /*$('#periodo_demanda').val(data['0'].periodo);
+              $('#deuda').val(data['0'].deuda);
+              $('#id_demanda').val(data['0'].id);
+              $('#concepto').val(data['0'].concepto);*/
+              
+            }
+          });
+  }
+</script>
 @endsection
