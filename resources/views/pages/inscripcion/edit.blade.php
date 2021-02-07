@@ -17,6 +17,8 @@
 									{!! Form::label('Asignatura', 'Asignatura', ['class'=>'col-form-label s-12']) !!}
 									{!! Form::text('course', null, ['class'=>'form-control r-0 light s-12', 'id'=>'course','readonly'=>'true']) !!}
 									{!! Form::hidden('id', null, ['class'=>'form-control r-0 light s-12', 'id'=>'id']) !!}
+									
+
 									<span class="description"></span>
 								</div>
 								
@@ -33,7 +35,7 @@
 			<br>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<button type="submit" class="btn btn-uft" onclick="actualizarLapso()"><i class="icon-save mr-2"></i>Guardar</button>
+				<button type="submit" class="btn btn-uft" onclick="actualizarLapso({{ $estudiante->id }})"><i class="icon-save mr-2"></i>Guardar</button>
 			</div>
 		</div>
 	</div>
@@ -48,7 +50,7 @@
             data : formData,
             success:function(data){
              	$("#modal_semestre").modal('hide');
-            	window.location.href = "{{URL::to('inscripcion')}}"
+            	location.reload();
             }
           });
 	}

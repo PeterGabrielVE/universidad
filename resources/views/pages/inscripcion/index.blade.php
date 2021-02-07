@@ -60,25 +60,25 @@
                                         <h4 class="mt-2">{{ $estudiante->first_name }} {{ $estudiante->last_name }}</h4>
                                             <div class="card-body">
                                                 <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <div>
-                                                          <div class="form-group row">
-                                                                <div class="col-sm-4 mb-3 mb-sm-0">
-                                                                    <p><label for="pensamiento_id">Cedula:</label>
-                                                                    <b>{{ $estudiante->identification_card ?? '' }}</b></p>
-                                                                </div>
-                                                                <div class="col-sm-4">
-                                                                   <p><label for="pensamiento_id">Correo:</label>
-                                                                    <b>{{ $estudiante->email  ?? ''}}</b></p>
-                                                                </div>
-                                                                 <div class="col-sm-4 mb-3 mb-sm-0">
-                                                                    <p><label for="pensamiento_id">Telefono:</label>
-                                                                     <b>{{ $estudiante->phone  ?? ''}}</b></p>
-                                                                </div>
+                                <div class="col-lg-12">
+                                       <div>
+                                        <div class="form-group row">
+                                          <div class="col-sm-4 mb-3 mb-sm-0">
+                                          <p><label for="pensamiento_id">Cedula:</label>
+                                           <b>{{ $estudiante->identification_card ?? '' }}</b></p>
+                                          </div>
+                                          <div class="col-sm-4">
+                                          <p><label for="pensamiento_id">Correo:</label>
+                                          <b>{{ $estudiante->email  ?? ''}}</b></p>
+                                          </div>
+                                          <div class="col-sm-4 mb-3 mb-sm-0">
+                                          <p><label for="pensamiento_id">Telefono:</label>
+                                          <b>{{ $estudiante->phone  ?? ''}}</b></p>
+                                          </div>
                                                                
-                                                          </div>
-                                                          <div class="form-group row">
-                                                                <div class="col-sm-4 mb-3 mb-sm-0">
+                                        </div>
+                                        <div class="form-group row">
+                                              <div class="col-sm-4 mb-3 mb-sm-0">
                                                                     <p><label for="pensamiento_id">Ingreso:</label>
                                                                     <b>{{ $estudiante->lapsos->name ?? '' }}</b></p>
                                                                 </div>
