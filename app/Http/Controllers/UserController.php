@@ -15,7 +15,31 @@ class UserController extends Controller
     public function index()
     {
         $usuarios = User::latest()->paginate(5);
-        $roles = ['0'=>'Administrativo','1'=>'Operativo'];
+        $roles = ['0'=>'Administrativo','1'=>'Directivo','2'=>'Operativo'];
+        return view('pages.usuarios.index',compact('usuarios','roles'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    public function indexAdministrativo()
+    {
+        $usuarios = User::where('rol_id','0')->latest()->paginate(5);
+        $roles = ['0'=>'Administrativo','1'=>'Directivo','2'=>'Operativo'];
+        return view('pages.usuarios.index',compact('usuarios','roles'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    public function indexDirectivo()
+    {
+        $usuarios = User::where('rol_id','1')->latest()->paginate(5);
+        $roles = ['0'=>'Administrativo','1'=>'Directivo','2'=>'Operativo'];
+        return view('pages.usuarios.index',compact('usuarios','roles'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+     public function indexOperativo()
+    {
+        $usuarios = User::where('rol_id','2')->latest()->paginate(5);
+        $roles = ['0'=>'Administrativo','1'=>'Directivo','2'=>'Operativo'];
         return view('pages.usuarios.index',compact('usuarios','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -64,7 +88,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        $roles = ['0'=>'Administrativo','1'=>'Directivo','2'=>'Operativo'];
+        return view('pages.usuarios.edit',compact('user','roles'));
     }
 
     /**
@@ -76,7 +102,13 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //dd($request->all());
+        $data = $request->all();
+        $user = User::find($id);
+        $user->update($data);
+        $user->save();
+        return redirect()->route('user.index')
+                        ->with('success','Usuario editado exitosamente.');
     }
 
     /**
@@ -87,6 +119,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+      $user = User::find($id);
+      $user->delete();
+      return back();
     }
 }

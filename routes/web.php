@@ -36,3 +36,6 @@ Route::get('/inscripcion', 'InscripcionController@index')->name('inscripcion');
 Route::post('buscar.estudiante', 'EstudiantesController@buscarEstudiante')->name('buscar.estudiante');
 Route::get('getLapso/{id}', 'InscripcionController@getLapso')->name('getLapso');
 Route::post('updateLapso', 'InscripcionController@updateLapso')->name('updateLapso');
+Route::get('usuario/administrativo', 'UserController@indexAdministrativo')->name('usuario/administrativo');
+Route::get('usuario/directivo', 'UserController@indexDirectivo')->name('usuario/directivo');
+Route::get('usuario/operativo', 'UserController@indexOperativo')->name('usuario/operativo');

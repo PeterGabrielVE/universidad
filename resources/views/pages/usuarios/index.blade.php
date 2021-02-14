@@ -44,7 +44,7 @@
                                     <thead>
                                         <tr>
                                             <th>Nombres y Apellidos</th>
-                                            <th>Correo ELecdtronico</th>
+                                            <th>Correo Electronico</th>
                                             <th>Perfil</th>
                                            
                                             <th style="width:16%">Opciones</th>
@@ -65,9 +65,9 @@
                                                  @endif
                                               </td>
                                             <td>
-                                                <form action="{{ route('estudiantes.destroy',$user->id) }}" method="POST">
+                                                <form action="{{ route('user.destroy',$user->id) }}" method="POST">
                             
-                                                    <a class="btn btn-uft btn-sm" href="{{ route('estudiantes.edit',$user->id) }}"><i class="fas fa-edit"></i></a>
+                                                    <a class="btn btn-uft btn-sm" href="{{ route('user.edit',$user->id) }}"><i class="fas fa-edit"></i></a>
                                    
                                                     @csrf
                                                     @method('DELETE')

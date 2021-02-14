@@ -37,7 +37,9 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Listado:</h6>
                         <a class="collapse-item" href="{{ route('estudiantes.index') }}">Estudiantes</a>
-                        <a class="collapse-item" href="{{ route('user.index') }}">Administrativos</a>
+                        <a class="collapse-item" href="{{ route('usuario/administrativo') }}">Administrativos</a>
+                        <a class="collapse-item" href="{{ route('usuario/directivo') }}">Directivos</a>
+                        <a class="collapse-item" href="{{ route('usuario/operativo') }}">Operativos</a>
                     </div>
                 </div>
             </li>
