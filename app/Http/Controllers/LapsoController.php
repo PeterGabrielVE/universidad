@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Lapso;
+use App\Lapso_estudiante;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
@@ -106,6 +107,11 @@ class LapsoController extends Controller
         $lapso = Lapso::find($id);
         $lapso->update($data);
         $lapso->save();
+
+        if($request->status == '0'){
+            $lapse = Lapso_Estudiante::where('note','>', '49')->update(['status'=>'Aprobado']);
+            $lapse = Lapso_Estudiante::where('note','<', '50')->update(['status'=>'Reprobado']);
+        }
         return back();
     }
 
