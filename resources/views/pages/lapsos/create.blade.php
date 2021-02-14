@@ -22,7 +22,7 @@
 								{!! Form::label('end_lapse', 'Fecha Final', ['class'=>'col-form-label s-12']) !!}
 								{!! Form::date('end_lapse', null, ['class'=>'form-control date r-0 light s-12',  'id'=>'end_lapse']) !!}
 								<span class="end_lapse_span"></span>
-								{!! Form::hidden('status', 'presente', ['class'=>'form-control r-0 light s-12',  'id'=>'end_lapse']) !!}
+								{!! Form::hidden('status', '1', ['class'=>'form-control r-0 light s-12',  'id'=>'create_status']) !!}
 							</div>
 						</div>
 						<div class="form-row">

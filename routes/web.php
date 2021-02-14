@@ -40,3 +40,5 @@ Route::get('usuario/administrativo', 'UserController@indexAdministrativo')->name
 Route::get('usuario/directivo', 'UserController@indexDirectivo')->name('usuario/directivo');
 Route::get('usuario/operativo', 'UserController@indexOperativo')->name('usuario/operativo');
 Route::get('pensum', 'LapsoController@getPensum')->name('pensum');
+Route::get('editLapso/{id}', 'LapsoController@edit')->name('editLapso');
+Route::post('updateLapso/{id}', 'LapsoController@update')->name('updateLapso');

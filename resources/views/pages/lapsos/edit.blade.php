@@ -1,5 +1,5 @@
 <!-- Modal -->
-{!! Form::open(['class'=>'formlDinamic']) !!}
+{!! Form::open(['class'=>'formlDinamic','id'=>'formData']) !!}
 <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
@@ -20,15 +20,16 @@
 							<div class="form-group col-4 m-0">
 								<i class="icon-file-text mr-2"></i>
 								{!! Form::label('end_lapse', 'Fecha Final', ['class'=>'col-form-label s-12']) !!}
-								{!! Form::date('end_lapse', null, ['class'=>'form-control date r-0 light s-12',  'id'=>'end_lapse']) !!}
+								{!! Form::date('end_lapse', null, ['class'=>'form-control date r-0 light s-12',  'id'=>'edit_end_lapse']) !!}
 								<span class="end_lapse_span"></span>
-								{!! Form::hidden('status', 'active', ['class'=>'form-control r-0 light s-12',  'id'=>'edit_end_lapse']) !!}
+								
 							</div>
 							<div class="form-group col-4 m-0">
 								<i class="icon-file-text mr-2"></i>
 								{!! Form::label('status', 'Estatus', ['class'=>'col-form-label s-12']) !!}
 								<span class="status_span"></span>
-								{!! Form::select('status',['presente','terminado'], null, ['class'=>'form-control r-0 light s-12',  'id'=>'status']) !!}
+								{!! Form::select('status',['0'=>'terminado','1'=>'presente'], null, ['class'=>'form-control r-0 light s-12',  'id'=>'edit_status']) !!}
+								{!! Form::hidden('id', null, ['class'=>'form-control date r-0 light s-12',  'id'=>'_id']) !!}
 							</div>
 						</div>
 						<div class="form-row">
@@ -38,9 +39,25 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<button type="submit" class="btn btn-uft"><i class="fas fa-save mr-2"></i>Guardar Datos</button>
+				<button type="button" class="btn btn-uft" onclick="actualizarLapso()"><i class="fas fa-save mr-2"></i>Guardar Datos</button>
 			</div>
 		</div>
 	</div>
 </div>
 {!! Form::close() !!}
+<script>
+	function actualizarLapso(){
+		  var id = $('#_id').val();
+		  var url ="{{url('updateLapso')}}/"+id;
+		  var formData = $('#formData').serialize();
+          $.ajax({
+            type : 'post',
+            url  : url,
+            data : formData,
+            success:function(data){
+              $('#edit').modal('hide')
+              location.reload();
+            }
+          });
+	}
+</script>

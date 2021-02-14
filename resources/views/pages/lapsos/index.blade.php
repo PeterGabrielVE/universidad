@@ -67,7 +67,7 @@
                                             <td>{{ $lapso->start_lapse }}</td>
                                             <td>{{ $lapso->end_lapse }}</td>
                                             <td>
-                                                @if($lapso->status=='presente')
+                                                @if($lapso->status=='1')
                                                 <form action="{{ route('lapso.destroy',$lapso->id) }}" method="POST">
                                    
                                                   
@@ -118,17 +118,17 @@
  function editLapso(id){
     $("#edit").modal("show");
         
-        var url ="{{url('lapso')}}/"+id;
+        var url ="{{url('editLapso')}}/"+id;
           $.ajax({
             type : 'get',
             url  : url,
             data : {'id':id},
             success:function(data){
               console.log(data);
-              /*$('#periodo_demanda').val(data['0'].periodo);
-              $('#deuda').val(data['0'].deuda);
-              $('#id_demanda').val(data['0'].id);
-              $('#concepto').val(data['0'].concepto);*/
+              $('#edit_start_lapse').val(data.start_lapse);
+              $('#edit_end_lapse').val(data.end_lapse);
+              $('#_id').val(data.id);
+              $('#edit_status').val(data.status);
               
             }
           });

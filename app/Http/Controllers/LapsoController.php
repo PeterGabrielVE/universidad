@@ -89,7 +89,8 @@ class LapsoController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = Lapso::find($id);
+        return response()->json($data);
     }
 
     /**
@@ -101,7 +102,11 @@ class LapsoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        $lapso = Lapso::find($id);
+        $lapso->update($data);
+        $lapso->save();
+        return back();
     }
 
     /**
@@ -112,7 +117,9 @@ class LapsoController extends Controller
      */
     public function destroy($id)
     {
-        //
+      $Lapso = Lapso::find($id);
+      $Lapso->delete();
+      return back();
     }
 
     public function setDateInDB($date_val){

@@ -73,11 +73,9 @@ class EstudiantesController extends Controller
 
     public function buscarEstudiante(Request $request){
 
-        //dd($request->all());
         $query = $request->consulta;
         $estudiante = Estudiante::where('identification_card',$query)->first();
         $carga = Lapso_Estudiante::where('student_id',$estudiante->id)->get();
-        //dd($carga);
         return view('pages.inscripcion.index',compact('estudiante','carga'));
     }
 
