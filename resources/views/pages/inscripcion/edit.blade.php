@@ -35,7 +35,7 @@
 			<br>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<button type="submit" class="btn btn-uft" onclick="actualizarLapso({{ $estudiante->id }})"><i class="icon-save mr-2"></i>Guardar</button>
+				<button type="submit" class="btn btn-uft" onclick="actualizarLapso()"><i class="icon-save mr-2"></i>Guardar</button>
 			</div>
 		</div>
 	</div>
