@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Lapso;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use DB;
 
 class LapsoController extends Controller
 {
@@ -179,4 +180,11 @@ class LapsoController extends Controller
                 break;   
         }
     }
+
+    public function getPensum(){
+        
+        $asignaturas = DB::table('courses')->orderBy('semester_id','ASC')->get();
+        return view('pages.lapsos.pensum',compact('asignaturas'));
+    }    
+
 }
