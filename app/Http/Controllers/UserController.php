@@ -38,7 +38,7 @@ class UserController extends Controller
 
      public function indexOperativo()
     {
-        $usuarios = User::where('rol_id','2')->latest()->paginate(5);
+        $usuarios = User::where('rol_id','1')->latest()->paginate(5);
         $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
         return view('pages.usuarios.index',compact('usuarios','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
