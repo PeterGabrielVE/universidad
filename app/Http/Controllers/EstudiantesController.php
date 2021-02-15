@@ -75,8 +75,11 @@ class EstudiantesController extends Controller
 
         $query = $request->consulta;
         $estudiante = Estudiante::where('identification_card',$query)->first();
-        $carga = Lapso_Estudiante::where('student_id',$estudiante->id)->get();
-        return view('pages.inscripcion.index',compact('estudiante','carga'));
+        $lapso = Lapso::latest('id')->first();
+        $carga = Lapso_Estudiante::where('student_id',$estudiante->id)->where('lapse_id',$lapso->id)->get();
+        $historia = Lapso_Estudiante::where('student_id',$estudiante->id)->get();
+
+        return view('pages.inscripcion.index',compact('estudiante','carga','historia','lapso'));
     }
 
     public function edit($id)

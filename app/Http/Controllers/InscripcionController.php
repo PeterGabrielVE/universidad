@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Lapso_Estudiante;
+use App\Asignatura;
+use App\Estudiante;
 
 class InscripcionController extends Controller
 {
@@ -22,9 +24,14 @@ class InscripcionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        //
+        //dd($id);
+        $aprobadas = Lapso_Estudiante::where('student_id',$id)->where('status','Aprobado')->pluck('course_id');
+        $asignaturas = Asignatura::whereNotIn('id',$aprobadas)->take(7)->get();
+        $estudiante = Estudiante::find($id);
+        return view('pages.inscripcion.create',compact('asignaturas','estudiante'));
+        
     }
 
     /**
