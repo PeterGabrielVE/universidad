@@ -59,20 +59,23 @@
                                       <td>{{ $asig->uc ?? '' }}</td>
                                       <td>{{ $asig->semester_id ?? '' }}</td>                       
                                       <td class="text-center">
-                                        <a class="btn btn-uft btn-sm" onclick="editarCarga({{ $asig->id }})"><i class="fas fa-edit"></i></a>
-                                                    
-                                       </td>
+                                        <input type="checkbox" name="asignatura_check_box_id" asignatura-checkbox="{{$asig->id }}">
+                                              
+                                       </td> 
                                       </tr
                                       @endforeach
                                    </tbody>
                               </table>
                                                   
                             </div>
+                            <div class="text-center"> <a class="btn btn-uft" onclick="inscribir()">Inscribir</a></div>
                         </div>
+
                     </div>
 
                 </div>
-               
+                <input type="hidden" name="asignatura_seleccionadas" id="asignatura_seleccionadas" >
+                <input type="hidden" name="id" id="id_estudiante" value={{ $estudiante->id }}>
                 <!-- /.container-fluid -->
 
             </div>
@@ -85,11 +88,43 @@
         </div>
         <!-- End of Content Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
-
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <script>
+      function inscribir() {
+        var all_asign_array = [];
+            $("input:checkbox[name=asignatura_check_box_id]").each(function(i, obj){
+               
+                if ( ($(this).is(":checked") ) && ($(this).attr("asignatura-checkbox") !== 'unknown' ) ) {
+                    all_asign_array.push($(this).attr("asignatura-checkbox"));
+                }
+            });
+            $('#asignatura_seleccionadas').val(all_asign_array.toString());
+
+            var id = $('#id_estudiante').val();
+            var asignaturas = $('#asignatura_seleccionadas').val();
+            let url='{{route('getEstudiante', ":id")}}'
+                url = url.replace(':id',id);
+
+
+            $.ajax({
+            dataType: 'json',
+            type: 'post',
+            url: '{{ url("createLapsoEstudiante") }}'+ '/' + id,
+            data:  {
+                    "_token": "{{ csrf_token() }}",
+                    "asignaturas": asignaturas
+              },
+            success: function(data) {
+            window.location.href = `${url}`
+            
+            }
+          });
+      }
+    </script>
 @endsection

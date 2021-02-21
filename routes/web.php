@@ -43,3 +43,5 @@ Route::get('pensum', 'LapsoController@getPensum')->name('pensum');
 Route::get('editLapso/{id}', 'LapsoController@edit')->name('editLapso');
 Route::post('updateLapso/{id}', 'LapsoController@update')->name('updateLapso');
 Route::get('createInscripcion/{id}', 'InscripcionController@create')->name('createInscripcion');
+Route::post('createLapsoEstudiante/{id}', 'InscripcionController@store')->name('createLapsoEstudiante');
+Route::get('getEstudiante/{id}', 'EstudiantesController@getEstudiante')->name('getEstudiante');

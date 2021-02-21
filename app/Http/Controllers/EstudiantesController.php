@@ -82,6 +82,16 @@ class EstudiantesController extends Controller
         return view('pages.inscripcion.index',compact('estudiante','carga','historia','lapso'));
     }
 
+        public function getEstudiante($id){
+
+        $estudiante = Estudiante::find($id);
+        $lapso = Lapso::latest('id')->first();
+        $carga = Lapso_Estudiante::where('student_id',$estudiante->id)->where('lapse_id',$lapso->id)->get();
+        $historia = Lapso_Estudiante::where('student_id',$estudiante->id)->get();
+
+        return view('pages.inscripcion.index',compact('estudiante','carga','historia','lapso'));
+    }
+
     public function edit($id)
     {
         $estudiante = Estudiante::find($id);

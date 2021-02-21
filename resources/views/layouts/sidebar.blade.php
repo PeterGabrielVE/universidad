@@ -27,6 +27,7 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
+            @if (Auth::user()->rol_id == '0' || Auth::user()->rol_id == '2')
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
@@ -39,11 +40,12 @@
                         <a class="collapse-item" href="{{ route('estudiantes.index') }}">Estudiantes</a>
                         <a class="collapse-item" href="{{ route('usuario/administrativo') }}">Administrativos</a>
                         <a class="collapse-item" href="{{ route('usuario/directivo') }}">Directivos</a>
+
                         <a class="collapse-item" href="{{ route('usuario/operativo') }}">Operativos</a>
                     </div>
                 </div>
             </li>
-
+            @endif
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"

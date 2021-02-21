@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Lapso;
 use App\Lapso_Estudiante;
 use App\Asignatura;
 use App\Estudiante;
@@ -40,9 +41,24 @@ class InscripcionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //
+         
+         $asig_array = explode(",",$request->asignaturas);
+         $lapse = Lapso::latest()->first();
+         $lapse_id = $lapse->id;
+          foreach ($asig_array as $key =>$value) {
+
+            $lapso = new Lapso_Estudiante();
+            $lapso->student_id = $id;
+            $lapso->lapse_id = $lapse_id;
+            $lapso->course_id = $value;
+            $lapso->note = '0';
+            $lapso->status = 'Cursando';
+            $lapso->save();
+        }
+        $data = '200';
+        return response()->json($data);
     }
 
     /**
@@ -107,7 +123,6 @@ class InscripcionController extends Controller
 
     public function updateLapso(Request $request)
     {
-        //dd($request->all());
         $id = $request->id;
         $data = $request->all();
         $recambio = Lapso_Estudiante::find($id);
