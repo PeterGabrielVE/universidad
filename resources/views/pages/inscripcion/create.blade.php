@@ -32,7 +32,7 @@
                                         <h6 class="m-0 font-weight-bold text-uft">Estudiante: {{ $estudiante->first_name }} {{ $estudiante->last_name }}</h6>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="{{ url()->previous() }}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
+                                        <a href="{{ route('getEstudiante',$estudiante->id) }}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
                                     </div>
                                 </div>
                             </div>
