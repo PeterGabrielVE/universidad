@@ -60,9 +60,11 @@
                                             <td>{{ $user->email ?? '' }}</td>
                                             
                                             <td> @if($user->rol_id =='0') {{ 'Administrativo'  }}
-                                                @else
+                                            @elseif($user->rol_id =='1')
                                                  {{ 'Operativo'  }}
-                                                 @endif
+                                            @else
+                                            {{ 'Directivo'  }}
+                                            @endif
                                               </td>
                                             <td>
                                                 <form action="{{ route('user.destroy',$user->id) }}" method="POST">

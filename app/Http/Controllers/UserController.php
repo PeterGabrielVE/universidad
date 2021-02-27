@@ -23,24 +23,27 @@ class UserController extends Controller
     public function indexAdministrativo()
     {
         $usuarios = User::where('rol_id','0')->latest()->paginate(5);
+        $rol = '0';
         $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
-        return view('pages.usuarios.index',compact('usuarios','roles'))
+        return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     public function indexDirectivo()
     {
         $usuarios = User::where('rol_id','2')->latest()->paginate(5);
+        $rol = '2';
         $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
-        return view('pages.usuarios.index',compact('usuarios','roles'))
+        return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
      public function indexOperativo()
     {
         $usuarios = User::where('rol_id','1')->latest()->paginate(5);
+        $rol = '1';
         $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
-        return view('pages.usuarios.index',compact('usuarios','roles'))
+        return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -62,10 +65,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+       $request['password'] = bcrypt($request->password);
        User::create($request->all());
    
-       return redirect()->route('user.index')
-                        ->with('success','Usuario guardado exitosamente.');
+       $usuarios = User::where('rol_id',$request->rol_id)->latest()->paginate(5);
+        $rol = '1';
+        $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
+        return view('pages.usuarios.index',compact('usuarios','rol','roles'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -103,12 +110,19 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         //dd($request->all());
+        if(isset($request->password)){
+            $request['password'] = bcrypt($request->password);
+        }
         $data = $request->all();
         $user = User::find($id);
         $user->update($data);
         $user->save();
-        return redirect()->route('user.index')
-                        ->with('success','Usuario editado exitosamente.');
+        
+        $usuarios = User::where('rol_id',$request->rol_id)->latest()->paginate(5);
+        $rol = '1';
+        $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
+        return view('pages.usuarios.index',compact('usuarios','rol','roles'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**

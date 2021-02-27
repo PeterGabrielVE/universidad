@@ -8,7 +8,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body">
-				<div class="form-row">
+				<div class="form-row"> 
 					<div class="col-md-6">
 						<div class="form-group m-0 has-feedback" id="campo_group">
 							
@@ -20,7 +20,7 @@
 					<div class="col-md-6">
 						<div class="form-group m-0" id="modulo_group">
 							{!! Form::label('roles', 'Perfil', ['class'=>'col-form-label s-12']) !!}
-							{!! Form::select('rol_id', $roles, null, ['class'=>'form-control r-0 light s-12', 'id'=>'rol_id', 'onclick'=>'inputClear(this.id)']) !!}
+							{!! Form::select('rol_id', $roles, $rol ?? null, ['class'=>'form-control r-0 light s-12', 'id'=>'rol_id', 'onclick'=>'inputClear(this.id)']) !!}
 							<span class="status_span"></span>
 						</div>
 					</div>
