@@ -54,17 +54,6 @@ class EstudiantesController extends Controller
   
         Estudiante::create($request->all());
 
-        $id = Estudiante::latest()->first()->id;
-
-        for ($i = 1; $i <= 7; $i++) {
-            $lapso = new Lapso_Estudiante();
-            $lapso->student_id = $id;
-            $lapso->lapse_id = $request->lapse_id;
-            $lapso->course_id = $i;
-            $lapso->note = '0';
-            $lapso->status = 'Cursando';
-            $lapso->save();
-        }
         
    
         return redirect()->route('estudiantes.index')
