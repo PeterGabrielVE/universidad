@@ -102,7 +102,8 @@
           </div>
           <div id="menu1" class="tab-pane fade">
             <h3>Carga Academica</h3>
-            @if($lapso->status =='0')
+            {{ $lapso->status }}
+            @if($lapso->status =='1')
             <div class="pull-right">
               <a href="{{ route('createInscripcion',$estudiante->id) }}" class="btn btn-uft"><i class="fas fa-plus pr-2"></i>Inscribir</a>
             </div>
