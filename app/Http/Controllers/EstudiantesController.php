@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Asignatura;
 use App\Estudiante;
 use App\Lapso;
 use App\Lapso_Estudiante;
@@ -41,6 +42,28 @@ class EstudiantesController extends Controller
     public function store(Request $request)
     {
     	
+            if($request->equivalency == '1'){
+
+                $request->validate([
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'identification_card' => 'required',
+                'email' => 'required',
+                'phone' => 'required',
+                'lapse_id' => 'required',
+                'country_id' => 'required',
+                'equivalency' => 'required',
+            ]);
+      
+            Estudiante::create($request->all());
+
+            $estudiante = Estudiante::latest('id')->first();
+            $asignaturas = Asignatura::orderBy('id','ASC')->get();
+
+            return view('pages.estudiantes.equivalencia',compact('asignaturas','estudiante'));
+        }
+
+
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',

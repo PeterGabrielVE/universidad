@@ -61,6 +61,26 @@ class InscripcionController extends Controller
         return response()->json($data);
     }
 
+    public function storeEquivalency(Request $request, $id)
+    {
+         
+         $asig_array = explode(",",$request->asignaturas);
+         $lapse = Lapso::latest()->first();
+         $lapse_id = $lapse->id;
+          foreach ($asig_array as $key =>$value) {
+
+            $lapso = new Lapso_Estudiante();
+            $lapso->student_id = $id;
+            $lapso->lapse_id = $lapse_id;
+            $lapso->course_id = $value;
+            $lapso->note = '60';
+            $lapso->status = 'Aprobado';
+            $lapso->save();
+        }
+        $data = '200';
+        return response()->json($data);
+    }
+
     /**
      * Display the specified resource.
      *
