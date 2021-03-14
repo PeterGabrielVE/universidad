@@ -19,7 +19,9 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
+                     <div>
+                        @include('alerts.toastr')
+                    </div>
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Estudiantes</h1>
 
@@ -54,33 +56,20 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                 <div class="col-sm-6 mb-3 mb-sm-0">
+                                                 <div class="col-sm-4 mb-3 mb-sm-0">
                                                     <input type="text" class="form-control form-control-user" id="identification_card" name="identification_card" 
                                                         placeholder="Cédula">
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-4">
                                                     <input type="email" class="form-control form-control-user" id="email" name="email"
                                                     placeholder="Correo Electronico">
                                                 </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                                <div class="col-sm-4 mb-3 mb-sm-0">
                                                     <input type="text" class="form-control form-control-user"
                                                         id="phone" name="phone" placeholder="Télefono">
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control form-control-user"
-                                                        id="lapse_name" placeholder="Lapso de Ingreso" value="{{ $lapso->name }}" readonly="true">
-                                                    <input type="hidden" class="form-control form-control-user"
-                                                        id="lapse_id" 
-                                                        name="lapse_id" 
-                                                        placeholder="Lapso de Ingreso" value="{{ $lapso->id }}"> 
-                                                    <input type="hidden" class="form-control form-control-user"
-                                                        id="status" 
-                                                        name="status" 
-                                                         value="Activo">       
-                                                </div>
                                             </div>
+                                            
                                             <div class="form-group row">
                                                  <div class="col-sm-6 mb-3 mb-sm-0">
                                                      {!! Form::label('lbl_pais', 'País donde vive:', ['class'=>'col-form-label s-12']) !!}
@@ -90,6 +79,19 @@
                                                      {!! Form::label('lbl_equivalencia', 'Equivalencia:', ['class'=>'col-form-label s-12']) !!}
                                                     {!! Form::select('equivalency', ['0'=>'No','1'=>'Si'], null, ['class'=>'form-control', 'id'=>'equivalency']) !!}
                                                 </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-4"></div>
+                                                <div class="col-sm-4">
+                                                    {!! Form::label('lbl_pais', 'Lapso:', ['class'=>'col-form-label s-12']) !!}
+                                                    {!! Form::select('lapse_id', $lapso, null, ['class'=>'form-control', 'id'=>'lapse_id']) !!}
+                                                  
+                                                    <input type="hidden" class="form-control form-control-user"
+                                                        id="status" 
+                                                        name="status" 
+                                                         value="Activo">       
+                                                </div>
+                                                <div class="col-sm-4"></div>
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-lg-3"></div>

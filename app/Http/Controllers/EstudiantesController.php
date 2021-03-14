@@ -27,7 +27,7 @@ class EstudiantesController extends Controller
      */
     public function create()
     {
-        $lapso = Lapso::latest('id')->first();
+        $lapso = Lapso::get()->pluck('name','id');
         $paises = Pais::get()->pluck('name','id');
         return view('pages.estudiantes.create',compact('lapso','paises'));
     }
@@ -41,7 +41,7 @@ class EstudiantesController extends Controller
      */
     public function store(Request $request)
     {
-    	
+    	    //dd($request->all());
             if($request->equivalency == '1'){
 
                 $request->validate([
@@ -56,7 +56,7 @@ class EstudiantesController extends Controller
             ]);
       
             Estudiante::create($request->all());
-
+            toastr()->success('¡El Estudiante fue creado exitosamente!');
             $estudiante = Estudiante::latest('id')->first();
             $asignaturas = Asignatura::orderBy('id','ASC')->get();
 
