@@ -22,9 +22,7 @@
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
-                Interface
-            </div>
+           
 
             <!-- Nav Item - Pages Collapse Menu -->
             @if (Auth::user()->rol_id == '0' || Auth::user()->rol_id == '2')
@@ -51,7 +49,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
-                    <span>Configuración</span>
+                    <span>Estudiante</span>
                 </a>
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
