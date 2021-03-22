@@ -128,4 +128,11 @@ class EstudiantesController extends Controller
       $estudiante->delete();
       return back();
     }
+
+    public function buscarEstudiantePorCedula(Request $request){
+
+        $query = $request->cedula;
+        $estudiante = Estudiante::where('identification_card',$query)->first();
+        return response()->json($estudiante);
+    }
 }

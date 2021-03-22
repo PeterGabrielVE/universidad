@@ -32,7 +32,12 @@
                                         <h6 class="m-0 font-weight-bold text-uft">Listado Estudiantes</h6>
                                     </div>
                                     <div class="pull-right">
-                                        <a onclick="crear()" class="btn btn-uft" role="button"><i class="fas fa-plus pr-2"></i>Agregar Estudiante</a>
+                                        <div class="row form-inline">
+                                             <input type="number" class="form-control form-control-user" id="cedula" name="cedula" 
+                                            placeholder="Cedula">
+                                            <a onclick="crear()" class="btn btn-uft" role="button"><i class="fas fa-plus pr-2"></i>Agregar Estudiante</a>
+                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -115,7 +120,21 @@
     </a>
 <script type="text/javascript">
     function crear(){
-        Swal.fire('Any fool can use a computer')
+        var cedula = $('#cedula').val();
+        var url ="{{url('buscarEstudiantePorCedula')}}";
+       
+          $.ajax({
+            type : 'GET',
+            url  : url,
+            data : {'cedula':cedula},
+            success:function(data){
+                console.log(data);
+                if(data === ''){
+                    Swal.fire('Ya existe un estudiante con esta cédula')
+                }
+            }
+          });
+        //Swal.fire('Any fool can use a computer')
     }
 </script>
 @endsection
