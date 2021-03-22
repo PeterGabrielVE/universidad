@@ -133,6 +133,19 @@ class EstudiantesController extends Controller
 
         $query = $request->cedula;
         $estudiante = Estudiante::where('identification_card',$query)->first();
-        return response()->json($estudiante);
+        if($estudiante == null){
+            $estudiante = 'null';
+            return response()->json($estudiante);
+        }else{
+             return response()->json($estudiante);
+        }
+       
+    }
+
+    public function createEstudiante($ced)
+    {   
+        $lapso = Lapso::get()->pluck('name','id');
+        $paises = Pais::get()->pluck('name','id');
+        return view('pages.estudiantes.create',compact('lapso','paises','ced'));
     }
 }

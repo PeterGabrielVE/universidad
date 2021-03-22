@@ -129,12 +129,19 @@
             data : {'cedula':cedula},
             success:function(data){
                 console.log(data);
-                if(data === ''){
-                    Swal.fire('Ya existe un estudiante con esta cédula')
+                if(data == 'null'){
+                    Swal.fire('No existe un estudiante con esta cédula');
+                     
+                    var url = {!! json_encode(url('crearEstudiante')) !!};
+                    window.location.href = `${url}/${cedula}`;
+                }else{
+                    Swal.fire('Ya existe un estudiante con esta cédula');
                 }
             }
           });
-        //Swal.fire('Any fool can use a computer')
+        
     }
+
+
 </script>
 @endsection

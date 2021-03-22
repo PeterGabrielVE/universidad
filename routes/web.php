@@ -47,3 +47,4 @@ Route::post('createLapsoEstudiante/{id}', 'InscripcionController@store')->name('
 Route::post('createLapsoEstudianteEquivalencia/{id}', 'InscripcionController@storeEquivalency')->name('createLapsoEstudianteEquivalencia');
 Route::get('getEstudiante/{id}', 'EstudiantesController@getEstudiante')->name('getEstudiante');
 Route::get('buscarEstudiantePorCedula', 'EstudiantesController@buscarEstudiantePorCedula')->name('buscarEstudiantePorCedula');
+Route::get('crearEstudiante/{cedula}', 'EstudiantesController@createEstudiante')->name('estudiante.crear');
