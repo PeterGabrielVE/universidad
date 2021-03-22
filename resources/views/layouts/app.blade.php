@@ -29,10 +29,7 @@
             
             <div class="control-sidebar-bg shadow white fixed"></div>
         </div>
-     {!! Toastr::render() !!}       <!--/#app -->
-       @jquery
-    @toastr_js
-    @toastr_render
+  
     </body>
     <!--
     --- Footer Part - Use Jquery anywhere at page.

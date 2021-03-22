@@ -19,9 +19,7 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <div>
-                        @include('alerts.toastr')
-                    </div>
+                    
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Estudiantes</h1>
 
@@ -34,7 +32,7 @@
                                         <h6 class="m-0 font-weight-bold text-uft">Listado Estudiantes</h6>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="{{ route('estudiantes.create') }}" class="btn btn-uft" role="button"><i class="fas fa-plus pr-2"></i>Agregar Estudiante</a>
+                                        <a onclick="crear()" class="btn btn-uft" role="button"><i class="fas fa-plus pr-2"></i>Agregar Estudiante</a>
                                     </div>
                                 </div>
                             </div>
@@ -115,4 +113,9 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+<script type="text/javascript">
+    function crear(){
+        Swal.fire('Any fool can use a computer')
+    }
+</script>
 @endsection
