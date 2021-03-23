@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Estudiante;
+use App\User;
 
 class HomeController extends Controller
 {
@@ -25,6 +26,9 @@ class HomeController extends Controller
     public function index()
     {
         $count_estudiante = Estudiante::select('id')->count();
-        return view('home', compact('count_estudiante'));
+        $count_admin = User::where('rol_id','0')->select('id')->count();
+        $count_dir = User::where('rol_id','2')->select('id')->count();
+        $count_ope = User::where('rol_id','1')->select('id')->count();
+        return view('home', compact('count_estudiante','count_admin','count_ope','count_dir'));
     }
 }

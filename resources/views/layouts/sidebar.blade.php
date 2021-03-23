@@ -35,7 +35,7 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Listado:</h6>
-                        <a class="collapse-item" href="{{ route('estudiantes.index') }}">Estudiantes</a>
+                        
                         <a class="collapse-item" href="{{ route('usuario/administrativo') }}">Administrativos</a>
                         <a class="collapse-item" href="{{ route('usuario/directivo') }}">Directivos</a>
 
@@ -54,7 +54,7 @@
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        
+                        <a class="collapse-item" href="{{ route('estudiantes.index') }}">Estudiantes</a>
                         <a class="collapse-item" href="{{ route('pensum') }}">Pensum</a>
                         <a class="collapse-item" href="{{ route('lapso.index') }}">Lapso</a>
                          <a class="collapse-item" href="{{ route('inscripcion') }}">Semestre</a>
