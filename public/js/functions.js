@@ -1,4 +1,4 @@
-  $('#name,#last_name').on("click keyup keypress change", function( event ){
+  $('#name,#first_name,#last_name').on("click keyup keypress change", function( event ){
      
       return soloLetras(event);     
     });

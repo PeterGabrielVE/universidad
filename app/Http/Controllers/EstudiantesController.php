@@ -29,7 +29,8 @@ class EstudiantesController extends Controller
     {
         $lapso = Lapso::get()->pluck('name','id');
         $paises = Pais::get()->pluck('name','id');
-        return view('pages.estudiantes.create',compact('lapso','paises'));
+        $prefijo = Pais::get()->pluck('Prefijo','id');
+        return view('pages.estudiantes.create',compact('lapso','paises','prefijo'));
     }
 
 
@@ -109,7 +110,8 @@ class EstudiantesController extends Controller
         $estudiante = Estudiante::find($id);
         $lapso = Lapso::latest('id')->first();
         $paises = Pais::get()->pluck('name','id');
-        return view('pages.estudiantes.edit',compact('estudiante','lapso','paises'));
+        $prefijo = Pais::get()->pluck('Prefijo','id');
+        return view('pages.estudiantes.edit',compact('estudiante','lapso','paises','prefijo'));
 
     }
 
@@ -146,6 +148,7 @@ class EstudiantesController extends Controller
     {   
         $lapso = Lapso::get()->pluck('name','id');
         $paises = Pais::get()->pluck('name','id');
-        return view('pages.estudiantes.create',compact('lapso','paises','ced'));
+         $prefijo = Pais::get()->pluck('Prefijo','id');
+        return view('pages.estudiantes.create',compact('lapso','paises','prefijo','ced'));
     }
 }

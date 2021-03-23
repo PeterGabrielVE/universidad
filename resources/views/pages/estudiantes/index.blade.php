@@ -65,7 +65,7 @@
                                             
                                             <td>{{ $estudiante->first_name ?? '' }} {{ $estudiante->last_name ?? '' }}</td>
                                             <td>{{ $estudiante->identification_card ?? '' }}</td>
-                                            <td>{{ $estudiante->phone ?? '' }}</td>
+                                            <td>{{ $estudiante->prefijo->Prefijo ?? '' }}-{{ $estudiante->phone ?? '' }}</td>
                                             <td>{{ $estudiante->email ?? '' }}</td>
                                             <td>
                                             @if ($estudiante->equivalency == '1')

@@ -45,27 +45,31 @@
                                         {!! Form::open(['route'=>'estudiantes.store','method'=>'POST', 'class'=>'user']) !!}
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    <input type="text" class="form-control form-control-user" id="name" name="first_name" 
+                                                    <input type="text" class="form-control" id="name" name="first_name" 
                                                         placeholder="Nombres">
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <input type="text" class="form-control form-control-user" id="last_name" name="last_name" 
+                                                    <input type="text" class="form-control" id="last_name" name="last_name" 
                                                         placeholder="Apellidos">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                 <div class="col-sm-4 mb-3 mb-sm-0">
-                                                    <input type="text" class="form-control form-control-user" id="identification_card" name="identification_card" 
+                                                 <div class="col-sm-3 mb-3 mb-sm-0">
+                                                    <input type="text" class="form-control" id="identification_card" name="identification_card" 
                                                     readonly
                                                     value="{{ $ced ?? null }}"
                                                         placeholder="Cédula">
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <input type="email" class="form-control form-control-user" id="email" name="email"
+                                                    <input type="email" class="form-control" id="email" name="email"
                                                     placeholder="Correo Electronico">
                                                 </div>
-                                                <div class="col-sm-4 mb-3 mb-sm-0">
-                                                    <input type="text" class="form-control form-control-user"
+                                                <div class="col-sm-2 mb-3 mb-sm-0 p-0">
+                                                {!! Form::select('cod_phone', $prefijo,null, ['class'=>'form-control', 'id'=>'cod_phone']) !!}
+                                                </div>
+                                                <div class="col-sm-3 mb-3 mb-sm-0">
+                                                    <input type="text" class="form-control
+                                                    "
                                                         id="phone" name="phone" placeholder="Télefono">
                                                 </div>
                                             </div>

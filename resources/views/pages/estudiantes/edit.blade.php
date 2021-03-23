@@ -55,7 +55,7 @@
                                             </div>
                                             <div class="form-group row">
                                                  <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    {!! Form::text('identification_card', $estudiante->identification_card ?? null, ['class'=>'form-control form-control-user', 'id'=>'identification_card','placeholder'=>'Cedula']) !!}
+                                                    {!! Form::number('identification_card', $estudiante->identification_card ?? null, ['class'=>'form-control form-control-user', 'id'=>'identification_card','placeholder'=>'Cedula']) !!}
                                                    
                                                 </div>
                                                 <div class="col-sm-6">
@@ -64,8 +64,11 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <div class="col-sm-6 mb-3 mb-sm-0">
-                                                     {!! Form::text('phone', $estudiante->phone ?? null, ['class'=>'form-control form-control-user', 'id'=>'phone','placeholder'=>'Télefono']) !!}
+                                                <div class="col-sm-2 mb-3 mb-sm-0 p-0">
+                                                {!! Form::select('cod_phone', $prefijo,$estudiante->cod_phone ?? '', ['class'=>'form-control', 'id'=>'cod_phone']) !!}
+                                                </div>
+                                                <div class="col-sm-4 mb-3 mb-sm-0">
+                                                     {!! Form::text('phone', $estudiante->phone ?? null, ['class'=>'form-control ', 'id'=>'phone','placeholder'=>'Télefono']) !!}
 
                                                 </div>
                                                 <div class="col-sm-6">

@@ -9,7 +9,7 @@ class Estudiante extends Model
     protected $table = 'students';
 
     protected $fillable = [
-       'first_name','last_name','identification_card','email','phone','lapse_id','country_id','equivalency','status'
+       'first_name','last_name','identification_card','email','phone','lapse_id','country_id','equivalency','status','cod_phone'
     ];
 
      public function paises()
@@ -25,5 +25,10 @@ class Estudiante extends Model
     public function pais()
     {
         return $this->belongsTo('App\Pais', 'country_id');
+    }
+
+    public function prefijo()
+    {
+        return $this->belongsTo('App\Pais', 'cod_phone');
     }
 }
