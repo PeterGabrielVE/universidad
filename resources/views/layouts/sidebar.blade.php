@@ -22,7 +22,7 @@
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-           
+
 
             <!-- Nav Item - Pages Collapse Menu -->
             @if (Auth::user()->rol_id == '0' || Auth::user()->rol_id == '2')
@@ -35,11 +35,11 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Listado:</h6>
-                        
-                        <a class="collapse-item" href="{{ route('usuario/administrativo') }}">Administrativos</a>
-                        <a class="collapse-item" href="{{ route('usuario/directivo') }}">Directivos</a>
 
-                        <a class="collapse-item" href="{{ route('usuario/operativo') }}">Operativos</a>
+                        <a class="collapse-item" href="{{ route('usuario/administrativo') }}">Director de Postgrado</a>
+                        <a class="collapse-item" href="{{ route('usuario/directivo') }}">Coordinador</a>
+
+                        <a class="collapse-item" href="{{ route('usuario/operativo') }}">Asistentes de Postgrado</a>
                     </div>
                 </div>
             </li>
@@ -58,7 +58,7 @@
                         <a class="collapse-item" href="{{ route('pensum') }}">Pensum</a>
                         <a class="collapse-item" href="{{ route('lapso.index') }}">Lapso</a>
                          <a class="collapse-item" href="{{ route('inscripcion') }}">Semestre</a>
-                        
+
                     </div>
                 </div>
             </li>
@@ -66,6 +66,6 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-           
+
 
         </ul>
