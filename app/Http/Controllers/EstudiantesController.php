@@ -7,6 +7,8 @@ use App\Estudiante;
 use App\Lapso;
 use App\Lapso_Estudiante;
 use App\Pais;
+use App\Doctorado;
+use App\Sede;
 use Illuminate\Http\Request;
 
 class EstudiantesController extends Controller
@@ -14,10 +16,10 @@ class EstudiantesController extends Controller
     public function index()
     {
     	$estudiantes = Estudiante::latest()->paginate(5);
-  
+
         return view('pages.estudiantes.index',compact('estudiantes'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
-        
+
     }
 
       /**
@@ -30,7 +32,9 @@ class EstudiantesController extends Controller
         $lapso = Lapso::get()->pluck('name','id');
         $paises = Pais::get()->pluck('name','id');
         $prefijo = Pais::get()->pluck('Prefijo','id');
-        return view('pages.estudiantes.create',compact('lapso','paises','prefijo'));
+        $doctorados = Doctorado::get()->pluck('name','id');
+        $sedes = Sede::get()->pluck('name','id');
+        return view('pages.estudiantes.create',compact('lapso','paises','prefijo','sedes','doctorados'));
     }
 
 
@@ -55,7 +59,7 @@ class EstudiantesController extends Controller
                 'country_id' => 'required',
                 'equivalency' => 'required',
             ]);
-      
+
             Estudiante::create($request->all());
             toastr()->success('¡El Estudiante fue creado exitosamente!');
             $estudiante = Estudiante::latest('id')->first();
@@ -75,11 +79,11 @@ class EstudiantesController extends Controller
             'country_id' => 'required',
             'equivalency' => 'required',
         ]);
-  
+
         Estudiante::create($request->all());
 
-        
-   
+
+
         return redirect()->route('estudiantes.index')
                         ->with('success','Estudiante guardado exitosamente.');
     }
@@ -141,14 +145,16 @@ class EstudiantesController extends Controller
         }else{
              return response()->json($estudiante);
         }
-       
+
     }
 
     public function createEstudiante($ced)
-    {   
+    {
         $lapso = Lapso::get()->pluck('name','id');
         $paises = Pais::get()->pluck('name','id');
-         $prefijo = Pais::get()->pluck('Prefijo','id');
-        return view('pages.estudiantes.create',compact('lapso','paises','prefijo','ced'));
+        $prefijo = Pais::get()->pluck('Prefijo','id');
+        $doctorados = Doctorado::get()->pluck('name','id');
+        $sedes = Sede::get()->pluck('name','id');
+        return view('pages.estudiantes.create',compact('lapso','paises','prefijo','ced','doctorados','sedes'));
     }
 }

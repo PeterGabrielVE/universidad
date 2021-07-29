@@ -3,7 +3,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
                 <div class="sidebar-brand-icon rotate-n-1">
-                    <img class="img-profile rounded-circle" src="{{URL::asset('img/logouft.png')}}" alt="Logo" height="70" width="70">
+                    <img class="img-profile rounded-circle" src="{{URL::asset('img/logo.png')}}" alt="Logo" height="70" width="70">
                 </div>
                 <div class="sidebar-brand-text mx-3">UFT</div>
             </a>

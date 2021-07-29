@@ -17,6 +17,7 @@
         "laravel/ui": "^2",
         "laravelcollective/html": "^6.2",
         "nesbot/carbon": "^2.43",
+        "spatie/laravel-permission": "^4.2",
         "yoeunes/toastr": "^1.2"
     },
     "require-dev": {

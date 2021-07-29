@@ -19,7 +19,7 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                   
+
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Estudiantes</h1>
 
@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -45,17 +45,17 @@
                                         {!! Form::open(['route'=>'estudiantes.store','method'=>'POST', 'class'=>'user']) !!}
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    <input type="text" class="form-control" id="name" name="first_name" 
+                                                    <input type="text" class="form-control" id="name" name="first_name"
                                                         placeholder="Nombres">
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <input type="text" class="form-control" id="last_name" name="last_name" 
+                                                    <input type="text" class="form-control" id="last_name" name="last_name"
                                                         placeholder="Apellidos">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                  <div class="col-sm-3 mb-3 mb-sm-0">
-                                                    <input type="text" class="form-control" id="identification_card" name="identification_card" 
+                                                    <input type="text" class="form-control" id="identification_card" name="identification_card"
                                                     readonly
                                                     value="{{ $ced ?? null }}"
                                                         placeholder="Cédula">
@@ -73,7 +73,18 @@
                                                         id="phone" name="phone" placeholder="Télefono">
                                                 </div>
                                             </div>
-                                            
+
+                                            <div class="form-group row">
+                                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                                    {!! Form::label('lbl_Sede', 'Sede:', ['class'=>'col-form-label s-12']) !!}
+                                                   {!! Form::select('sede_id', $sedes, null, ['class'=>'form-control', 'id'=>'sede_id']) !!}
+                                               </div>
+                                               <div class="col-sm-6">
+                                                    {!! Form::label('lbl_Doctorado', 'Doctorado:', ['class'=>'col-form-label s-12']) !!}
+                                                   {!! Form::select('doctorado_id', $doctorados, null, ['class'=>'form-control', 'id'=>'doctorado']) !!}
+                                               </div>
+                                           </div>
+
                                             <div class="form-group row">
                                                  <div class="col-sm-6 mb-3 mb-sm-0">
                                                      {!! Form::label('lbl_pais', 'País donde vive:', ['class'=>'col-form-label s-12']) !!}
@@ -89,25 +100,25 @@
                                                 <div class="col-sm-4">
                                                     {!! Form::label('lbl_pais', 'Lapso:', ['class'=>'col-form-label s-12']) !!}
                                                     {!! Form::select('lapse_id', $lapso, null, ['class'=>'form-control', 'id'=>'lapse_id']) !!}
-                                                  
+
                                                     <input type="hidden" class="form-control form-control-user"
-                                                        id="status" 
-                                                        name="status" 
-                                                         value="Activo">       
+                                                        id="status"
+                                                        name="status"
+                                                         value="Activo">
                                                 </div>
                                                 <div class="col-sm-4"></div>
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-lg-3"></div>
                                                 <div class="col-lg-3">
-                                                   
+
                                                     <button type="submit" class="btn btn-uft btn-user btn-block" style="width: 400px;"><i class="icon-save mr-2"></i>Registrar</button>
                                                 </div>
                                                 <div class="col-lg-3"></div>
                                             </div>
-                                            
+
                                        {!! Form::close() !!}
-                                       
+
                                     </div>
                                 </div>
                             </div>
@@ -115,7 +126,7 @@
                     </div>
 
                 </div>
-               
+
                 <!-- /.container-fluid -->
 
             </div>
