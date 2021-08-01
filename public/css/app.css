@@ -7043,7 +7043,7 @@ button.bg-dark:focus {
 }
 
 .bg-white {
-  background-color: #fff !important;
+  background-color: rgb(110, 2, 2) !important;
 }
 
 .bg-transparent {
@@ -10903,3 +10903,15 @@ a.text-dark:focus {
   }
 }
 
+.bg-uft{
+    background-color:rgb(124, 4, 4)!important;
+    color: #fff !important;
+}
+
+.bg-uft a{
+    color: #fff !important;
+}
+
+.bg-uft a:hover {
+    color: rgb(124, 4, 4) !important;
+  }
