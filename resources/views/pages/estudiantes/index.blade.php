@@ -6,7 +6,7 @@
         <!-- Sidebar -->
         @include('layouts.sidebar')
         <!-- End of Sidebar -->
-
+        @include('pages.usuarios.create')
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
@@ -19,7 +19,7 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    
+
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Estudiantes</h1>
 
@@ -33,15 +33,13 @@
                                     </div>
                                     <div class="pull-right">
                                         <div class="row form-inline">
-                                             <input type="number" class="form-control form-control-user" id="cedula" name="cedula" 
-                                            placeholder="Cedula">
-                                            <a onclick="crear()" class="btn btn-uft" role="button"><i class="fas fa-plus pr-2"></i>Agregar Estudiante</a>
+                                            <a data-toggle="modal" data-target="#create" class="btn btn-uft" role="button"><i class="fas fa-plus pr-2"></i>Crear Estudiante</a>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
-                           
+
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -58,11 +56,11 @@
                                             <th style="width:16%">Opciones</th>
                                         </tr>
                                     </thead>
-                                   
+
                                     <tbody>
                                         @foreach ($estudiantes as $estudiante)
                                         <tr>
-                                            
+
                                             <td>{{ $estudiante->first_name ?? '' }} {{ $estudiante->last_name ?? '' }}</td>
                                             <td>{{ $estudiante->identification_card ?? '' }}</td>
                                             <td>{{ $estudiante->prefijo->Prefijo ?? '' }}-{{ $estudiante->phone ?? '' }}</td>
@@ -78,18 +76,18 @@
                                             <td>{{ $estudiante->lapsos->name ?? '' }}</td>
                                             <td>
                                                 <form action="{{ route('estudiantes.destroy',$estudiante->id) }}" method="POST">
-                            
+
                                                     <a class="btn btn-uft btn-sm" href="{{ route('estudiantes.edit',$estudiante->id) }}"><i class="fas fa-edit"></i></a>
-                                   
+
                                                     @csrf
                                                     @method('DELETE')
-                                      
+
                                                     <button type="submit" class="btn btn-uft btn-sm"><i class="fas fa-trash"></i></button>
                                                 </form>
                                             </td>
                                         </tr>
                                         @endforeach
-                                       
+
                                     </tbody>
                                 </table>
                                 {!! $estudiantes->links() !!}
@@ -98,7 +96,7 @@
                     </div>
 
                 </div>
-               
+
                 <!-- /.container-fluid -->
 
             </div>
@@ -122,7 +120,7 @@
     function crear(){
         var cedula = $('#cedula').val();
         var url ="{{url('buscarEstudiantePorCedula')}}";
-       
+
           $.ajax({
             type : 'GET',
             url  : url,
@@ -131,7 +129,7 @@
                 console.log(data);
                 if(data == 'null'){
                     Swal.fire('No existe un estudiante con esta cédula');
-                     
+
                     var url = {!! json_encode(url('crearEstudiante')) !!};
                     window.location.href = `${url}/${cedula}`;
                 }else{
@@ -139,7 +137,7 @@
                 }
             }
           });
-        
+
     }
 
 

@@ -9,15 +9,17 @@ use App\Lapso_Estudiante;
 use App\Pais;
 use App\Doctorado;
 use App\Sede;
-use Illuminate\Http\Request;
+use App\Rol;
 
 class EstudiantesController extends Controller
 {
     public function index()
     {
+        $rol = 4;
+        $title = "Estudiante";
     	$estudiantes = Estudiante::latest()->paginate(5);
-
-        return view('pages.estudiantes.index',compact('estudiantes'))
+        $roles = Rol::get()->pluck('name','id');
+        return view('pages.estudiantes.index',compact('estudiantes','roles','rol','title'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
 
     }

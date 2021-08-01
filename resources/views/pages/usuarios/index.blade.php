@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -46,19 +46,19 @@
                                             <th>Nombres y Apellidos</th>
                                             <th>Correo Electronico</th>
                                             <th>Perfil</th>
-                                           
+
                                             <th style="width:16%">Opciones</th>
                                         </tr>
                                     </thead>
-                                   
+
                                     <tbody>
                                         @foreach ($usuarios as $user)
                                         <tr>
-                                            
+
                                             <td>{{ $user->name ?? '' }}</td>
-                                            
+
                                             <td>{{ $user->email ?? '' }}</td>
-                                            
+
                                             <td> @if($user->rol_id =='0') {{ 'Administrativo'  }}
                                             @elseif($user->rol_id =='1')
                                                  {{ 'Operativo'  }}
@@ -68,18 +68,18 @@
                                               </td>
                                             <td>
                                                 <form action="{{ route('user.destroy',$user->id) }}" method="POST">
-                            
+
                                                     <a class="btn btn-uft btn-sm" href="{{ route('user.edit',$user->id) }}"><i class="fas fa-edit"></i></a>
-                                   
+
                                                     @csrf
                                                     @method('DELETE')
-                                      
+
                                                     <button type="submit" class="btn btn-uft btn-sm"><i class="fas fa-trash"></i></button>
                                                 </form>
                                             </td>
                                         </tr>
                                         @endforeach
-                                       
+
                                     </tbody>
                                 </table>
                                 {!! $usuarios->links() !!}
@@ -88,7 +88,7 @@
                     </div>
 
                 </div>
-               
+
                 <!-- /.container-fluid -->
 
             </div>
