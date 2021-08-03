@@ -9,6 +9,7 @@
 			</div>
 			<div class="modal-body">
 				<div class="form-row">
+                    @if($rol != 4)
 					<div class="col-md-6">
 						<div class="form-group m-0 has-feedback" id="campo_group">
 
@@ -17,6 +18,7 @@
 							<span class="campo_span"></span>
 						</div>
 					</div>
+
 					<div class="col-md-6">
 						<div class="form-group m-0" id="modulo_group">
 							{!! Form::label('roles', 'Perfil', ['class'=>'col-form-label s-12']) !!}
@@ -24,6 +26,7 @@
 							<span class="status_span"></span>
 						</div>
 					</div>
+                    @endif
 					<div class="col-md-6">
 						<div class="form-group m-0 has-feedback" id="campo_group">
 
@@ -59,3 +62,6 @@
 		$('#create').modal('hide');
 	}
 </script>
+
+
+

@@ -66,8 +66,9 @@ class UserController extends Controller
     public function store(Request $request)
     {
        $request['password'] = bcrypt($request->password);
-       User::create($request->all());
-   
+       $user = User::create($request->all());
+       $user->assignRole('Estudiante');
+
        $usuarios = User::where('rol_id',$request->rol_id)->latest()->paginate(5);
         $rol = '1';
         $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
@@ -117,7 +118,7 @@ class UserController extends Controller
         $user = User::find($id);
         $user->update($data);
         $user->save();
-        
+
         $usuarios = User::where('rol_id',$request->rol_id)->latest()->paginate(5);
         $rol = '1';
         $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
