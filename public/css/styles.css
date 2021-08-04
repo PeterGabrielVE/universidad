@@ -1,10 +1,10 @@
 .pull-left {
   float: left !important;
-} 
+}
 
 .pull-right {
   float: right !important;
-} 
+}
 .text-uft{
 	color:#7d1414;
 }
@@ -19,4 +19,16 @@
 	background-position:center;
 	background-size:cover;
 	padding-top: 10px;
+}
+
+.sidebar-uft{
+    color: #7d1414 !important;
+}
+
+.text-uft:hover{
+    color: #000000 !important;
+}
+
+.bg-gradient-primary .text-white:hover{
+    color: #000000 !important;
 }
