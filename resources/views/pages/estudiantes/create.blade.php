@@ -27,7 +27,7 @@
                             <div class="row">
                                 <div class="col-lg-12 margin-tb">
                                     <div class="pull-left">
-                                        <h6 class="m-0 font-weight-bold text-uft">Crear Estudiante</h6>
+                                        <h6 class="m-0 font-weight-bold text-uft">Registrar Datos</h6>
                                     </div>
                                     <div class="pull-right">
                                         <a href="{{ url()->previous() }}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
@@ -42,59 +42,38 @@
                                     <div>
                                         {!! Form::open(['route'=>'estudiantes.store','method'=>'POST', 'class'=>'user']) !!}
                                             <div class="form-group row">
-                                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                                <div class="col-sm-4">
+                                                    {!! Form::label('lbl_nombres', 'Nombres:', ['class'=>'col-form-label s-12']) !!}
                                                     <input type="text" class="form-control" id="name" name="first_name"
-                                                        placeholder="Nombres">
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control" id="last_name" name="last_name"
-                                                        placeholder="Apellidos">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                 <div class="col-sm-3 mb-3 mb-sm-0">
-                                                    <input type="text" class="form-control" id="identification_card" name="identification_card"
-                                                    readonly
-                                                    value="{{ $ced ?? null }}"
-                                                        placeholder="Cédula">
+                                                        placeholder="Ingrese sus nombres">
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <input type="email" class="form-control" id="email" name="email"
-                                                    placeholder="Correo Electronico">
+                                                    {!! Form::label('lbl_apellidos', 'Apellidos:', ['class'=>'col-form-label s-12']) !!}
+                                                    <input type="text" class="form-control" id="last_name" name="last_name"
+                                                        placeholder="Ingrese sus apellidos">
                                                 </div>
-                                                <div class="col-sm-2 mb-3 mb-sm-0 p-0">
-                                                {!! Form::select('cod_phone', $prefijo,null, ['class'=>'form-control', 'id'=>'cod_phone']) !!}
-                                                </div>
-                                                <div class="col-sm-3 mb-3 mb-sm-0">
-                                                    <input type="text" class="form-control
-                                                    "
-                                                        id="phone" name="phone" placeholder="Télefono">
+                                                <div class="col-sm-4">
+                                                    {!! Form::label('lbl_cedula', 'Cédula:', ['class'=>'col-form-label s-12']) !!}
+                                                    <input type="text" class="form-control" id="identification_card" name="identification_card"
+                                                    placeholder="Ingrese su cédula">
                                                 </div>
                                             </div>
-
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    {!! Form::label('lbl_Sede', 'Sede:', ['class'=>'col-form-label s-12']) !!}
-                                                   {!! Form::select('sede_id', $sedes, null, ['class'=>'form-control', 'id'=>'sede_id']) !!}
+                                                    {!! Form::label('lbl_pais', 'País donde vive:', ['class'=>'col-form-label s-12']) !!}
+                                                   {!! Form::select('country_id', $paises, null, ['class'=>'form-control', 'id'=>'country_id']) !!}
                                                </div>
-                                               <div class="col-sm-6">
-                                                    {!! Form::label('lbl_Doctorado', 'Doctorado:', ['class'=>'col-form-label s-12']) !!}
-                                                   {!! Form::select('doctorado_id', $doctorados, null, ['class'=>'form-control', 'id'=>'doctorado']) !!}
-                                               </div>
-                                           </div>
-
-                                            <div class="form-group row">
-                                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                                     {!! Form::label('lbl_pais', 'País donde vive:', ['class'=>'col-form-label s-12']) !!}
-                                                    {!! Form::select('country_id', $paises, null, ['class'=>'form-control', 'id'=>'country_id']) !!}
+                                                <div class="col-sm-2 mb-3 mb-sm-0">
+                                                    {!! Form::label('lbl_cedula', 'Télefono:', ['class'=>'col-form-label s-12']) !!}
+                                                    {!! Form::select('cod_phone', $prefijo,null, ['class'=>'form-control', 'id'=>'cod_phone']) !!}
                                                 </div>
-                                                <div class="col-sm-6">
-                                                     {!! Form::label('lbl_equivalencia', 'Equivalencia:', ['class'=>'col-form-label s-12']) !!}
-                                                    {!! Form::select('equivalency', ['0'=>'No','1'=>'Si'], null, ['class'=>'form-control', 'id'=>'equivalency']) !!}
+                                                <div class="col-sm-3 mb-3 mb-sm-0">
+                                                    {!! Form::label('lbl_cedula', ' ', ['class'=>'col-form-label s-12']) !!}
+                                                    <input type="text" class="form-control mt-3" id="phone" name="phone" placeholder="Télefono">
                                                 </div>
                                             </div>
+
                                             <div class="form-group row">
-                                                <div class="col-sm-4"></div>
                                                 <div class="col-sm-4">
                                                     {!! Form::label('lbl_pais', 'Lapso:', ['class'=>'col-form-label s-12']) !!}
                                                     {!! Form::select('lapse_id', $lapso, null, ['class'=>'form-control', 'id'=>'lapse_id']) !!}
@@ -104,6 +83,20 @@
                                                         name="status"
                                                          value="Activo">
                                                 </div>
+                                                <div class="col-sm-4">
+                                                    {!! Form::label('lbl_Sede', 'Sede:', ['class'=>'col-form-label s-12']) !!}
+                                                   {!! Form::select('sede_id', $sedes, null, ['class'=>'form-control', 'id'=>'sede_id']) !!}
+                                               </div>
+                                               <div class="col-sm-4">
+                                                    {!! Form::label('lbl_Doctorado', 'Doctorado:', ['class'=>'col-form-label s-12']) !!}
+                                                   {!! Form::select('doctorado_id', $doctorados, null, ['class'=>'form-control', 'id'=>'doctorado']) !!}
+                                               </div>
+                                           </div>
+
+
+                                            <div class="form-group row">
+                                                <div class="col-sm-4"></div>
+
                                                 <div class="col-sm-4"></div>
                                             </div>
                                             <div class="form-group row">
