@@ -58,8 +58,7 @@ class EstudiantesController extends Controller
                 'email' => 'required',
                 'phone' => 'required',
                 'lapse_id' => 'required',
-                'country_id' => 'required',
-                'equivalency' => 'required',
+                'country_id' => 'required'
             ]);
 
             Estudiante::create($request->all());

@@ -43,7 +43,7 @@
 	width: 100%;
 	padding: 10px 0;
 	font-size: 16px;
-	color: #fff;
+	color: #000000;
 	margin-bottom: 30px;
 	border: none;
 	border-bottom: 1px solid #fff;
@@ -57,7 +57,7 @@
 	letter-spacing: 1px;
 	padding: 10px 0;
 	font-size: 16px;
-	color: #fff;
+	color: #000000;
 	pointer-events: none;
 	transition: .5s;
 }
@@ -72,7 +72,7 @@
 	background: transparent;
 	border: none;
 	outline: none;
-	color: #fff;
+	color: #000000;
 	background: #900C3F;
 	padding: 10px 20px;
 	cursor: pointer;

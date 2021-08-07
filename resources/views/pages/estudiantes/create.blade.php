@@ -103,7 +103,7 @@
                                                 <div class="col-lg-3"></div>
                                                 <div class="col-lg-3">
 
-                                                    <button type="submit" class="btn btn-uft btn-user btn-block" style="width: 400px;"><i class="icon-save mr-2"></i>Registrar</button>
+                                                    <button type="submit" class="btn btn-uft btn-block" style="width: 400px;"><i class="icon-save mr-2"></i>Guardar Datos</button>
                                                 </div>
                                                 <div class="col-lg-3"></div>
                                             </div>
