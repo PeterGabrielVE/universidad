@@ -5,7 +5,7 @@
                 <div class="row text-center">
                     <div class="col-12 mt-4">
                         <div class="sidebar-brand-icon">
-                            <img class="img-profile rounded-circle" src="{{URL::sucure_asset('img/logo.png')}}" alt="Logo" height="70" width="70">
+                            <img class="img-profile rounded-circle" src="{{URL::asset('img/logo.png')}}" alt="Logo" height="70" width="70">
                         </div>
                     </div>
                     <div class="col-12 pt-2">
