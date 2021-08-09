@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Asignatura;
 use App\Estudiante;
 use App\Lapso;
@@ -10,6 +11,9 @@ use App\Pais;
 use App\Doctorado;
 use App\Sede;
 use App\Rol;
+use App\User;
+use Illuminate\Support\Facades\Auth;
+
 
 class EstudiantesController extends Controller
 {
@@ -46,10 +50,10 @@ class EstudiantesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $req)
     {
     	    //dd($request->all());
-            if($request->equivalency == '1'){
+            /*if($request->equivalency == '1'){
 
                 $request->validate([
                 'first_name' => 'required',
@@ -58,19 +62,28 @@ class EstudiantesController extends Controller
                 'email' => 'required',
                 'phone' => 'required',
                 'lapse_id' => 'required',
-                'country_id' => 'required'
+                'country_id' => 'required',
+                'sede_id' => 'required'
             ]);
 
+            $user = User::find(Auth::id());
+            dd($user);
             Estudiante::create($request->all());
             toastr()->success('¡El Estudiante fue creado exitosamente!');
             $estudiante = Estudiante::latest('id')->first();
             $asignaturas = Asignatura::orderBy('id','ASC')->get();
 
             return view('pages.estudiantes.equivalencia',compact('asignaturas','estudiante'));
-        }
+        }*/
+        $user = User::find(Auth::id());
+        $user->name = $req->first_name;
+        $user->last_name = $req->last_name;
+        $user->name = $req->first_name;
+        $user->name = $req->first_name;
+        $user->identification_card = $req->identification_card;
+        $user->save();
 
-
-        $request->validate([
+        /*$req->validate([
             'first_name' => 'required',
             'last_name' => 'required',
             'identification_card' => 'required',
@@ -80,8 +93,9 @@ class EstudiantesController extends Controller
             'country_id' => 'required',
             'equivalency' => 'required',
         ]);
+        */
 
-        Estudiante::create($request->all());
+        //Estudiante::create($request->all());
 
 
 
