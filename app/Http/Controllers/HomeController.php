@@ -30,7 +30,7 @@ class HomeController extends Controller
         $count_admin = User::where('rol_id','0')->select('id')->count();
         $count_dir = User::where('rol_id','2')->select('id')->count();
         $count_ope = User::where('rol_id','1')->select('id')->count();
-
+//dd((Auth::user()->roles));
         if(Auth::user()->roles->first()->id == 4){
             $student = Estudiante::where('user_id',Auth::user()->id)->first();
             if($student){

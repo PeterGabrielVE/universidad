@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Rol; 
 
 class UserController extends Controller
 {
@@ -15,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         $usuarios = User::latest()->paginate(5);
-        $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
+        $roles = Rol::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -24,7 +25,7 @@ class UserController extends Controller
     {
         $usuarios = User::where('rol_id','0')->latest()->paginate(5);
         $rol = '0';
-        $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
+        $roles = Rol::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -33,7 +34,7 @@ class UserController extends Controller
     {
         $usuarios = User::where('rol_id','2')->latest()->paginate(5);
         $rol = '2';
-        $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
+        $roles = Rol::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -42,7 +43,7 @@ class UserController extends Controller
     {
         $usuarios = User::where('rol_id','1')->latest()->paginate(5);
         $rol = '1';
-        $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
+        $roles = Rol::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -65,13 +66,31 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->all());
        $request['password'] = bcrypt($request->password);
-       $user = User::create($request->all());
-       $user->assignRole('Estudiante');
-
+       $user = User::create($request->all());  
+       switch ($request->rol_id) {
+        case 1:
+            $user->assignRole('Director');
+            break;
+        case 2:
+            $user->assignRole('Coordinador');
+            break;
+        case 3:
+            $user->assignRole('Asistente');
+            break;
+        case 4:
+            $user->assignRole('Estudiante');
+            break;
+        case 5:
+            $user->assignRole('Administrador');
+             break;
+    }
+ 
+                
        $usuarios = User::where('rol_id',$request->rol_id)->latest()->paginate(5);
         $rol = '1';
-        $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
+        $roles = Rol::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -97,7 +116,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
+        $roles = Rol::get()->pluck('name','id');
         return view('pages.usuarios.edit',compact('user','roles'));
     }
 
@@ -121,7 +140,7 @@ class UserController extends Controller
 
         $usuarios = User::where('rol_id',$request->rol_id)->latest()->paginate(5);
         $rol = '1';
-        $roles = ['0'=>'Administrativo','1'=>'Operativo','2'=>'Directivo'];
+        $roles = Rol::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
