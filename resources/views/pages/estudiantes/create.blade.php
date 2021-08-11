@@ -81,7 +81,7 @@
                                                     <input type="hidden" class="form-control form-control-user"
                                                         id="status"
                                                         name="status"
-                                                         value="Activo">
+                                                         value="1">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     {!! Form::label('lbl_Sede', 'Sede:', ['class'=>'col-form-label s-12']) !!}

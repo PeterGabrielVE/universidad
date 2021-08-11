@@ -13,6 +13,7 @@ use App\Sede;
 use App\Rol;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 
 class EstudiantesController extends Controller
@@ -78,26 +79,17 @@ class EstudiantesController extends Controller
         $user = User::find(Auth::id());
         $user->name = $req->first_name;
         $user->last_name = $req->last_name;
-        $user->name = $req->first_name;
-        $user->name = $req->first_name;
+        $user->sede_id = $req->sede_id;
+        $user->doctorado_id = $req->doctorado_id;
         $user->identification_card = $req->identification_card;
         $user->save();
 
-        /*$req->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'identification_card' => 'required',
-            'email' => 'required',
-            'phone' => 'required',
-            'lapse_id' => 'required',
-            'country_id' => 'required',
-            'equivalency' => 'required',
-        ]);
-        */
-
-        //Estudiante::create($request->all());
-
-
+        $student = new Estudiante();
+        $student->user_id = Auth::id();
+        $student->status = $req->status;
+        $student->created_at = Carbon::now();
+        $student->updated_at =Carbon::now();
+        $student->save();
 
         return redirect()->route('estudiantes.index')
                         ->with('success','Estudiante guardado exitosamente.');

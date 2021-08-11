@@ -32,7 +32,13 @@ class HomeController extends Controller
         $count_ope = User::where('rol_id','1')->select('id')->count();
 
         if(Auth::user()->roles->first()->id == 4){
-            return redirect()->route('estudiantes.create');
+            $student = Estudiante::where('user_id',Auth::user()->id)->first();
+            if($student){
+                return redirect()->route('estudiantes.edit',$student->id);
+            }else{
+                return redirect()->route('estudiantes.create');
+            }
+
         }else{
             return view('home', compact('count_estudiante','count_admin','count_ope','count_dir'));
         }
