@@ -311,4 +311,16 @@ class EstudiantesController extends Controller
             return back();
         }
     }
+
+    public function reports()
+    {
+        $estudiante = Estudiante::all();
+        $lapso = Lapso::latest('id')->first();
+        $paises = Pais::all();
+        $prefijo = Pais::get()->pluck('Prefijo','id');
+        $user = User::all();
+        $sedes = Sede::all();
+        $doctorados = Doctorado::get()->pluck('name','id');
+        return view('pages.estudiantes.report',compact('estudiante','lapso','paises','prefijo','user','doctorados','sedes'));
+    }
 }

@@ -38,4 +38,30 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function doctorado()
+    {
+        return $this->belongsTo('App\Doctorado', 'doctorado_id');
+    }
+
+    public function paises()
+    {
+        return $this->belongsTo('App\Pais', 'country_id');
+    }
+
+    public function lapsos()
+    {
+        return $this->belongsTo('App\Lapso', 'lapse_id');
+    }
+
+    public function pais()
+    {
+        return $this->belongsTo('App\Pais', 'country_id');
+    }
+
+    public function prefijo()
+    {
+        return $this->belongsTo('App\Pais', 'cod_phone');
+    }
+
 }

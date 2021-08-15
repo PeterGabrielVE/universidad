@@ -60,7 +60,18 @@
                 </div>
             </li>
             @endif
-            <hr class="sidebar-divider my-0">
+             <!-- Divider -->
+             <hr class="sidebar-divider my-0">
+
+             @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 5)
+             <li class="nav-item">
+                 <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                     <i class="fas fa-fw fa-file"></i>
+                     <span>Reportes</span>
+                 </a>
+             </li>
+             @endif
+             <hr class="sidebar-divider">
             <!-- Nav Item - Utilities Collapse Menu -->
             @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 5)
             <li class="nav-item">
@@ -72,19 +83,11 @@
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-uft  py-2 collapse-inner rounded">
-
-                        <a class="collapse-item" href="{{ route('pensum') }}">Pensum</a>
                         <a class="collapse-item" href="{{ route('lapso.index') }}">Lapso</a>
                         <a class="collapse-item" href="{{ route('inscripcion') }}">Semestre</a>
-
                     </div>
                 </div>
             </li>
-            @endif
-
-            <!-- Divider -->
             <hr class="sidebar-divider">
-
-
-
+            @endif
         </ul>

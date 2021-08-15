@@ -50,7 +50,7 @@
                                             <th>Cedula</th>
                                             <th>Telefono</th>
                                             <th>Correo Electronico</th>
-                                            <th>Equivalencia</th>
+                                            <th>Doctorado</th>
                                             <th>País</th>
                                             <th style="width:25%">Lapso</th>
                                             <th style="width:16%">Opciones</th>
@@ -61,19 +61,13 @@
                                         @foreach ($estudiantes as $estudiante)
                                         <tr>
 
-                                            <td>{{ $estudiante->first_name ?? '' }} {{ $estudiante->last_name ?? '' }}</td>
-                                            <td>{{ $estudiante->identification_card ?? '' }}</td>
-                                            <td>{{ $estudiante->prefijo->Prefijo ?? '' }}-{{ $estudiante->phone ?? '' }}</td>
-                                            <td>{{ $estudiante->email ?? '' }}</td>
-                                            <td>
-                                            @if ($estudiante->equivalency == '1')
-                                              Si
-                                            @else
-                                              No
-                                            @endif
-                                        </td>
-                                            <td>{{ $estudiante->paises->name ?? '' }}</td>
-                                            <td>{{ $estudiante->lapsos->name ?? '' }}</td>
+                                            <td>{{ $estudiante->user->name ?? '' }} {{ $estudiante->user->last_name ?? '' }}</td>
+                                            <td>{{ $estudiante->user->identification_card ?? '' }}</td>
+                                            <td>{{ $estudiante->user->prefijo->Prefijo ?? '' }}-{{ $estudiante->user->phone ?? '' }}</td>
+                                            <td>{{ $estudiante->user->email ?? '' }}</td>
+                                            <td>{{ $estudiante->user->doctorado->name ?? '' }}</td>
+                                            <td>{{ $estudiante->user->paises->name ?? '' }}</td>
+                                            <td>{{ $estudiante->user->lapsos->name ?? '' }}</td>
                                             <td>
                                                 <form action="{{ route('estudiantes.destroy',$estudiante->id) }}" method="POST">
 
