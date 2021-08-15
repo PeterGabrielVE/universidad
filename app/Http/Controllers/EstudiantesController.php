@@ -122,7 +122,9 @@ class EstudiantesController extends Controller
         $lapso = Lapso::latest('id')->first();
         $paises = Pais::get()->pluck('name','id');
         $prefijo = Pais::get()->pluck('Prefijo','id');
-        return view('pages.estudiantes.edit',compact('estudiante','lapso','paises','prefijo'));
+        $user = User::find($estudiante->user_id);
+        $doctorados = Doctorado::get()->pluck('name','id');
+        return view('pages.estudiantes.edit',compact('estudiante','lapso','paises','prefijo','user','doctorados'));
 
     }
 
