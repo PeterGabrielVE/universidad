@@ -15,6 +15,7 @@
     <link rel="stylesheet" href=  {{asset('css/all.min.css')}}>
     <link rel="stylesheet" href=  {{asset('css/sb-admin-2.min.css')}}>
     <link rel="stylesheet" href=  {{asset('css/styles.css')}}>
+    <link rel="stylesheet" href=  {{asset('bootstrap-fileinput/css/fileinput.css')}}>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     </head>

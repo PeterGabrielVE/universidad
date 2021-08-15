@@ -22,7 +22,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
-	
+
 	// users, roles, presmissions
 	Route::resource('user', 'UserController');
 	Route::resource('rol', 'RolController');
@@ -48,3 +48,5 @@ Route::post('createLapsoEstudianteEquivalencia/{id}', 'InscripcionController@sto
 Route::get('getEstudiante/{id}', 'EstudiantesController@getEstudiante')->name('getEstudiante');
 Route::get('buscarEstudiantePorCedula', 'EstudiantesController@buscarEstudiantePorCedula')->name('buscarEstudiantePorCedula');
 Route::get('crearEstudiante/{cedula}', 'EstudiantesController@createEstudiante')->name('estudiante.crear');
+Route::get('documentEstudiante/{id}', 'EstudiantesController@document')->name('estudiante.document');
+Route::post('documentStore/{id}', 'EstudiantesController@documentStore')->name('estudiante.documentStore');

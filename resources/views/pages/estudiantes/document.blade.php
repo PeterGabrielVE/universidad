@@ -29,7 +29,7 @@
                             <div class="row">
                                 <div class="col-lg-12 margin-tb">
                                     <div class="pull-left">
-                                        <h6 class="m-0 font-weight-bold text-uft">Editar Estudiante</h6>
+                                        <h6 class="m-0 font-weight-bold text-uft">Documentos Estudiante</h6>
                                     </div>
                                     <div class="pull-right">
                                         <a href="{{route('estudiantes.index')}}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
@@ -40,65 +40,32 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
+                                <div class="col-12 mb-4">
+                                    <div class="pull-left">
+                                        <h6 class="m-0 font-weight-bold text-uft">Publicación 1</h6>
+                                    </div>
+                                </div>
                                  <div class="col-lg-12">
                                     <div>
-                                        {!! Form::open(['route'=>["estudiantes.update",$estudiante->id],'method'=>'PUT', 'class'=>'user']) !!}
+                                        {!! Form::open(['route'=>["estudiante.documentStore",$estudiante->id],'method'=>'POST', 'class'=>'user','files'=>true,'enctype'=>'multipart/form-data']) !!}
                                             <div class="form-group row">
-                                                <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    {!! Form::label('lbl_nombres', 'Nombres:', ['class'=>'col-form-label s-12']) !!}
-                                                    {!! Form::text('first_name', $user->name ?? null, ['class'=>'form-control form-control-user', 'id'=>'first_name','placeholder'=>'Nombres']) !!}
-
+                                                <div class="col-md-3 offset-md-1">
+                                                    <div class="form-group">
+                                                        {!! Form::label('lbl_nombres', 'Extenso', ['class'=>'col-form-label s-12']) !!}
+                                                        <input id="file" class="file" name="post1_extenso" type="file" size="15" required>
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-6">
-                                                     {!! Form::text('last_name', $user->last_name ?? null, ['class'=>'form-control form-control-user', 'id'=>'last_name','placeholder'=>'Apellidos']) !!}
-
+                                                <div class="col-md-3 offset-md-1">
+                                                    <div class="form-group">
+                                                        {!! Form::label('lbl_nombres', 'Carta de Aceptación', ['class'=>'col-form-label s-12']) !!}
+                                                        <input id="file2" class="file" name="post1_carta" type="file" size="15" required>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    {!! Form::number('identification_card', $user->identification_card ?? null, ['class'=>'form-control form-control-user', 'id'=>'identification_card','placeholder'=>'Cedula']) !!}
-
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    {!! Form::email('email', $user->email ?? null, ['class'=>'form-control form-control-user', 'id'=>'email','placeholder'=>'Correo Electronico']) !!}
-
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="col-sm-2 mb-3 mb-sm-0 p-0">
-                                                {!! Form::select('cod_phone', $prefijo,$user->cod_phone ?? '', ['class'=>'form-control', 'id'=>'cod_phone']) !!}
-                                                </div>
-                                                <div class="col-sm-4 mb-3 mb-sm-0">
-                                                     {!! Form::text('phone', $user->phone ?? null, ['class'=>'form-control ', 'id'=>'phone','placeholder'=>'Télefono']) !!}
-
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control form-control-user"
-                                                        id="lapse_name" placeholder="Lapso de Ingreso" value="{{ $lapso->name }}" readonly="true">
-                                                    <input type="hidden" class="form-control form-control-user"
-                                                        id="lapse_id"
-                                                        name="lapse_id"
-                                                        placeholder="Lapso de Ingreso" value="{{ $lapso->id }}">
-                                                    <input type="hidden" class="form-control form-control-user"
-                                                        id="status"
-                                                        name="status"
-                                                         value="Activo">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    {!! Form::select('country_id', $paises,$user->country_id ?? null, ['class'=>'form-control', 'id'=>'country_id']) !!}
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    {!! Form::label('lbl_Doctorado', 'Doctorado:', ['class'=>'col-form-label s-12']) !!}
-                                                   {!! Form::select('doctorado_id', $doctorados, $user->doctorado_id ?? null, ['class'=>'form-control', 'id'=>'doctorado']) !!}
-                                               </div>
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-lg-3"></div>
                                                 <div class="col-lg-3">
-
-                                                    <button type="submit" class="btn btn-uft btn-block" style="width: 400px;"><i class="icon-save mr-2"></i>Actualizar</button>
+                                                    <button type="submit" class="btn btn-uft btn-block" style="width: 400px;"><i class="icon-save mr-2"></i>Subir</button>
                                                 </div>
                                                 <div class="col-lg-3"></div>
                                             </div>
@@ -132,4 +99,27 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+@endsection
+@section('js')
+<script src={{asset('bootstrap-fileinput/js/fileinput.js')}}></script>
+<script src={{asset('bootstrap-fileinput/js/plugins/piexif.js')}}></script>
+<script src={{asset('bootstrap-fileinput/js/plugins/sortable.js')}}></script>
+<script src={{asset('bootstrap-fileinput/js/locales/es.js')}}></script>
+<script src={{asset('bootstrap-fileinput/themes/gly/theme.js')}}></script>
+<script>
+		var title = 'Users';
+		var colunms = [0,1,2,3,4];
+
+		$(".file").fileinput({
+			showCaption: false,
+			showRemove: false,
+			showUpload: false,
+			showBrowse: false,
+			browseOnZoneClick: true,
+		});
+
+    $(document).ready(function() {
+        $('#account').addClass('active');
+    });
+</script>
 @endsection

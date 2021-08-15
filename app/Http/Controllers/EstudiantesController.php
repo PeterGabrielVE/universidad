@@ -128,6 +128,13 @@ class EstudiantesController extends Controller
 
     }
 
+    public function document($id)
+    {
+        $estudiante = Estudiante::find($id);
+        return view('pages.estudiantes.document',compact('estudiante'));
+
+    }
+
     public function update(Request $request, $id)
     {
         $data = $request->all();
@@ -165,5 +172,15 @@ class EstudiantesController extends Controller
         $doctorados = Doctorado::get()->pluck('name','id');
         $sedes = Sede::get()->pluck('name','id');
         return view('pages.estudiantes.create',compact('lapso','paises','prefijo','ced','doctorados','sedes'));
+    }
+
+    public function documentStore(Request $request, $id)
+    {
+        dd($request->all());
+        $data = $request->all();
+        $estudiante = Estudiante::find($id);
+        $estudiante->update($data);
+        $estudiante->save();
+        return back();
     }
 }
