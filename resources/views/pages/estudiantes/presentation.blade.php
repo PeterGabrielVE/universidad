@@ -47,30 +47,30 @@
                                 </div>
                                  <div class="col-lg-12">
                                     <div>
-                                        {!! Form::open(['route'=>["estudiante.documentStore",$estudiante->id],'method'=>'POST', 'class'=>'user','files'=>true,'enctype'=>'multipart/form-data']) !!}
+                                        {!! Form::open(['route'=>["estudiante.presentationStore",$estudiante->id],'method'=>'POST', 'class'=>'user','files'=>true,'enctype'=>'multipart/form-data']) !!}
                                             <div class="form-group row">
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         {!! Form::label('lbl_nombres', 'Extenso', ['class'=>'col-form-label s-12']) !!}
-                                                        <input id="file" class="file" name="post1_extenso" type="file" size="15" required>
+                                                        <input id="file1" class="file" name="extenso" type="file" size="15" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         {!! Form::label('lbl_nombres', 'Carta de Aceptación', ['class'=>'col-form-label s-12']) !!}
-                                                        <input id="file2" class="file" name="post1_carta" type="file" size="15" required>
+                                                        <input id="file2" class="file" name="carta_aceptacion" type="file" size="15" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         {!! Form::label('lbl_nombres', 'Extenso', ['class'=>'col-form-label s-12']) !!}
-                                                        <input id="file" class="file" name="post1_extenso" type="file" size="15" required>
+                                                        <input id="file3" class="file" name="poster" type="file" size="15" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         {!! Form::label('lbl_nombres', 'Carta de Aceptación', ['class'=>'col-form-label s-12']) !!}
-                                                        <input id="file2" class="file" name="post1_carta" type="file" size="15" required>
+                                                        <input id="file4" class="file" name="certificado" type="file" size="15" required>
                                                     </div>
                                                 </div>
                                             </div>

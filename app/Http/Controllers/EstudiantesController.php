@@ -10,6 +10,7 @@ use App\Lapso_Estudiante;
 use App\Pais;
 use App\Post1;
 use App\Post2;
+use App\Presentation;
 use App\Doctorado;
 use App\Sede;
 use App\Rol;
@@ -28,6 +29,18 @@ class EstudiantesController extends Controller
         $roles = Rol::get()->pluck('name','id');
         return view('pages.estudiantes.index',compact('estudiantes','roles','rol','title'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
+
+    }
+
+    public function show($id)
+    {
+        $estudiante = Estudiante::find($id);
+        $lapso = Lapso::latest('id')->first();
+        $paises = Pais::get()->pluck('name','id');
+        $prefijo = Pais::get()->pluck('Prefijo','id');
+        $user = User::find($estudiante->user_id);
+        $doctorados = Doctorado::get()->pluck('name','id');
+        return view('pages.estudiantes.show',compact('estudiante','lapso','paises','prefijo','user','doctorados'));
 
     }
 
@@ -253,5 +266,49 @@ class EstudiantesController extends Controller
         $estudiante = Estudiante::find($id);
         return view('pages.estudiantes.presentation',compact('estudiante'));
 
+    }
+
+    public function presentationStore(Request $request, $id)
+    {
+        $file1 = $request->extenso;
+        $file2 = $request->carta_aceptacion;
+        $file3 = $request->poster;
+        $file4 = $request->certificado;
+        $date = Carbon::now();
+        $email = Auth::user()->email;
+
+        if($file1 !=null && $file2 !=null && $file3 !=null && $file4 !=null){
+
+            $path = public_path().'/document/';
+            $extension = $file1->getClientOriginalExtension();
+            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
+            $file1->move($path, $fileName);
+
+            $extension2 = $file2->getClientOriginalExtension();
+            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
+            $file2->move($path, $fileName2);
+
+            $extension3 = $file3->getClientOriginalExtension();
+            $fileName3 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension3;
+            $file3->move($path, $fileName3);
+
+            $extension4 = $file4->getClientOriginalExtension();
+            $fileName4 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension4;
+            $file4->move($path, $fileName4);
+
+
+            $pre = new Presentation();
+            $pre->student_id = $id;
+            $pre->extenso = $fileName;
+            $pre->carta_aceptacion = $fileName2;
+            $pre->poster = $fileName3;
+            $pre->certificado = $fileName4;
+            $pre->created_at = $date;
+            $pre->updated_at = $date;
+            $pre->save();
+            return redirect()->route('estudiantes.show',$id);
+        }else{
+            return back();
+        }
     }
 }

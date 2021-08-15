@@ -53,3 +53,4 @@ Route::post('documentStore/{id}', 'EstudiantesController@documentStore')->name('
 Route::get('document2Estudiante/{id}', 'EstudiantesController@document2')->name('estudiante.document.post2');
 Route::post('documentStore2/{id}', 'EstudiantesController@documentStorePost2')->name('estudiante.documentStorePost2');
 Route::get('presentations/{id}', 'EstudiantesController@presentation')->name('estudiante.presentation');
+Route::post('presentationStore/{id}', 'EstudiantesController@presentationStore')->name('estudiante.presentationStore');
