@@ -242,9 +242,16 @@ class EstudiantesController extends Controller
             $post1->created_at = $date;
             $post1->updated_at = $date;
             $post1->save();
-            return redirect()->route('estudiante.presentations',$id);
+            return redirect()->route('estudiante.presentation',$id);
         }else{
             return back();
         }
+    }
+
+    public function presentation($id)
+    {
+        $estudiante = Estudiante::find($id);
+        return view('pages.estudiantes.presentation',compact('estudiante'));
+
     }
 }

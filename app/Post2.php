@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Post1 extends Model
+class Post2 extends Model
 {
     protected $table = 'posts_2';
 

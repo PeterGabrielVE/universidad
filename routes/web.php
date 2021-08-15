@@ -51,4 +51,5 @@ Route::get('crearEstudiante/{cedula}', 'EstudiantesController@createEstudiante')
 Route::get('documentEstudiante/{id}', 'EstudiantesController@document')->name('estudiante.document');
 Route::post('documentStore/{id}', 'EstudiantesController@documentStore')->name('estudiante.documentStore');
 Route::get('document2Estudiante/{id}', 'EstudiantesController@document2')->name('estudiante.document.post2');
-Route::post('documentStore2/{id}', 'EstudiantesController@documentStore2')->name('estudiante.documentStore2');
+Route::post('documentStore2/{id}', 'EstudiantesController@documentStorePost2')->name('estudiante.documentStorePost2');
+Route::get('presentations/{id}', 'EstudiantesController@presentation')->name('estudiante.presentation');
