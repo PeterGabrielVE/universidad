@@ -8,6 +8,8 @@ use App\Estudiante;
 use App\Lapso;
 use App\Lapso_Estudiante;
 use App\Pais;
+use App\Post1;
+use App\Post2;
 use App\Doctorado;
 use App\Sede;
 use App\Rol;
@@ -135,6 +137,13 @@ class EstudiantesController extends Controller
 
     }
 
+    public function document2($id)
+    {
+        $estudiante = Estudiante::find($id);
+        return view('pages.estudiantes.document_post_2',compact('estudiante'));
+
+    }
+
     public function update(Request $request, $id)
     {
         $data = $request->all();
@@ -176,11 +185,66 @@ class EstudiantesController extends Controller
 
     public function documentStore(Request $request, $id)
     {
-        dd($request->all());
-        $data = $request->all();
-        $estudiante = Estudiante::find($id);
-        $estudiante->update($data);
-        $estudiante->save();
-        return back();
+        $file1 = $request->post1_extenso;
+        $file2 = $request->post1_carta;
+        $date = Carbon::now();
+        $email = Auth::user()->email;
+
+        if($file1 !=null && $file2 !=null){
+
+            $path = public_path().'/document/';
+            $extension = $file1->getClientOriginalExtension();
+            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
+            $file1->move($path, $fileName);
+
+            $extension2 = $file2->getClientOriginalExtension();
+            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
+            $file2->move($path, $fileName2);
+
+
+            $post1 = new Post1();
+            $post1->student_id = $id;
+            $post1->extenso = $fileName;
+            $post1->carta_aceptacion = $fileName2;
+            $post1->created_at = $date;
+            $post1->updated_at = $date;
+            $post1->save();
+            return redirect()->route('estudiante.document.post2',$id);
+        }else{
+            return back();
+        }
+
+    }
+
+    public function documentStorePost2(Request $request, $id)
+    {
+        $file1 = $request->post2_extenso;
+        $file2 = $request->post2_carta;
+        $date = Carbon::now();
+        $email = Auth::user()->email;
+
+        if($file1 !=null && $file2 !=null){
+
+            $path = public_path().'/document/';
+            $extension = $file1->getClientOriginalExtension();
+            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
+            $file1->move($path, $fileName);
+
+            $extension2 = $file2->getClientOriginalExtension();
+            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
+            $file2->move($path, $fileName2);
+
+
+            $post1 = new Post2();
+            $post1->student_id = $id;
+            $post1->extenso = $fileName;
+            $post1->carta_aceptacion = $fileName2;
+            $post1->created_at = $date;
+            $post1->updated_at = $date;
+            $post1->save();
+            return redirect()->route('estudiante.presentations',$id);
+        }else{
+            return back();
+        }
     }
 }
