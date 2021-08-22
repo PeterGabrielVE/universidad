@@ -92,12 +92,11 @@
                                                    {!! Form::select('doctorado_id', $doctorados, null, ['class'=>'form-control', 'id'=>'doctorado']) !!}
                                                </div>
                                            </div>
-
-
-                                            <div class="form-group row">
-                                                <div class="col-sm-4"></div>
-
-                                                <div class="col-sm-4"></div>
+                                            <div class="form-group row" id="gerencia" style="display:none;">
+                                                @include('pages.estudiantes.documents')
+                                            </div>
+                                            <div class="form-group row" id="ciencia" style="display:none;">
+                                                @include('pages.estudiantes.all_documents')
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-lg-3"></div>
@@ -130,4 +129,31 @@
     </div>
     <!-- End of Page Wrapper -->
 
+@endsection
+@section('js')
+<script src={{asset('bootstrap-fileinput/js/fileinput.js')}}></script>
+<script src={{asset('bootstrap-fileinput/js/plugins/piexif.js')}}></script>
+<script src={{asset('bootstrap-fileinput/js/plugins/sortable.js')}}></script>
+<script src={{asset('bootstrap-fileinput/js/locales/es.js')}}></script>
+<script src={{asset('bootstrap-fileinput/themes/gly/theme.js')}}></script>
+<script>
+    $(".file").fileinput({
+			showCaption: false,
+			showRemove: false,
+			showUpload: false,
+			showBrowse: false,
+			browseOnZoneClick: true,
+	});
+    $("#doctorado").on("click change", function( event ) {
+		let valor = $(this).val();
+
+        if(valor == 1){
+            $('#gerencia').show();
+        }else if(valor == 2){
+            $('#ciencia').show();
+        }else{
+
+        }
+	});
+</script>
 @endsection
