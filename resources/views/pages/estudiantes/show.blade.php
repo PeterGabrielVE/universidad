@@ -50,43 +50,47 @@
 
                                                 </div>
                                                 <div class="col-sm-6">
+                                                     {!! Form::label('lbl_apellidos', 'Apellido:', ['class'=>'col-form-label s-12']) !!}
                                                      {!! Form::text('last_name', $user->last_name ?? null, ['class'=>'form-control form-control-user', 'id'=>'last_name','placeholder'=>'Apellidos']) !!}
-
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                  <div class="col-sm-6 mb-3 mb-sm-0">
+                                                    {!! Form::label('lbl_cedula', 'Cedula:', ['class'=>'col-form-label s-12']) !!}
                                                     {!! Form::number('identification_card', $user->identification_card ?? null, ['class'=>'form-control form-control-user', 'id'=>'identification_card','placeholder'=>'Cedula']) !!}
-
                                                 </div>
                                                 <div class="col-sm-6">
+                                                    {!! Form::label('lbl_email', 'Email:', ['class'=>'col-form-label s-12']) !!}
                                                     {!! Form::email('email', $user->email ?? null, ['class'=>'form-control form-control-user', 'id'=>'email','placeholder'=>'Correo Electronico']) !!}
 
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <div class="col-sm-2 mb-3 mb-sm-0 p-0">
-                                                {!! Form::select('cod_phone', $prefijo,$user->cod_phone ?? '', ['class'=>'form-control', 'id'=>'cod_phone']) !!}
+                                                <div class="col-sm-1 mb-3 ml-4 p-0">
+                                                    {!! Form::label('lbl_codigo', 'Codigo:', ['class'=>'col-form-label s-12']) !!}
+                                                    {!! Form::select('cod_phone', $prefijo,$user->cod_phone ?? '', ['class'=>'form-control', 'id'=>'cod_phone']) !!}
                                                 </div>
                                                 <div class="col-sm-4 mb-3 mb-sm-0">
-                                                     {!! Form::text('phone', $user->phone ?? null, ['class'=>'form-control ', 'id'=>'phone','placeholder'=>'Télefono']) !!}
-
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control form-control-user"
-                                                        id="lapse_name" placeholder="Lapso de Ingreso" value="{{ $lapso->name }}" readonly="true">
-                                                    <input type="hidden" class="form-control form-control-user"
-                                                        id="lapse_id"
-                                                        name="lapse_id"
-                                                        placeholder="Lapso de Ingreso" value="{{ $lapso->id }}">
-                                                    <input type="hidden" class="form-control form-control-user"
-                                                        id="status"
-                                                        name="status"
-                                                         value="Activo">
+                                                    {!! Form::label('lbl_telefono', 'Telefono:', ['class'=>'col-form-label s-12']) !!}
+                                                    {!! Form::text('phone', $user->phone ?? null, ['class'=>'form-control ', 'id'=>'phone','placeholder'=>'Télefono']) !!}
+                                                 </div>
+                                                 <div class="col-sm-6">
+                                                    {!! Form::label('lbl_lapso', 'Lapso:', ['class'=>'col-form-label s-12']) !!}
+                                                      <input type="text" class="form-control form-control-user"
+                                                          id="lapse_name" placeholder="Lapso de Ingreso" value="{{ $lapso->name }}" readonly="true">
+                                                      <input type="hidden" class="form-control form-control-user"
+                                                          id="lapse_id"
+                                                          name="lapse_id"
+                                                          placeholder="Lapso de Ingreso" value="{{ $lapso->id }}">
+                                                      <input type="hidden" class="form-control form-control-user"
+                                                          id="status"
+                                                          name="status"
+                                                           value="Activo">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                 <div class="col-sm-6 mb-3 mb-sm-0">
+                                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                                    {!! Form::label('lbl_pais', 'Pais:', ['class'=>'col-form-label s-12']) !!}
                                                     {!! Form::select('country_id', $paises,$user->country_id ?? null, ['class'=>'form-control', 'id'=>'country_id']) !!}
                                                 </div>
                                                 <div class="col-sm-6">

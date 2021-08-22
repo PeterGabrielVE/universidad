@@ -34,7 +34,7 @@ class HomeController extends Controller
         if(Auth::user()->roles->first()->id == 4){
             $student = Estudiante::where('user_id',Auth::user()->id)->first();
             if($student){
-                return redirect()->route('estudiante.document',$student->id);
+                return redirect()->route('estudiantes.show',$student->id);
             }else{
                 return redirect()->route('estudiantes.create');
             }

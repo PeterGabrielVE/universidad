@@ -68,7 +68,7 @@ class EstudiantesController extends Controller
      */
     public function store(Request $req)
     {
-    	//dd($request->all());
+    	//dd($req->all());
         $user = User::find(Auth::id());
         $user->name = $req->first_name;
         $user->last_name = $req->last_name;
@@ -84,7 +84,25 @@ class EstudiantesController extends Controller
         $student->updated_at =Carbon::now();
         $student->save();
 
-        return redirect()->route('estudiantes.index')
+        $stud = Estudiante::latest('id')->first();
+
+        if($req->doctorado_id == 1){
+            $this->documents_store($req->d_post1_extenso,$req->d_post1_carta,$stud->id);
+        }else{
+            $file1 = $req->c_post1_extenso;
+            $file2 = $req->c_post1_carta;
+            $file3 = $req->c_post2_extenso;
+            $file4 = $req->c_post2_carta;
+
+            $file5 = $req->c_extenso;
+            $file6 = $req->c_carta_aceptacion;
+            $file7 = $req->c_poster;
+            $file8 = $req->c_certificado;
+            $this->documents_store_ciencia($file1,$file2,$file3,$file4,$file5,$file6,$file7,$file8,$stud->id);
+        }
+
+
+        return redirect()->route('estudiantes.show',$stud->id)
                         ->with('success','Estudiante guardado exitosamente.');
     }
 
@@ -300,5 +318,110 @@ class EstudiantesController extends Controller
         $sedes = Sede::all();
         $doctorados = Doctorado::get()->pluck('name','id');
         return view('pages.estudiantes.report',compact('estudiante','lapso','paises','prefijo','user','doctorados','sedes'));
+    }
+
+    public function documents_store($file1,$file2, $id)
+    {
+        $date = Carbon::now();
+        $email = Auth::user()->email;
+
+        if($file1 !=null && $file2 !=null){
+
+            $path = public_path().'/document/';
+            $extension = $file1->getClientOriginalExtension();
+            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
+            $file1->move($path, $fileName);
+
+            $extension2 = $file2->getClientOriginalExtension();
+            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
+            $file2->move($path, $fileName2);
+
+
+            $post1 = new Post1();
+            $post1->student_id = $id;
+            $post1->extenso = $fileName;
+            $post1->carta_aceptacion = $fileName2;
+            $post1->created_at = $date;
+            $post1->updated_at = $date;
+            $post1->save();
+        }else{
+            return back();
+        }
+
+    }
+
+    public function documents_store_ciencia($file1,$file2,$file3,$file4,$file5,$file6,$file7,$file8, $id)
+    {
+        $date = Carbon::now();
+        $email = Auth::user()->email;
+
+        if($file1 !=null && $file2 !=null && $file3 !=null && $file4 !=null
+        && $file5 !=null && $file6 !=null && $file7 !=null && $file8 !=null){
+
+            $path = public_path().'/document/';
+            $extension = $file1->getClientOriginalExtension();
+            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
+            $file1->move($path, $fileName);
+
+            $extension2 = $file2->getClientOriginalExtension();
+            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
+            $file2->move($path, $fileName2);
+
+            $post1 = new Post1();
+            $post1->student_id = $id;
+            $post1->extenso = $fileName;
+            $post1->carta_aceptacion = $fileName2;
+            $post1->created_at = $date;
+            $post1->updated_at = $date;
+            $post1->save();
+
+            $path = public_path().'/document/';
+            $extension3 = $file3->getClientOriginalExtension();
+            $fileName3 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension3;
+            $file3->move($path, $fileName3);
+
+            $extension4 = $file4->getClientOriginalExtension();
+            $fileName4 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension4;
+            $file4->move($path, $fileName4);
+
+
+            $post1 = new Post2();
+            $post1->student_id = $id;
+            $post1->extenso = $fileName3;
+            $post1->carta_aceptacion = $fileName4;
+            $post1->created_at = $date;
+            $post1->updated_at = $date;
+            $post1->save();
+
+            $path = public_path().'/document/';
+            $extension5 = $file5->getClientOriginalExtension();
+            $fileName5 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension5;
+            $file5->move($path, $fileName5);
+
+            $extension6 = $file6->getClientOriginalExtension();
+            $fileName6 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension6;
+            $file6->move($path, $fileName6);
+
+            $extension7 = $file7->getClientOriginalExtension();
+            $fileName7 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension7;
+            $file7->move($path, $fileName7);
+
+            $extension8 = $file8->getClientOriginalExtension();
+            $fileName8 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension8;
+            $file8->move($path, $fileName8);
+
+            $pre = new Presentation();
+            $pre->student_id = $id;
+            $pre->extenso = $fileName5;
+            $pre->carta_aceptacion = $fileName6;
+            $pre->poster = $fileName7;
+            $pre->certificado = $fileName8;
+            $pre->created_at = $date;
+            $pre->updated_at = $date;
+            $pre->save();
+
+        }else{
+            return back();
+        }
     }
 }

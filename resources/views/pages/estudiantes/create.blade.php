@@ -40,7 +40,7 @@
                             <div class="row">
                                  <div class="col-lg-12">
                                     <div>
-                                        {!! Form::open(['route'=>'estudiantes.store','method'=>'POST', 'class'=>'user']) !!}
+                                        {!! Form::open(['route'=>'estudiantes.store','method'=>'POST', 'class'=>'user','files'=>true,'enctype'=>'multipart/form-data']) !!}
                                             <div class="form-group row">
                                                 <div class="col-sm-4">
                                                     {!! Form::label('lbl_nombres', 'Nombres:', ['class'=>'col-form-label s-12']) !!}
@@ -150,12 +150,20 @@
         if(valor == 1){
             $('#gerencia').show();
             $('#ciencia').hide();
+
+            $('.gerencia_required').prop('required',true);
+            $('.ciencia_required').prop('required',false);
         }else if(valor == 2){
             $('#ciencia').show();
             $('#gerencia').hide();
+
+            $('.gerencia_required').prop('required',false);
+            $('.ciencia_required').prop('required',true);
         }else{
             $('#ciencia').hide();
             $('#gerencia').hide();
+            $('.gerencia_required').prop('required',false);
+            $('.ciencia_required').prop('required',false);
         }
 	});
 </script>
