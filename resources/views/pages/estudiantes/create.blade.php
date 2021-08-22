@@ -92,10 +92,10 @@
                                                    {!! Form::select('doctorado_id', $doctorados, null, ['class'=>'form-control', 'id'=>'doctorado']) !!}
                                                </div>
                                            </div>
-                                            <div class="form-group row" id="gerencia" style="display:none;">
+                                            <div class="form-group row m-2" id="gerencia" style="display:none;">
                                                 @include('pages.estudiantes.documents')
                                             </div>
-                                            <div class="form-group row" id="ciencia" style="display:none;">
+                                            <div class="form-group row m-2" id="ciencia" style="display:none;">
                                                 @include('pages.estudiantes.all_documents')
                                             </div>
                                             <div class="form-group row">
@@ -149,10 +149,13 @@
 
         if(valor == 1){
             $('#gerencia').show();
+            $('#ciencia').hide();
         }else if(valor == 2){
             $('#ciencia').show();
+            $('#gerencia').hide();
         }else{
-
+            $('#ciencia').hide();
+            $('#gerencia').hide();
         }
 	});
 </script>
