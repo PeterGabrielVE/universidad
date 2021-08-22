@@ -50,7 +50,7 @@
 
                                                 </div>
                                                 <div class="col-sm-6">
-                                                     {!! Form::label('lbl_apellidos', 'Apellido:', ['class'=>'col-form-label s-12']) !!} 
+                                                     {!! Form::label('lbl_apellidos', 'Apellido:', ['class'=>'col-form-label s-12']) !!}
                                                      {!! Form::text('last_name', $user->last_name ?? null, ['class'=>'form-control form-control-user', 'id'=>'last_name','placeholder'=>'Apellidos']) !!}
 
                                                 </div>
@@ -69,16 +69,16 @@
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-sm-2 mb-3 mb-sm-0 p-0">
-                                                {!! Form::label('lbl_codigo', 'Codigo:', ['class'=>'col-form-label s-12']) !!}  
+                                                {!! Form::label('lbl_codigo', 'Codigo:', ['class'=>'col-form-label s-12']) !!}
                                                 {!! Form::select('cod_phone', $prefijo,$user->cod_phone ?? '', ['class'=>'form-control', 'id'=>'cod_phone']) !!}
                                                 </div>
                                                 <div class="col-sm-4 mb-3 mb-sm-0">
-                                                     {!! Form::label('lbl_telefono', 'Telefono:', ['class'=>'col-form-label s-12']) !!} 
+                                                     {!! Form::label('lbl_telefono', 'Telefono:', ['class'=>'col-form-label s-12']) !!}
                                                      {!! Form::text('phone', $user->phone ?? null, ['class'=>'form-control ', 'id'=>'phone','placeholder'=>'Télefono']) !!}
 
                                                 </div>
                                                 <div class="col-sm-6">
-                                                  {!! Form::label('lbl_lapso', 'Lapso:', ['class'=>'col-form-label s-12']) !!}  
+                                                  {!! Form::label('lbl_lapso', 'Lapso:', ['class'=>'col-form-label s-12']) !!}
                                                     <input type="text" class="form-control form-control-user"
                                                         id="lapse_name" placeholder="Lapso de Ingreso" value="{{ $lapso->name }}" readonly="true">
                                                     <input type="hidden" class="form-control form-control-user"
@@ -135,8 +135,4 @@
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
 @endsection

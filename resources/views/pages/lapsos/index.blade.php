@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -69,21 +69,21 @@
                                             <td>
                                                 @if($lapso->status=='1')
                                                 <form action="{{ route('lapso.destroy',$lapso->id) }}" method="POST">
-                                   
-                                                  
-                                    
+
+
+
                                                     <a class="btn btn-uft" onclick="editLapso({{ $lapso->id }})"><i class="fas fa-edit"></i></a>
-                                   
+
                                                     @csrf
                                                     @method('DELETE')
-                                      
+
                                                     <button type="submit" class="btn btn-uft"><i class="fas fa-trash"></i></button>
                                                 </form>
                                                 @endif
                                             </td>
                                         </tr>
                                         @endforeach
-                                       
+
                                     </tbody>
                                 </table>
                                 {!! $lapsos->links() !!}
@@ -92,15 +92,11 @@
                     </div>
 
                 </div>
-               
+
                 <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
-
-            <!-- Footer -->
-            @include('layouts.footer')
-            <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
@@ -108,16 +104,12 @@
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
 @endsection
 @section('js')
 <script>
  function editLapso(id){
     $("#edit").modal("show");
-        
+
         var url ="{{url('editLapso')}}/"+id;
           $.ajax({
             type : 'get',
@@ -129,7 +121,7 @@
               $('#edit_end_lapse').val(data.end_lapse);
               $('#_id').val(data.id);
               $('#edit_status').val(data.status);
-              
+
             }
           });
   }

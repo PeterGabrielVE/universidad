@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
                         </div>
                         <div class="card-body">
                              <div class="table-responsive">
@@ -46,27 +46,27 @@
                                   <th>Codigo</th>
                                   <th>Nombre</th>
                                   <th>UC</th>
-                                  <th>Semestre</th>                           
+                                  <th>Semestre</th>
                                   <th style="width:16%">Seleccionar</th>
                               </tr>
                             </thead>
-                                                     
+
                             <tbody>
                                   @foreach ($asignaturas as $asig)
                                   <tr>
                                       <td>{{ $asig->cod ?? '' }}</td>
                                       <td>{{ $asig->name ?? '' }}</td>
                                       <td>{{ $asig->uc ?? '' }}</td>
-                                      <td>{{ $asig->semester_id ?? '' }}</td>                       
+                                      <td>{{ $asig->semester_id ?? '' }}</td>
                                       <td class="text-center">
                                         <input type="checkbox" name="asignatura_check_box_id" asignatura-checkbox="{{$asig->id }}">
-                                              
-                                       </td> 
+
+                                       </td>
                                       </tr
                                       @endforeach
                                    </tbody>
                               </table>
-                                                  
+
                             </div>
                             <div class="text-center"> <a class="btn btn-uft" onclick="inscribir()">Inscribir</a></div>
                         </div>
@@ -80,18 +80,9 @@
 
             </div>
             <!-- End of Main Content -->
-
-            <!-- Footer -->
-            @include('layouts.footer')
-            <!-- End of Footer -->
-
         </div>
         <!-- End of Content Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
     </div>
     <!-- End of Page Wrapper -->
 
@@ -99,7 +90,7 @@
       function inscribir() {
         var all_asign_array = [];
             $("input:checkbox[name=asignatura_check_box_id]").each(function(i, obj){
-               
+
                 if ( ($(this).is(":checked") ) && ($(this).attr("asignatura-checkbox") !== 'unknown' ) ) {
                     all_asign_array.push($(this).attr("asignatura-checkbox"));
                 }
@@ -122,7 +113,7 @@
               },
             success: function(data) {
             window.location.href = `${url}`
-            
+
             }
           });
       }

@@ -67,7 +67,7 @@
                                           <p><label for="pensamiento_id">Telefono:</label>
                                           <b>{{ $estudiante->phone  ?? ''}}</b></p>
                                           </div>
-                                                               
+
                                         </div>
             <div class="form-group row">
               <div class="col-sm-4 mb-3 mb-sm-0">
@@ -92,9 +92,9 @@
              <b>{{ $estudiante->status ?? ''}}</b>
            </p>
          </div>
-                               
+
         </div>
-                                                        
+
       </div>
     </div>
               </div>
@@ -102,7 +102,7 @@
           </div>
           <div id="menu1" class="tab-pane fade">
             <h3>Carga Academica</h3>
-           
+
             @if($lapso->status =='1')
             <div class="pull-right">
               <a href="{{ route('createInscripcion',$estudiante->id) }}" class="btn btn-uft"><i class="fas fa-plus pr-2"></i>Inscribir</a>
@@ -116,27 +116,27 @@
                                   <th>Materia</th>
                                   <th>Nota</th>
                                   <th>Estatus</th>
-                                                              
+
                                   <th style="width:16%">Actualizar</th>
                               </tr>
                             </thead>
-                                                     
+
                             <tbody>
                                   @foreach ($carga as $c)
                                   <tr>
                                       <td>{{ $c->asignatura->name ?? '' }}</td>
                                       <td>{{ $c->note ?? '' }}</td>
                                       <td>{{ $c->status ?? '' }}</td>
-                                                             
+
                                       <td class="text-center">
                                         <a class="btn btn-uft btn-sm" onclick="editarCarga({{ $c->id }})"><i class="fas fa-edit"></i></a>
-                                                    
+
                                        </td>
                                       </tr
                                       @endforeach
                                    </tbody>
                               </table>
-                                                  
+
                             </div>
                           </div>
                       </div>
@@ -150,29 +150,29 @@
                                   <th>Materia</th>
                                   <th>Nota</th>
                                   <th>Estatus</th>
-                                   
+
                               </tr>
                             </thead>
-                                                     
+
                             <tbody>
                                   @foreach ($historia as $c)
                                   <tr>
                                       <td>{{ $c->asignatura->name ?? '' }}</td>
                                       <td>{{ $c->note ?? '' }}</td>
                                       <td>{{ $c->status ?? '' }}</td>
-                                                             
-                                      
+
+
                                       </tr
                                       @endforeach
                                    </tbody>
                               </table>
-                                                  
+
                             </div>
-                          </div>               
+                          </div>
                       </div>
                   </div>
-              </div>         
-            @endif    
+              </div>
+            @endif
          </div>
       </div>
 
@@ -189,43 +189,34 @@
 
             </div>
             <!-- End of Main Content -->
-
-            <!-- Footer -->
-            @include('layouts.footer')
-            <!-- End of Footer -->
-
         </div>
         <!-- End of Content Wrapper -->
 
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
 @endsection
 @section('js')
 <script>
- 
+
   function editarCarga(id){
     $("#modal_semestre").modal("show");
-        
+
        var url ="{{url('getLapso')}}/"+id;
           $.ajax({
             type : 'get',
             url  : url,
             data : {'id':id},
             success:function(data){
-             
+
               $('#course').val(data['0'].course_id);
               $('#id').val(data['0'].id);
               $('#note').val(data['0'].note);
               console.log(data);
-              
+
             }
           });
   }
- 
+
 </script>
 @endsection

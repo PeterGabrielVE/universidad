@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -46,7 +46,7 @@
                                          <div class="form-row">
                                         <div class="col-md-6">
                                             <div class="form-group m-0 has-feedback" id="campo_group">
-                                                
+
                                                 {!! Form::label('nombre', 'Nombre', ['class'=>'col-form-label s-12']) !!}
                                                 {!! Form::text('name', $user->name ?? '', ['class'=>'form-control r-0 light s-12', 'id'=>'name', 'onclick'=>'inputClear(this.id)']) !!}
                                                 <span class="campo_span"></span>
@@ -61,7 +61,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group m-0 has-feedback" id="campo_group">
-                                                
+
                                                 {!! Form::label('metaListValue', 'Correo Electronico', ['class'=>'col-form-label s-12']) !!}
                                                 {!! Form::email('email', $user->email ?? '', ['class'=>'form-control r-0 light s-12', 'id'=>'email', 'onclick'=>'inputClear(this.id)']) !!}
                                                 <span class="campo_span"></span>
@@ -69,26 +69,26 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group m-0 has-feedback" id="campo_group">
-                                                
+
                                                 {!! Form::label('Contraseña', 'Contraseña', ['class'=>'col-form-label s-12']) !!}
                                                 {!! Form::text('password', null, ['class'=>'form-control r-0 light s-12', 'id'=>'password', 'onclick'=>'inputClear(this.id)']) !!}
                                                 <span class="campo_span"></span>
                                             </div>
                                         </div>
-                                        
-                                        
-                                    </div>   
+
+
+                                    </div>
                                     <div class="form-group row mt-4">
                                                 <div class="col-lg-3"></div>
                                                 <div class="col-lg-3">
-                                                   
+
                                                     <button type="submit" class="btn btn-uft btn-user btn-block" style="width: 400px;"><i class="icon-save mr-2"></i>Actualizar</button>
                                                 </div>
                                                 <div class="col-lg-3"></div>
                                             </div>
-                                                 
+
                                        {!! Form::close() !!}
-                                       
+
                                     </div>
                                 </div>
                             </div>
@@ -96,24 +96,15 @@
                     </div>
 
                 </div>
-               
+
                 <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
-
-            <!-- Footer -->
-            @include('layouts.footer')
-            <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
 
     </div>
     <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
 @endsection
