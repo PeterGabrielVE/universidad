@@ -51,11 +51,11 @@ class EstudiantesController extends Controller
      */
     public function create()
     {
-        $lapso = Lapso::get()->pluck('name','id');
-        $paises = Pais::get()->pluck('name','id');
-        $prefijo = Pais::get()->pluck('Prefijo','id');
-        $doctorados = Doctorado::get()->pluck('name','id');
-        $sedes = Sede::get()->pluck('name','id');
+        $lapso = Lapso::get()->pluck('name','id')->prepend('Seleccione una opción','');
+        $paises = Pais::get()->pluck('name','id')->prepend('Seleccione una opción','');
+        $prefijo = Pais::get()->pluck('Prefijo','id')->prepend('Seleccione una opción','');
+        $doctorados = Doctorado::get()->pluck('name','id')->prepend('Seleccione una opción','');
+        $sedes = Sede::get()->pluck('name','id')->prepend('Seleccione una opción','');
         return view('pages.estudiantes.create',compact('lapso','paises','prefijo','sedes','doctorados'));
     }
 
@@ -68,29 +68,7 @@ class EstudiantesController extends Controller
      */
     public function store(Request $req)
     {
-    	    //dd($request->all());
-            /*if($request->equivalency == '1'){
-
-                $request->validate([
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'identification_card' => 'required',
-                'email' => 'required',
-                'phone' => 'required',
-                'lapse_id' => 'required',
-                'country_id' => 'required',
-                'sede_id' => 'required'
-            ]);
-
-            $user = User::find(Auth::id());
-            dd($user);
-            Estudiante::create($request->all());
-            toastr()->success('¡El Estudiante fue creado exitosamente!');
-            $estudiante = Estudiante::latest('id')->first();
-            $asignaturas = Asignatura::orderBy('id','ASC')->get();
-
-            return view('pages.estudiantes.equivalencia',compact('asignaturas','estudiante'));
-        }*/
+    	//dd($request->all());
         $user = User::find(Auth::id());
         $user->name = $req->first_name;
         $user->last_name = $req->last_name;

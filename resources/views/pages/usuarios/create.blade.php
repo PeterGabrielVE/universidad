@@ -9,7 +9,9 @@
 			</div>
 			<div class="modal-body">
 				<div class="form-row">
-                    @if($rol != 4)
+                    @if($rol == 4)
+                    {!! Form::hidden('rol_id', '4', ['class'=>'form-control r-0 light s-12', 'id'=>'rol_id', 'onclick'=>'inputClear(this.id)']) !!}
+                    @else
 					<div class="col-md-6">
 						<div class="form-group m-0 has-feedback" id="campo_group">
 

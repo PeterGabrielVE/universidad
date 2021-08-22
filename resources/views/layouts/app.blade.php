@@ -30,6 +30,10 @@
 
             <div class="control-sidebar-bg shadow white fixed"></div>
         </div>
+        <!-- Footer -->
+        @include('layouts.footer')
+        <!-- End of Footer -->
+
 
     </body>
     <!--

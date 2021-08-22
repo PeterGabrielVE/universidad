@@ -84,10 +84,20 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-uft  py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{{ route('lapso.index') }}">Lapso</a>
-                        <a class="collapse-item" href="{{ route('inscripcion') }}">Semestre</a>
                     </div>
                 </div>
             </li>
             <hr class="sidebar-divider">
             @endif
+
+            @if (Auth::user()->rol_id == 4)
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="#" >
+                    <span>Mi perfil</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            @endif
         </ul>
+
+
