@@ -424,4 +424,26 @@ class EstudiantesController extends Controller
             return back();
         }
     }
+
+    public function setdocument($id)
+    {
+        $estudiante = Estudiante::find($id);
+        $post1 = Post1::where('student_id',$id)->first();
+        $post2 = Post2::where('student_id',$id)->first();
+        $pre = Presentation::where('student_id',$id)->first();
+        return view('pages.estudiantes.set_document',compact('estudiante','post1','post2','pre'));
+
+    }
+
+    public function downloadDocument($file)
+    {
+         $path = public_path().'/document';
+        if($file == ''){
+            Session::flash('message-error','No posee documento');
+            return back();
+        }else{
+            $doc = $path.'/'.$file;
+            return response()->download($doc);
+        }
+    }
 }

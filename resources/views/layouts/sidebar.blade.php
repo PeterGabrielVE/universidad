@@ -59,9 +59,9 @@
                     </div>
                 </div>
             </li>
-            @endif
              <!-- Divider -->
              <hr class="sidebar-divider my-0">
+            @endif
 
              @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 5)
              <li class="nav-item">
@@ -70,8 +70,8 @@
                      <span>Reportes</span>
                  </a>
              </li>
-             @endif
              <hr class="sidebar-divider">
+             @endif
             <!-- Nav Item - Utilities Collapse Menu -->
             @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 5)
             <li class="nav-item">
@@ -92,8 +92,14 @@
 
             @if (Auth::user()->rol_id == 4)
             <li class="nav-item">
-                <a class="nav-link collapsed text-uft" href="#" >
+                <a class="nav-link collapsed text-uft" href="{{ route('estudiantes.show',Auth::user()->estudiante(Auth::user()->id)) }}">
                     <span>Mi perfil</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('estudiantes.document',Auth::user()->estudiante(Auth::user()->id)) }}">
+                    <span>Mis Documentos</span>
                 </a>
             </li>
             <hr class="sidebar-divider">

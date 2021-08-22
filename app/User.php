@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Estudiante;
 
 class User extends Authenticatable
 {
@@ -62,6 +63,12 @@ class User extends Authenticatable
     public function prefijo()
     {
         return $this->belongsTo('App\Pais', 'cod_phone');
+    }
+
+    public function estudiante($id)
+    {
+        $estudiante = Estudiante::where('user_id',$id)->first();
+        return $estudiante->id;
     }
 
 }
