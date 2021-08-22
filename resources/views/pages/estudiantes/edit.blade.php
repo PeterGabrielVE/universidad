@@ -75,7 +75,6 @@
                                                 <div class="col-sm-4 mb-3 mb-sm-0">
                                                      {!! Form::label('lbl_telefono', 'Telefono:', ['class'=>'col-form-label s-12']) !!}
                                                      {!! Form::text('phone', $user->phone ?? null, ['class'=>'form-control ', 'id'=>'phone','placeholder'=>'Télefono']) !!}
-
                                                 </div>
                                                 <div class="col-sm-6">
                                                   {!! Form::label('lbl_lapso', 'Lapso:', ['class'=>'col-form-label s-12']) !!}
