@@ -59,4 +59,5 @@ Route::post('presentationStore/{id}', 'EstudiantesController@presentationStore')
 Route::get('reports', 'EstudiantesController@reports')->name('reports');
 
 Route::get('documento/estudiante/{id}', 'EstudiantesController@setdocument')->name('estudiantes.document');
+Route::get('calificacion/estudiante/{id}', 'EstudiantesController@calificacion')->name('estudiantes.calificacion');
 Route::get('download/document/{file}','EstudiantesController@downloadDocument');

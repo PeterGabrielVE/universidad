@@ -32,7 +32,7 @@
                                         <h6 class="m-0 font-weight-bold text-uft">Editar Estudiante</h6>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="{{route('estudiantes.index')}}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
+                                        <a href="{{ url()->previous() }}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
                                     </div>
                                 </div>
                             </div>

@@ -53,7 +53,7 @@
                                             <th>Doctorado</th>
                                             <th>País</th>
                                             <th style="width:25%">Lapso</th>
-                                            <th style="width:16%">Opciones</th>
+                                            <th style="width:25%">Opciones</th>
                                         </tr>
                                     </thead>
 
@@ -72,7 +72,7 @@
                                                 <form action="{{ route('estudiantes.destroy',$estudiante->id) }}" method="POST">
 
                                                     <a class="btn btn-uft btn-sm" href="{{ route('estudiantes.edit',$estudiante->id) }}"><i class="fas fa-edit"></i></a>
-
+                                                    <a class="btn btn-uft btn-sm" href="{{ route('estudiantes.calificacion',$estudiante->id) }}"><i class="fas fa-file"></i></a>
                                                     @csrf
                                                     @method('DELETE')
 

@@ -435,6 +435,17 @@ class EstudiantesController extends Controller
 
     }
 
+    public function calificacion($id)
+    {
+        $estudiante = Estudiante::find($id);
+        $post1 = Post1::where('student_id',$id)->first();
+        $post2 = Post2::where('student_id',$id)->first();
+        $pre = Presentation::where('student_id',$id)->first();
+        $calificacion = ['0'=>'Seleccione calificación','1'=>'Aprobado','2'=>'No Aprobado'];
+        return view('pages.estudiantes.calificacion',compact('estudiante','post1','post2','pre','calificacion'));
+
+    }
+
     public function downloadDocument($file)
     {
          $path = public_path().'/document';
