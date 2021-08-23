@@ -453,10 +453,19 @@ class EstudiantesController extends Controller
         $post1->extenso_note = $req->post1_extenso_note;
         $post1->carta_aceptacion_note = $req->post1_carta_aceptacion_note;
         $post1->save();
-        //dd($post1);
+
         $post2 = Post2::where('student_id',$id)->first();
+        $post2->extenso_note = $req->post2_extenso_note;
+        $post2->carta_aceptacion_note = $req->post2_carta_aceptacion_note;
+        $post2->save();
+
         $pre = Presentation::where('student_id',$id)->first();
-        $calificacion = ['0'=>'Seleccione calificación','1'=>'Aprobado','2'=>'No Aprobado'];
+        $pre->extenso_note = $req->pre_extenso_note;
+        $pre->carta_aceptacion_note = $req->pre_carta_aceptacion_note;
+        $pre->poster_note = $req->pre_poster_note;
+        $pre->certificado_note = $req->pre_certificado_note;
+        $pre->save();
+
         return back();
 
     }

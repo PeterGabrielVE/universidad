@@ -100,7 +100,7 @@
                                                     @endif
                                                 </td>
                                                 <td>@if(isset($post2->extenso))
-                                                    {!! Form::select('post2_extenso_note', $calificacion,$pos21->extenso_note ?? '', ['class'=>'form-control', 'id'=>'post2_extenso_note']) !!}
+                                                    {!! Form::select('post2_extenso_note', $calificacion,$post2->extenso_note ?? '', ['class'=>'form-control', 'id'=>'post2_extenso_note']) !!}
                                                     @endif
                                                 </td>
                                             </tr>
