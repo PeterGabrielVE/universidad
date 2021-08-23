@@ -45,6 +45,7 @@
                     </div>
                 </div>
             </li>
+            <hr class="sidebar-divider">
             @endif
             @if (Auth::user()->rol_id == 2 || Auth::user()->rol_id == 3)
             <li class="nav-item">

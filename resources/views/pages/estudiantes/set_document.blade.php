@@ -32,7 +32,7 @@
                                         <h6 class="m-0 font-weight-bold text-uft">Documentos Estudiante</h6>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="{{route('estudiantes.index')}}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
+                                        <a href="{{ url()->previous() }}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
                                     </div>
                                 </div>
                             </div>
@@ -42,7 +42,7 @@
                             <div class="row">
                                 <div class="col-12 mb-4">
                                     <div class="pull-left">
-                                        <h6 class="m-0 font-weight-bold text-uft">Publicación 1</h6>
+
                                     </div>
                                 </div>
                                 <div class="table-responsive">
@@ -82,7 +82,7 @@
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post2->extenso.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
                                                     @else
-                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.document',$estudiante->id)}}">
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.document.post2',$estudiante->id)}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
                                                     @endif
                                                 </td>
@@ -90,7 +90,7 @@
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post2->carta_aceptacion.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
                                                     @else
-                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.document',$estudiante->id)}}">
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.document.post2',$estudiante->id)}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
                                                     @endif
                                                 </td>
@@ -156,24 +156,10 @@
 <script src={{asset('bootstrap-fileinput/js/locales/es.js')}}></script>
 <script src={{asset('bootstrap-fileinput/themes/gly/theme.js')}}></script>
 <script>
-		var namefile = $('#pre_extenso').val();
-        var url = '../document/' +namefile;
-
-		$(".file").fileinput({
-			allowedFileExtensions: ['jpg','jpge','png', 'word','pdf'],
-            initialPreview: [url],
-            initialPreviewAsData: true,
-            showCaption: false,
-            showRemove: false,
-            showUpload: false,
-            showCancel: false,
-            showBrowse: false,
-            browseOnZoneClick: true,
-            overwriteInitial: true
-		});
-
-    $(document).ready(function() {
-        $('#account').addClass('active');
-    });
+	$('#dataTable').dataTable({
+        "bPaginate": false, //Ocultar paginación
+        "bFilter": false,
+        "bInfo": false
+    })
 </script>
 @endsection
