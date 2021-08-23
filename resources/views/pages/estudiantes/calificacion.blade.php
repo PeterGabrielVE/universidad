@@ -45,6 +45,8 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
+                                    <form action="{{ route('calificacion.store',$estudiante->id) }}"  method="POST">
+                                        {{ csrf_field() }}
                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
@@ -184,7 +186,14 @@
                                             </tr>
                                         </tbody>
                                     </table>
-
+                                    <div class="row">
+                                        <div class="col-4"></div>
+                                        <div class="col-4 text-center">
+                                            <button class="btn btn-uft btn-block" type="submit" style="width:200px;">Calificar</button>
+                                        </div>
+                                        <div class="col-4"></div>
+                                    </div>
+                                </form>
                                 </div>
                             </div>
                         </div>

@@ -446,6 +446,21 @@ class EstudiantesController extends Controller
 
     }
 
+    public function storeCalificacion(Request $req,$id)
+    {
+        //dd($req->all());
+        $post1 = Post1::where('student_id',$id)->first();
+        $post1->extenso_note = $req->post1_extenso_note;
+        $post1->carta_aceptacion_note = $req->post1_carta_aceptacion_note;
+        $post1->save();
+        //dd($post1);
+        $post2 = Post2::where('student_id',$id)->first();
+        $pre = Presentation::where('student_id',$id)->first();
+        $calificacion = ['0'=>'Seleccione calificación','1'=>'Aprobado','2'=>'No Aprobado'];
+        return back();
+
+    }
+
     public function downloadDocument($file)
     {
          $path = public_path().'/document';
