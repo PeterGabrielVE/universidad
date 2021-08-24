@@ -39,7 +39,7 @@
                         <div class="card-body">
                             <div class="card-header py-3">
                                <div class="form-row">
-                                  <div class="col-12"><h5>{{__('Reporte por sede')}}</h5></div>
+                                  <div class="col-12"><h5>{{__('Reporte por Sede')}}</h5></div>
                                     <div class="card-header py-3">
                                         <div class="btn-toolbar">
                                             <form class="form-inline" id="searchReportForm" method="POST" action="#">
@@ -47,7 +47,7 @@
 
                                                       <div class="form-group mr-2">
                                                           <label for="sede" class="mr-3">Sede</label>
-                                                          <select class="form-control" name="budget_state" data-width="300px" id="sede" data-placeholder="{{__('Buscar Sede')}}..." data-allow-clear="1" required="true">
+                                                          <select class="form-control select" name="sede" data-width="300px" id="sede" data-placeholder="{{__('Buscar Sede')}}..." data-allow-clear="1" required="true">
                                                               <option value="">Seleccione</option>
                                                              @foreach ($sedes as $s)
                                                                  <option value="{{ $s->id }}">{{ $s->name }}</option>
@@ -79,7 +79,7 @@
                                                       {{ csrf_field() }}
                                                       <div class="form-group mr-2">
                                                           <label for="budgetState" class="mr-3">Cédula</label>
-                                                          <select class="form-control" name="budget_state" data-width="300px" id="budgetState" data-placeholder="{{__('Buscar Estudiante')}}..." data-allow-clear="1" required="true">
+                                                          <select class="form-control select" name="cedula" data-width="300px" id="student" data-placeholder="{{__('Buscar Estudiante')}}..." data-allow-clear="1" required="true">
                                                               <option value="">Seleccione</option>
                                                              @foreach ($estudiantes as $ced)
                                                                  <option value="{{ $ced->id }}">{{ $ced->identification_card }}</option>
@@ -88,10 +88,9 @@
                                                       </div>
                                                       <div class="input-group">
                                                           <div class="col-12 dt-buttons btn-group flex-wrap">
-                                                              <a class="btn btn-secondary buttons-csv buttons-html5"onclick="downloadCsvConfigCompromiso()" style="margin: 0px" href="#" id="btn_compromiso_csv"> {{ __('CSV') }}</a>
                                                               <a class="btn btn-secondary buttons-csv buttons-html5"
-                                                              onclick="downloadExcelConfigCompromiso()"
-                                                             href="#" id="btn_compromiso_excel"> {{ __('Excel') }}</a>
+                                                              onclick="downloadStudent()"
+                                                             href="#" id="btn_compromiso_excel"> {{ __('Descargar') }}</a>
 
                                                           </div>
                                                       </div>
@@ -126,4 +125,12 @@
 
     </div>
     <!-- End of Page Wrapper -->
+@endsection
+@section('js')
+<script>
+    $(document).ready(function() {
+    $('.select').select2();
+    });
+
+</script>
 @endsection
