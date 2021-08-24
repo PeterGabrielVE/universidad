@@ -310,14 +310,12 @@ class EstudiantesController extends Controller
 
     public function reports()
     {
-        $estudiante = Estudiante::all();
-        $lapso = Lapso::latest('id')->first();
-        $paises = Pais::all();
-        $prefijo = Pais::get()->pluck('Prefijo','id');
-        $user = User::all();
+        $estudiantes = User::leftjoin('students','users.id','students.user_id')
+                            ->select('students.id','users.identification_card')
+                            ->where('users.doctorado_id',1)
+                            ->get();
         $sedes = Sede::all();
-        $doctorados = Doctorado::get()->pluck('name','id');
-        return view('pages.estudiantes.report',compact('estudiante','lapso','paises','prefijo','user','doctorados','sedes'));
+        return view('pages.estudiantes.report',compact('estudiantes','sedes'));
     }
 
     public function documents_store($file1,$file2, $id)
