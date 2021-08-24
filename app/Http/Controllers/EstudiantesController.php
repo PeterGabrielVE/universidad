@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use \PDF;
 use App\Asignatura;
 use App\Estudiante;
 use App\Lapso;
@@ -15,9 +19,6 @@ use App\Doctorado;
 use App\Sede;
 use App\Rol;
 use App\User;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-
 
 class EstudiantesController extends Controller
 {
@@ -478,5 +479,18 @@ class EstudiantesController extends Controller
             $doc = $path.'/'.$file;
             return response()->download($doc);
         }
+    }
+
+    public function downloadSedePdf($id)
+    {
+        $data =DB::table('sedes')
+            ->leftJoin('users', 'sedes.id', '=', 'users.sede_id')
+            ->leftjoin('students','users.id','students.user_id')
+            ->select('sedes.name')
+            ->orderBy('sedes.created_at', 'DESC')
+            ->get();
+        $pdf = PDF::loadView('pages.reports.sede', compact('data'));
+
+        return $pdf->download('report-sede.pdf');
     }
 }

@@ -58,7 +58,7 @@
                                                           <div class="col-12 dt-buttons btn-group flex-wrap">
                                                               <a class="btn btn-secondary buttons-csv buttons-html5"
                                                               onclick="downloadPdfSede()"
-                                                             href="#" id="btn_compromiso_excel"> {{ __('Descargar') }}</a>
+                                                             href="#"> {{ __('Descargar') }}</a>
                                                           </div>
                                                       </div>
 
@@ -131,6 +131,26 @@
     $(document).ready(function() {
     $('.select').select2();
     });
+
+    function downloadPdfSede(){
+
+
+        let sede = $('#sede').val();
+        var url = {!! json_encode(url('/download/sede')) !!};
+
+        if(sede == ''){
+            Swal.fire({
+                title: 'Error!',
+                text: 'Seleccione una sede',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            })
+        }else{
+            $('#sede').val('');
+            $("#sede").select2('val','');
+            window.location.href = `${url}/${sede}`;
+        }
+   }
 
 </script>
 @endsection

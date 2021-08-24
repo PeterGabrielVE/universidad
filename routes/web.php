@@ -62,3 +62,4 @@ Route::get('documento/estudiante/{id}', 'EstudiantesController@setdocument')->na
 Route::get('calificacion/estudiante/{id}', 'EstudiantesController@calificacion')->name('estudiantes.calificacion');
 Route::post('store/calificacion/{id}', 'EstudiantesController@storeCalificacion')->name('calificacion.store');
 Route::get('download/document/{file}','EstudiantesController@downloadDocument');
+Route::get('download/sede/{id}','EstudiantesController@downloadSedePdf');
