@@ -224,10 +224,10 @@ footer {
       </div>
     </header>
     <main>
-     <div id="thanks">Datos de la Sede</div>
+     <div id="thanks">Datos del Estudiante</div>
       <div id="details" class="clearfix">
         <div id="client">
-          <div class="to">{{__('Ubicación')}}: {{ $sede->name ?? null }}</div>
+          <div class="to">{{__('Ubicación')}}: {{ $user->name ?? null }}</div>
 
         </div>
 
@@ -235,23 +235,15 @@ footer {
       <table border="0" cellspacing="0" cellpadding="0">
         <thead>
           <tr>
-            <th class="qty">Mes</th>
-            <th class="qty">Cantidad</th>
+            <th class="qty">Archivos Enviados</th>
+            <th class="qty"></th>
           </tr>
         </thead>
         <tbody>
-                @foreach($userArr as $u1)
-                    @foreach($userArr2 as $u2)
-                        @foreach($userArr3 as $u3)
-                            @if($u1['month'] === $u2['month'] &&  $u1['month'] === $u3['month'])
-                            <tr>
-                                <td class="qty2">{{ $u1['month'] }}</td>
-                                <td class="qty2">{{ $u1['count'] + $u2['count'] + $u3['count'] }}</td>
-                            </tr>
-                            @endif
-                        @endforeach
-                    @endforeach
-                @endforeach
+                <tr>
+                    <td class="qty2">{{ $total ?? 0 }}</td>
+                    <td class="qty2"></td>
+                </tr>
         </tboody>
       </table>
 

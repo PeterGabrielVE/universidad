@@ -483,14 +483,130 @@ class EstudiantesController extends Controller
 
     public function downloadSedePdf($id)
     {
-        $data =DB::table('sedes')
-            ->leftJoin('users', 'sedes.id', '=', 'users.sede_id')
+            $users = Sede::leftjoin('users', 'sedes.id', '=', 'users.sede_id')
             ->leftjoin('students','users.id','students.user_id')
-            ->select('sedes.name')
-            ->orderBy('sedes.created_at', 'DESC')
-            ->get();
-        $pdf = PDF::loadView('pages.reports.sede', compact('data'));
+            ->leftjoin('posts_1','students.id','posts_1.student_id')
+            ->select('posts_1.id AS id','posts_1.created_at AS created_at')
+            ->where('sedes.id',$id)
+            ->get()
+            ->groupBy(function ($date) {
+                return Carbon::parse($date->created_at)->format('m');
+            });;
+        $usermcount = [];
+        $userArr = [];
 
-        return $pdf->download('report-sede.pdf');
+        foreach ($users as $key => $value) {
+            $usermcount[(int)$key] = count($value) *2;
+        }
+
+        $month = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+        for ($i = 1; $i <= 12; $i++) {
+            if (!empty($usermcount[$i])) {
+                $userArr[$i]['count'] = $usermcount[$i];
+            } else {
+                $userArr[$i]['count'] = 0;
+            }
+            $userArr[$i]['month'] = $month[$i - 1];
+        }
+
+        $posts2 = Sede::leftjoin('users', 'sedes.id', '=', 'users.sede_id')
+        ->leftjoin('students','users.id','students.user_id')
+        ->leftjoin('posts_2','students.id','posts_2.student_id')
+        ->select('posts_2.id AS id','posts_2.created_at AS created_at')
+        ->where('sedes.id',$id)
+        ->get()
+        ->groupBy(function ($date) {
+            return Carbon::parse($date->created_at)->format('m');
+        });
+        //dd($users);
+        $usermcount2 = [];
+        $userArr2 = [];
+
+        foreach ($posts2 as $key => $value) {
+            $usermcount2[(int)$key] = count($value) *2;
+        }
+
+        for ($i = 1; $i <= 12; $i++) {
+            if (!empty($usermcount2[$i])) {
+                $userArr2[$i]['count'] = $usermcount2[$i];
+            } else {
+                $userArr2[$i]['count'] = 0;
+            }
+            $userArr2[$i]['month'] = $month[$i - 1];
+        }
+
+        $pres = Sede::leftjoin('users', 'sedes.id', '=', 'users.sede_id')
+        ->leftjoin('students','users.id','students.user_id')
+        ->leftjoin('presentations','students.id','presentations.student_id')
+        ->select('presentations.id AS id','presentations.created_at AS created_at')
+        ->where('sedes.id',$id)
+        ->get()
+        ->groupBy(function ($date) {
+            return Carbon::parse($date->created_at)->format('m');
+        });
+
+        $usermcount3 = [];
+        $userArr3 = [];
+
+        foreach ($pres as $key => $value) {
+            $usermcount3[(int)$key] = count($value) *4;
+        }
+
+        for ($i = 1; $i <= 12; $i++) {
+            if (!empty($usermcount3[$i])) {
+                $userArr3[$i]['count'] = $usermcount3[$i];
+            } else {
+                $userArr3[$i]['count'] = 0;
+            }
+            $userArr3[$i]['month'] = $month[$i - 1];
+        }
+
+        $sede = DB::table('sedes')->where('sedes.id',$id)->first();
+        $pdf = PDF::loadView('pages.reports.sede', compact('userArr','userArr2','userArr3','sede'));
+
+        return $pdf->stream('report-sede.pdf');
+    }
+
+    public function downloadStudentPdf($id)
+    {
+            $p1 = 0;
+            $p2 = 0;
+            $p3 = 0;
+
+            $post1 = User::leftjoin('students','users.id','students.user_id')
+            ->leftjoin('posts_1','students.id','posts_1.student_id')
+            ->select('posts_1.id AS id')
+            ->where('users.identification_card',$id)
+            ->first();
+
+            if(isset($post1)){
+                $p1 = 2;
+            }
+            $post2 = User::leftjoin('students','users.id','students.user_id')
+            ->leftjoin('posts_2','students.id','posts_2.student_id')
+            ->select('posts_2.id AS id')
+            ->where('users.identification_card',$id)
+            ->first();
+
+            if(isset($post2)){
+                $p2 = 2;
+            }
+            $pre = User::leftjoin('students','users.id','students.user_id')
+            ->leftjoin('presentations','students.id','presentations.student_id')
+            ->select('presentations.id AS id')
+            ->where('users.identification_card',$id)
+            ->first();
+
+            if(isset($pre)){
+                $p3 = 4;
+            }
+
+            $total = $p1 + $p2 + $p3;
+
+        $user = DB::table('users')->where('identification_card',$id)->first();
+        $pdf = PDF::loadView('pages.reports.student', compact('total','user'));
+
+        return $pdf->stream('report-estudiante.pdf');
     }
 }

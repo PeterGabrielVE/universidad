@@ -133,8 +133,6 @@
     });
 
     function downloadPdfSede(){
-
-
         let sede = $('#sede').val();
         var url = {!! json_encode(url('/download/sede')) !!};
 
@@ -149,6 +147,24 @@
             $('#sede').val('');
             $("#sede").select2('val','');
             window.location.href = `${url}/${sede}`;
+        }
+   }
+
+   function downloadStudent(){
+        let ced = $('#student').val();
+        var url = {!! json_encode(url('/download/student')) !!};
+
+        if(ced == ''){
+            Swal.fire({
+                title: 'Error!',
+                text: 'Seleccione un estudiante',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            })
+        }else{
+            $('#student').val('');
+            $("#student").select2('val','');
+            window.location.href = `${url}/${ced}`;
         }
    }
 
