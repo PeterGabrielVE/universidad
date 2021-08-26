@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Rol;
+Use Alert;
 
 class UserController extends Controller
 {
@@ -66,33 +67,32 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
+       try {
        $request['password'] = bcrypt($request->password);
        $user = User::create($request->all());
-       switch ($request->rol_id) {
-        case 1:
-            $user->assignRole('Director');
-            break;
-        case 2:
-            $user->assignRole('Coordinador');
-            break;
-        case 3:
-            $user->assignRole('Asistente');
-            break;
-        case 4:
-            $user->assignRole('Estudiante');
-            break;
-        case 5:
-            $user->assignRole('Administrador');
-             break;
-    }
-
-
-       $usuarios = User::where('rol_id',$request->rol_id)->latest()->paginate(5);
-        $rol = '1';
-        $roles = Rol::get()->pluck('name','id');
-        return view('pages.usuarios.index',compact('usuarios','rol','roles'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        switch ($request->rol_id) {
+            case 1:
+                $user->assignRole('Director');
+                break;
+            case 2:
+                $user->assignRole('Coordinador');
+                break;
+            case 3:
+                $user->assignRole('Asistente');
+                break;
+            case 4:
+                $user->assignRole('Estudiante');
+                break;
+            case 5:
+                $user->assignRole('Administrador');
+                break;
+        }
+        Alert::success('Usuario', '¡Creado exitosamente!');
+        return redirect()->back();
+        } catch (\Exception $e){
+            return redirect()->back()
+                ->with('error', '¡Error durante la creación!');
+        }
     }
 
     /**

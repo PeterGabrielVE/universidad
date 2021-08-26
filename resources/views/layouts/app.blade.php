@@ -24,8 +24,8 @@
 
         <div class="app" id="app">
             {{-- Main Navigation or menu --}}
-
              <main>
+                @include('sweetalert::alert')
                 @yield('content')
             </main>
 
