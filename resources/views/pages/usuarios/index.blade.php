@@ -59,13 +59,10 @@
 
                                             <td>{{ $user->email ?? '' }}</td>
 
-                                            <td> @if($user->rol_id =='0') {{ 'Administrativo'  }}
-                                            @elseif($user->rol_id =='1')
-                                                 {{ 'Operativo'  }}
-                                            @else
-                                            {{ 'Directivo'  }}
-                                            @endif
-                                              </td>
+                                            <td>@if(isset($user->rol_id))
+                                                {{ $user->rol->name ?? '' }}
+                                                @endif
+                                            </td>
                                             <td>
                                                 <form action="{{ route('user.destroy',$user->id) }}" method="POST">
 

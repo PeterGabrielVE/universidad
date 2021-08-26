@@ -52,12 +52,12 @@ class User extends Authenticatable
 
     public function lapsos()
     {
-        return $this->belongsTo('App\Lapso', 'lapse_id');
+        return $this->belongsTo('App\Lapso','lapse_id');
     }
 
     public function pais()
     {
-        return $this->belongsTo('App\Pais', 'country_id');
+        return $this->belongsTo('App\Pais','country_id');
     }
 
     public function prefijo()
@@ -69,6 +69,11 @@ class User extends Authenticatable
     {
         $estudiante = Estudiante::where('user_id',$id)->first();
         return $estudiante->id;
+    }
+
+    public function rol()
+    {
+        return $this->belongsTo('App\Rol','rol_id');
     }
 
 }

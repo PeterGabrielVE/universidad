@@ -40,7 +40,7 @@
                     <div class="bg-uft py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{{ route('usuario/administrativo') }}">Director de Postgrado</a>
                         <a class="collapse-item" href="{{ route('usuario/directivo') }}">Coordinador</a>
-                        <a class="collapse-item" href="{{ route('usuario/operativo') }}">Asistentes de Postgrado</a>
+                        <a class="collapse-item" href="{{ route('usuario/asistente') }}">Asistentes de Postgrado</a>
                         <a class="collapse-item" href="{{ route('estudiantes.index') }}">Estudiantes</a>
                     </div>
                 </div>

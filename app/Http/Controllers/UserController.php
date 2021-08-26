@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-use App\Rol; 
+use App\Rol;
 
 class UserController extends Controller
 {
@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function indexAdministrativo()
     {
-        $usuarios = User::where('rol_id','0')->latest()->paginate(5);
+        $usuarios = User::where('rol_id','1')->latest()->paginate(5);
         $rol = '0';
         $roles = Rol::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
@@ -39,9 +39,9 @@ class UserController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
-     public function indexOperativo()
+     public function indexAsistente()
     {
-        $usuarios = User::where('rol_id','1')->latest()->paginate(5);
+        $usuarios = User::where('rol_id',3)->latest()->paginate(5);
         $rol = '1';
         $roles = Rol::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
@@ -68,7 +68,7 @@ class UserController extends Controller
     {
         //dd($request->all());
        $request['password'] = bcrypt($request->password);
-       $user = User::create($request->all());  
+       $user = User::create($request->all());
        switch ($request->rol_id) {
         case 1:
             $user->assignRole('Director');
@@ -86,8 +86,8 @@ class UserController extends Controller
             $user->assignRole('Administrador');
              break;
     }
- 
-                
+
+
        $usuarios = User::where('rol_id',$request->rol_id)->latest()->paginate(5);
         $rol = '1';
         $roles = Rol::get()->pluck('name','id');
