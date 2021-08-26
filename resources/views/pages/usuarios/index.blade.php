@@ -64,15 +64,8 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <form action="{{ route('user.destroy',$user->id) }}" method="POST">
-
-                                                    <a class="btn btn-uft btn-sm" href="{{ route('user.edit',$user->id) }}"><i class="fas fa-edit"></i></a>
-
-                                                    @csrf
-                                                    @method('DELETE')
-
-                                                    <button type="submit" class="btn btn-uft btn-sm"><i class="fas fa-trash"></i></button>
-                                                </form>
+                                                <a class="btn btn-uft btn-sm" href="{{ route('user.edit',$user->id) }}"><i class="fas fa-edit"></i></a>
+                                                <a class="btn btn-uft btn-sm" href="{{ route('user.delete',$user->id) }}"><i class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>
                                         @endforeach

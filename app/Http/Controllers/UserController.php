@@ -90,8 +90,8 @@ class UserController extends Controller
         Alert::success('Usuario', '¡Creado exitosamente!');
         return redirect()->back();
         } catch (\Exception $e){
-            return redirect()->back()
-                ->with('error', '¡Error durante la creación!');
+            Alert::error('Usuario', '¡Error durante a creación!');
+            return redirect()->back();
         }
     }
 
@@ -129,7 +129,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //dd($request->all());
+        try {
         if(isset($request->password)){
             $request['password'] = bcrypt($request->password);
         }
@@ -141,8 +141,13 @@ class UserController extends Controller
         $usuarios = User::where('rol_id',$request->rol_id)->latest()->paginate(5);
         $rol = '1';
         $roles = Rol::get()->pluck('name','id');
+        Alert::success('Usuario', '¡Actualizado exitosamente!');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
+        } catch (\Exception $e){
+            Alert::error('Usuario', '¡Error durante a actualización!');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -151,10 +156,16 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
-      $user = User::find($id);
-      $user->delete();
-      return back();
+      try {
+            $user = User::find($id);
+            $user->delete();
+            Alert::success('Usuario', 'Eliminado exitosamente!');
+            return back();
+        }catch (\Exception $e){
+            Alert::error('Usuario', '¡Error durante a actualización!');
+            return redirect()->back();
+        }
     }
 }

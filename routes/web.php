@@ -32,7 +32,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 });
 
-Route::get('/inscripcion', 'InscripcionController@index')->name('inscripcion');
 Route::post('buscar.estudiante', 'EstudiantesController@buscarEstudiante')->name('buscar.estudiante');
 Route::get('getLapso/{id}', 'InscripcionController@getLapso')->name('getLapso');
 Route::post('updateLapso', 'InscripcionController@updateLapso')->name('updateLapso');
@@ -40,12 +39,11 @@ Route::post('updateLapso', 'InscripcionController@updateLapso')->name('updateLap
 Route::get('usuario/administrativo', 'UserController@indexAdministrativo')->name('usuario/administrativo');
 Route::get('usuario/directivo', 'UserController@indexDirectivo')->name('usuario/directivo');
 Route::get('usuario/asistente', 'UserController@indexAsistente')->name('usuario/asistente');
+Route::get('usuario/delete/{id}', 'UserController@delete')->name('user.delete');
 Route::get('editLapso/{id}', 'LapsoController@edit')->name('editLapso');
 Route::post('updateLapso/{id}', 'LapsoController@update')->name('updateLapso');
 
-Route::get('createInscripcion/{id}', 'InscripcionController@create')->name('createInscripcion');
-Route::post('createLapsoEstudiante/{id}', 'InscripcionController@store')->name('createLapsoEstudiante');
-Route::post('createLapsoEstudianteEquivalencia/{id}', 'InscripcionController@storeEquivalency')->name('createLapsoEstudianteEquivalencia');
+
 Route::get('getEstudiante/{id}', 'EstudiantesController@getEstudiante')->name('getEstudiante');
 Route::get('buscarEstudiantePorCedula', 'EstudiantesController@buscarEstudiantePorCedula')->name('buscarEstudiantePorCedula');
 Route::get('crearEstudiante/{cedula}', 'EstudiantesController@createEstudiante')->name('estudiante.crear');
