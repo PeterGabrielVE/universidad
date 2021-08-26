@@ -24,7 +24,7 @@ class UserController extends Controller
     public function indexAdministrativo()
     {
         $usuarios = User::where('rol_id','1')->latest()->paginate(5);
-        $rol = '0';
+        $rol = '1';
         $roles = Rol::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -42,7 +42,7 @@ class UserController extends Controller
      public function indexAsistente()
     {
         $usuarios = User::where('rol_id',3)->latest()->paginate(5);
-        $rol = '1';
+        $rol = '3';
         $roles = Rol::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
