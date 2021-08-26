@@ -27,9 +27,9 @@ class HomeController extends Controller
     public function index()
     {
         $count_estudiante = Estudiante::select('id')->count();
-        $count_admin = User::where('rol_id','0')->select('id')->count();
+        $count_coord = User::where('rol_id','2')->select('id')->count();
         $count_dir = User::where('rol_id','2')->select('id')->count();
-        $count_ope = User::where('rol_id','1')->select('id')->count();
+        $count_asis = User::where('rol_id','3')->select('id')->count();
         //dd((Auth::user()->id));
         if(Auth::user()->roles->first()->id == 4){
             $student = Estudiante::where('user_id',Auth::user()->id)->first();
@@ -40,7 +40,7 @@ class HomeController extends Controller
             }
 
         }else{
-            return view('home', compact('count_estudiante','count_admin','count_ope','count_dir'));
+            return view('home', compact('count_estudiante','count_coord','count_asis','count_dir'));
         }
 
     }
