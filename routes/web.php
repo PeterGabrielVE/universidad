@@ -45,7 +45,6 @@ Route::post('updateLapso/{id}', 'LapsoController@update')->name('updateLapso');
 
 
 Route::get('getEstudiante/{id}', 'EstudiantesController@getEstudiante')->name('getEstudiante');
-Route::get('buscarEstudiantePorCedula', 'EstudiantesController@buscarEstudiantePorCedula')->name('buscarEstudiantePorCedula');
 Route::get('crearEstudiante/{cedula}', 'EstudiantesController@createEstudiante')->name('estudiante.crear');
 Route::get('documentEstudiante/{id}', 'EstudiantesController@document')->name('estudiante.document');
 

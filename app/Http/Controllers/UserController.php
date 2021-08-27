@@ -164,7 +164,7 @@ class UserController extends Controller
             Alert::success('Usuario', 'Eliminado exitosamente!');
             return back();
         }catch (\Exception $e){
-            Alert::error('Usuario', '¡Error durante a actualización!');
+            Alert::error('Usuario', '¡Error durante a eliminación!');
             return redirect()->back();
         }
     }

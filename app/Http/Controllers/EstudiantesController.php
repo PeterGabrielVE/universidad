@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use \PDF;
+Use Alert;
 use App\Asignatura;
 use App\Estudiante;
 use App\Lapso;
@@ -163,25 +164,19 @@ class EstudiantesController extends Controller
         return back();
     }
 
-     public function destroy(Request $request, $id)
+     public function destroy($id)
     {
-      $estudiante = Estudiante::find($id);
-      $estudiante->delete();
-      return back();
-    }
-
-    public function buscarEstudiantePorCedula(Request $request){
-
-        $query = $request->cedula;
-        $estudiante = Estudiante::where('identification_card',$query)->first();
-        if($estudiante == null){
-            $estudiante = 'null';
-            return response()->json($estudiante);
-        }else{
-             return response()->json($estudiante);
+        try {
+            $estudiante = Estudiante::find($id);
+            $estudiante->delete();
+            Alert::success('Usuario', 'Eliminado exitosamente!');
+            return back();
+        }catch (\Exception $e){
+            Alert::error('Usuario', '¡Error durante a eliminación!');
+            return redirect()->back();
         }
-
     }
+
 
     public function createEstudiante($ced)
     {
