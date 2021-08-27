@@ -46,7 +46,7 @@
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                                     {!! Form::label('lbl_nombres', 'Nombres:', ['class'=>'col-form-label s-12']) !!}
-                                                    {!! Form::text('first_name', $user->name ?? null, ['class'=>'form-control form-control-user', 'id'=>'first_name','placeholder'=>'Nombres']) !!}
+                                                    {!! Form::text('first_name', $user->first_name ?? null, ['class'=>'form-control form-control-user', 'id'=>'first_name','placeholder'=>'Nombres']) !!}
 
                                                 </div>
                                                 <div class="col-sm-6">
@@ -85,7 +85,7 @@
                                                       <input type="hidden" class="form-control form-control-user"
                                                           id="status"
                                                           name="status"
-                                                           value="Activo">
+                                                           value="1">
                                                 </div>
                                             </div>
                                             <div class="form-group row">

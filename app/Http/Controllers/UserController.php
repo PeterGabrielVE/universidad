@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Estudiante;
 use App\User;
 use App\Rol;
 Use Alert;
@@ -70,6 +72,8 @@ class UserController extends Controller
        try {
        $request['password'] = bcrypt($request->password);
        $user = User::create($request->all());
+
+       $data = User::latest('id')->first();
         switch ($request->rol_id) {
             case 1:
                 $user->assignRole('Director');
@@ -82,6 +86,13 @@ class UserController extends Controller
                 break;
             case 4:
                 $user->assignRole('Estudiante');
+
+                $student =  new Estudiante();
+                $student->user_id = $data->id;
+                $student->created_at = Carbon::now();
+                $student->updated_at =Carbon::now();
+                $student->save();
+
                 break;
             case 5:
                 $user->assignRole('Administrador');

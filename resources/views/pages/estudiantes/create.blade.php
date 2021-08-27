@@ -79,8 +79,7 @@
                                                     {!! Form::select('lapse_id', $lapso, null, ['class'=>'form-control', 'id'=>'lapse_id']) !!}
 
                                                     <input type="hidden" class="form-control form-control-user"
-                                                        id="status"
-                                                        name="status"
+                                                        id="status" name="status"
                                                          value="1">
                                                 </div>
                                                 <div class="col-sm-4">

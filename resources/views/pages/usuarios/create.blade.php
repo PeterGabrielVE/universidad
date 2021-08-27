@@ -1,5 +1,5 @@
 <!-- Modal Create-->
-{!! Form::open(['route'=>'user.store','method'=>'POST', 'class'=>'formlDinamic', 'id'=>'guardarRegistro']) !!}
+{!! Form::open(['route'=>["estudiantes.update",Auth::user()->estudiante(Auth::user()->id)],'method'=>'PUT', 'class'=>'user']) !!}
 <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
@@ -16,7 +16,7 @@
 						<div class="form-group m-0 has-feedback" id="campo_group">
 
 							{!! Form::label('nombre', 'Nombre', ['class'=>'col-form-label s-12']) !!}
-							{!! Form::text('name', null, ['class'=>'form-control r-0 light s-12', 'id'=>'name', 'onclick'=>'inputClear(this.id)']) !!}
+							{!! Form::text('first_name', null, ['class'=>'form-control r-0 light s-12', 'id'=>'name', 'onclick'=>'inputClear(this.id)']) !!}
 							<span class="campo_span"></span>
 						</div>
 					</div>

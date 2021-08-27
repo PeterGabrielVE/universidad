@@ -155,13 +155,29 @@ class EstudiantesController extends Controller
 
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
-        $data = $request->all();
+        try{
+        $user = User::find(Auth::id());
+        $user->first_name = $req->name;
+        $user->last_name = $req->last_name;
+        $user->sede_id = $req->sede_id;
+        $user->doctorado_id = $req->doctorado_id;
+        $user->identification_card = $req->identification_card;
+        $user->save();
+
+        $data = $req->all();
         $estudiante = Estudiante::find($id);
         $estudiante->update($data);
         $estudiante->save();
+
+        Alert::success('Estudiante', '¡Actualizado exitosamente!');
         return back();
+
+        } catch (\Exception $e){
+            Alert::error('Estudiante', '¡Error durante la actualización!');
+            return redirect()->back();
+        }
     }
 
      public function destroy($id)
