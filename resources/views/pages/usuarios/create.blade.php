@@ -1,5 +1,5 @@
 <!-- Modal Create-->
-{!! Form::open(['route'=>["estudiantes.update",Auth::user()->estudiante(Auth::user()->id)],'method'=>'PUT', 'class'=>'user']) !!}
+{!! Form::open(['route'=>"user.store",'method'=>'POST', 'class'=>'user']) !!}
 <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
@@ -10,43 +10,44 @@
 			<div class="modal-body">
 				<div class="form-row">
                     @if($rol == 4)
-                    {!! Form::hidden('rol_id', '4', ['class'=>'form-control r-0 light s-12', 'id'=>'rol_id', 'onclick'=>'inputClear(this.id)']) !!}
+                    {!! Form::hidden('rol_id', '4', ['class'=>'form-control r-0 light s-12', 'id'=>'rol_id']) !!}
                     @else
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<div class="form-group m-0 has-feedback" id="campo_group">
-
 							{!! Form::label('nombre', 'Nombre', ['class'=>'col-form-label s-12']) !!}
-							{!! Form::text('first_name', null, ['class'=>'form-control r-0 light s-12', 'id'=>'name', 'onclick'=>'inputClear(this.id)']) !!}
+							{!! Form::text('first_name', null, ['class'=>'form-control r-0 light s-12', 'id'=>'name']) !!}
 							<span class="campo_span"></span>
 						</div>
 					</div>
-
-					<div class="col-md-6">
+                    <div class="col-md-4">
+						<div class="form-group m-0 has-feedback" id="campo_group">
+							{!! Form::label('apellidos', 'Apellidos', ['class'=>'col-form-label s-12']) !!}
+							{!! Form::text('last_name', null, ['class'=>'form-control r-0 light s-12', 'id'=>'last_name']) !!}
+							<span class="apellido_span"></span>
+						</div>
+					</div>
+					<div class="col-md-4">
 						<div class="form-group m-0" id="modulo_group">
 							{!! Form::label('roles', 'Perfil', ['class'=>'col-form-label s-12']) !!}
-							{!! Form::select('rol_id', $roles, $rol ?? null, ['class'=>'form-control r-0 light s-12', 'id'=>'rol_id', 'onclick'=>'inputClear(this.id)']) !!}
+							{!! Form::select('rol_id', $roles, $rol ?? null, ['class'=>'form-control r-0 light s-12', 'id'=>'rol_id']) !!}
 							<span class="status_span"></span>
 						</div>
 					</div>
                     @endif
 					<div class="col-md-6">
 						<div class="form-group m-0 has-feedback" id="campo_group">
-
 							{!! Form::label('metaListValue', 'Correo Electronico', ['class'=>'col-form-label s-12']) !!}
-							{!! Form::email('email', null, ['class'=>'form-control r-0 light s-12', 'id'=>'email', 'onclick'=>'inputClear(this.id)']) !!}
+							{!! Form::email('email', null, ['class'=>'form-control r-0 light s-12', 'id'=>'email']) !!}
 							<span class="campo_span"></span>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group m-0 has-feedback" id="campo_group">
-
 							{!! Form::label('Contraseña', 'Contraseña', ['class'=>'col-form-label s-12']) !!}
-							{!! Form::text('password', null, ['class'=>'form-control r-0 light s-12', 'id'=>'password', 'onclick'=>'inputClear(this.id)']) !!}
+							{!! Form::text('password', null, ['class'=>'form-control r-0 light s-12', 'id'=>'password']) !!}
 							<span class="campo_span"></span>
 						</div>
 					</div>
-
-
 				</div>
 
 			</div>

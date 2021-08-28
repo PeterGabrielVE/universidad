@@ -159,10 +159,13 @@ class EstudiantesController extends Controller
     {
         try{
         $user = User::find(Auth::id());
-        $user->first_name = $req->name;
+        $user->first_name = $req->first_name;
         $user->last_name = $req->last_name;
         $user->sede_id = $req->sede_id;
         $user->doctorado_id = $req->doctorado_id;
+        $user->country_id = $req->country_id;
+        $user->cod_phone = $req->cod_phone;
+        $user->phone = $req->phone;
         $user->identification_card = $req->identification_card;
         $user->save();
 
@@ -171,6 +174,18 @@ class EstudiantesController extends Controller
         $estudiante->update($data);
         $estudiante->save();
 
+        $search_lapse = Lapso_Estudiante::where('student_id',$id)
+                                        ->where('lapse_id',$req->lapse_id)
+                                        ->where('doctorado_id',$req->doctorado_id)
+                                        ->first();
+
+        if($search_lapse == null){
+            $lapso = new Lapso_Estudiante();
+            $lapso->student_id = $id;
+            $lapso->lapse_id = $req->lapse_id;
+            $lapso->doctorado_id = $req->doctorado_id;
+            $lapso->save();
+        }
         Alert::success('Estudiante', '¡Actualizado exitosamente!');
         return back();
 
@@ -206,6 +221,7 @@ class EstudiantesController extends Controller
 
     public function documentStore(Request $request, $id)
     {
+        try{
         $file1 = $request->post1_extenso;
         $file2 = $request->post1_carta;
         $date = Carbon::now();
@@ -230,15 +246,22 @@ class EstudiantesController extends Controller
             $post1->created_at = $date;
             $post1->updated_at = $date;
             $post1->save();
+            Alert::success('Estudiante', 'Guardado exitosamente!');
             return redirect()->route('estudiante.document.post2',$id);
         }else{
             return back();
+        }
+
+        }catch (\Exception $e){
+            Alert::error('Usuario', '¡Error durante el almacenamiento!');
+            return redirect()->back();
         }
 
     }
 
     public function documentStorePost2(Request $request, $id)
     {
+        try{
         $file1 = $request->post2_extenso;
         $file2 = $request->post2_carta;
         $date = Carbon::now();
@@ -263,9 +286,15 @@ class EstudiantesController extends Controller
             $post1->created_at = $date;
             $post1->updated_at = $date;
             $post1->save();
+            Alert::success('Estudiante', 'Guardado exitosamente!');
             return redirect()->route('estudiante.presentation',$id);
         }else{
             return back();
+        }
+
+        }catch (\Exception $e){
+            Alert::error('Usuario', '¡Error durante el almacenamiento!');
+            return redirect()->back();
         }
     }
 
@@ -278,6 +307,8 @@ class EstudiantesController extends Controller
 
     public function presentationStore(Request $request, $id)
     {
+        try{
+
         $file1 = $request->extenso;
         $file2 = $request->carta_aceptacion;
         $file3 = $request->poster;
@@ -314,9 +345,14 @@ class EstudiantesController extends Controller
             $pre->created_at = $date;
             $pre->updated_at = $date;
             $pre->save();
+            Alert::success('Estudiante', 'Guardado exitosamente!');
             return redirect()->route('estudiantes.show',$id);
         }else{
             return back();
+        }
+        }catch (\Exception $e){
+            Alert::error('Usuario', '¡Error durante el almacenamiento!');
+            return redirect()->back();
         }
     }
 
@@ -458,7 +494,7 @@ class EstudiantesController extends Controller
 
     public function storeCalificacion(Request $req,$id)
     {
-        //dd($req->all());
+        try{
         $post1 = Post1::where('student_id',$id)->first();
         $post1->extenso_note = $req->post1_extenso_note;
         $post1->carta_aceptacion_note = $req->post1_carta_aceptacion_note;
@@ -475,8 +511,12 @@ class EstudiantesController extends Controller
         $pre->poster_note = $req->pre_poster_note;
         $pre->certificado_note = $req->pre_certificado_note;
         $pre->save();
-
+        Alert::success('Estudiante', 'Guardado exitosamente!');
         return back();
+        }catch (\Exception $e){
+            Alert::error('Usuario', '¡Error durante el almacenamiento!');
+            return redirect()->back();
+        }
 
     }
 

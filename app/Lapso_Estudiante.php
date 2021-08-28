@@ -16,4 +16,9 @@ class Lapso_Estudiante extends Model
     {
         return $this->belongsTo('App\Asignatura', 'course_id');
     }
+
+    public function lapso()
+    {
+        return $this->belongsTo('App\Lapso', 'lapse_id');
+    }
 }

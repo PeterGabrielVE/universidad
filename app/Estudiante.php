@@ -17,4 +17,9 @@ class Estudiante extends Model
     {
         return $this->belongsTo('App\User', 'user_id');
     }
+
+    public function lapso_estudiante()
+    {
+        return $this->belongsTo('App\Lapso_Estudiante','id','student_id');
+    }
 }

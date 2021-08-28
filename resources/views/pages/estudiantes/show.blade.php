@@ -21,7 +21,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">{{ Auth::user()->name ?? null }} {{ Auth::user()->last_name ?? null }}</h1>
+                    <h1 class="h3 mb-2 text-gray-800">{{ Auth::user()->first_name ?? null }} {{ Auth::user()->last_name ?? null }}</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -79,13 +79,9 @@
                                                       <input type="text" class="form-control form-control-user"
                                                           id="lapse_name" placeholder="Lapso de Ingreso" value="{{ $lapso->name }}" readonly="true">
                                                       <input type="hidden" class="form-control form-control-user"
-                                                          id="lapse_id"
-                                                          name="lapse_id"
-                                                          placeholder="Lapso de Ingreso" value="{{ $lapso->id }}">
+                                                          id="lapse_id" name="lapse_id" placeholder="Lapso de Ingreso" value="{{ $lapso->id }}">
                                                       <input type="hidden" class="form-control form-control-user"
-                                                          id="status"
-                                                          name="status"
-                                                           value="1">
+                                                        id="status" name="status" value="1">
                                                 </div>
                                             </div>
                                             <div class="form-group row">

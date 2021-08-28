@@ -67,7 +67,7 @@
                                             <td>{{ $estudiante->user->email ?? '' }}</td>
                                             <td>{{ $estudiante->user->doctorado->name ?? '' }}</td>
                                             <td>{{ $estudiante->user->paises->name ?? '' }}</td>
-                                            <td>{{ $estudiante->user->lapsos->name ?? '' }}</td>
+                                            <td>{{ $estudiante->lapso_estudiante->lapso->name ?? '' }}</td>
                                             <td>
                                                 <form action="{{ route('estudiantes.destroy',$estudiante->id) }}" method="POST">
 
