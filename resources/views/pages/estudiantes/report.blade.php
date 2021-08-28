@@ -146,7 +146,7 @@
         }else{
             $('#sede').val('');
             $("#sede").select2('val','');
-            window.location.href = `${url}/${sede}`;
+            window.open(`${url}/${sede}`, '_blank');
         }
    }
 
@@ -164,7 +164,7 @@
         }else{
             $('#student').val('');
             $("#student").select2('val','');
-            window.location.href = `${url}/${ced}`;
+            window.open(`${url}/${ced}`, '_blank');
         }
    }
 

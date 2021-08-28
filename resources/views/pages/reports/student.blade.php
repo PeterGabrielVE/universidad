@@ -227,7 +227,9 @@ footer {
      <div id="thanks">Datos del Estudiante</div>
       <div id="details" class="clearfix">
         <div id="client">
-          <div class="to">{{__('Ubicación')}}: {{ $user->name ?? null }}</div>
+          <div class="to">{{__('Nombres y Apellidos')}}: {{ $user->first_name ?? null }} {{ $user->last_name ?? null }}</div>
+          <div class="to">{{__('Cédula')}}: {{ $user->identification_card ?? null }} </div>
+          <div class="to">{{__('Correo Eléctronico')}}: {{ $user->email ?? null }} </div>
 
         </div>
 
@@ -236,13 +238,11 @@ footer {
         <thead>
           <tr>
             <th class="qty">Archivos Enviados</th>
-            <th class="qty"></th>
           </tr>
         </thead>
         <tbody>
                 <tr>
                     <td class="qty2">{{ $total ?? 0 }}</td>
-                    <td class="qty2"></td>
                 </tr>
         </tboody>
       </table>

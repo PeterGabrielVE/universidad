@@ -626,37 +626,27 @@ class EstudiantesController extends Controller
             $p2 = 0;
             $p3 = 0;
 
-            $post1 = User::leftjoin('students','users.id','students.user_id')
-            ->leftjoin('posts_1','students.id','posts_1.student_id')
-            ->select('posts_1.id AS id')
-            ->where('users.identification_card',$id)
-            ->first();
-
+            $post1 = Post1::where('student_id',$id)
+            ->get();
             if(isset($post1)){
                 $p1 = 2;
             }
-            $post2 = User::leftjoin('students','users.id','students.user_id')
-            ->leftjoin('posts_2','students.id','posts_2.student_id')
-            ->select('posts_2.id AS id')
-            ->where('users.identification_card',$id)
-            ->first();
+            $post2 = Post1::where('student_id',$id)
+            ->get();
 
             if(isset($post2)){
                 $p2 = 2;
             }
-            $pre = User::leftjoin('students','users.id','students.user_id')
-            ->leftjoin('presentations','students.id','presentations.student_id')
-            ->select('presentations.id AS id')
-            ->where('users.identification_card',$id)
-            ->first();
+            $pre = Presentation::where('student_id',$id)
+            ->get();
 
             if(isset($pre)){
                 $p3 = 4;
             }
 
             $total = $p1 + $p2 + $p3;
-
-        $user = DB::table('users')->where('identification_card',$id)->first();
+        $student = Estudiante::find($id);
+        $user = User::find($student->user_id);
         $pdf = PDF::loadView('pages.reports.student', compact('total','user'));
 
         return $pdf->stream('report-estudiante.pdf');
