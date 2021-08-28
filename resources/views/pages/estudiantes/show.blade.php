@@ -85,16 +85,20 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                                <div class="col-sm-4 mb-3 mb-sm-0">
                                                     {!! Form::label('lbl_pais', 'Pais:', ['class'=>'col-form-label s-12']) !!}
                                                     {!! Form::select('country_id', $paises,$user->country_id ?? null, ['class'=>'form-control', 'id'=>'country_id']) !!}
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-4 mb-3 mb-sm-0">
+                                                    {!! Form::label('lbl_sede', 'Sede:', ['class'=>'col-form-label s-12']) !!}
+                                                    {!! Form::select('sede_id', $sedes,$user->sede_id ?? null, ['class'=>'form-control', 'id'=>'sede_id']) !!}
+                                                </div>
+                                                <div class="col-sm-4">
                                                     {!! Form::label('lbl_Doctorado', 'Doctorado:', ['class'=>'col-form-label s-12']) !!}
                                                    {!! Form::select('doctorado_id', $doctorados, $user->doctorado_id ?? null, ['class'=>'form-control', 'id'=>'doctorado']) !!}
                                                </div>
                                             </div>
-                                            <div class="form-group row">
+                                            <div class="form-group row mt-4">
                                                 <div class="col-lg-3"></div>
                                                 <div class="col-lg-3">
                                                     <button type="submit" class="btn btn-uft btn-block" style="width: 400px;"><i class="icon-save mr-2"></i>Editar</button>

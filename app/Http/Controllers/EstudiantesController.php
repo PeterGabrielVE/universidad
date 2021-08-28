@@ -42,7 +42,8 @@ class EstudiantesController extends Controller
         $prefijo = Pais::get()->pluck('Prefijo','id');
         $user = User::find($estudiante->user_id);
         $doctorados = Doctorado::get()->pluck('name','id');
-        return view('pages.estudiantes.show',compact('estudiante','lapso','paises','prefijo','user','doctorados'));
+        $sedes = Sede::get()->pluck('name','id')->prepend('Seleccione una opción','');
+        return view('pages.estudiantes.show',compact('estudiante','lapso','paises','prefijo','sedes','user','doctorados'));
 
     }
 
@@ -534,15 +535,15 @@ class EstudiantesController extends Controller
 
     public function downloadSedePdf($id)
     {
-            $users = Sede::leftjoin('users', 'sedes.id', '=', 'users.sede_id')
-            ->leftjoin('students','users.id','students.user_id')
-            ->leftjoin('posts_1','students.id','posts_1.student_id')
+            $users = Post1::leftjoin('students','posts_1.student_id','students.id')
+            ->leftjoin('users', 'students.user_id', '=', 'users.id')
+            ->leftjoin('sedes','users.sede_id','sedes.id')
             ->select('posts_1.id AS id','posts_1.created_at AS created_at')
             ->where('sedes.id',$id)
             ->get()
             ->groupBy(function ($date) {
                 return Carbon::parse($date->created_at)->format('m');
-            });;
+            });
         $usermcount = [];
         $userArr = [];
 
@@ -561,15 +562,15 @@ class EstudiantesController extends Controller
             $userArr[$i]['month'] = $month[$i - 1];
         }
 
-        $posts2 = Sede::leftjoin('users', 'sedes.id', '=', 'users.sede_id')
-        ->leftjoin('students','users.id','students.user_id')
-        ->leftjoin('posts_2','students.id','posts_2.student_id')
-        ->select('posts_2.id AS id','posts_2.created_at AS created_at')
-        ->where('sedes.id',$id)
-        ->get()
-        ->groupBy(function ($date) {
-            return Carbon::parse($date->created_at)->format('m');
-        });
+        $posts2 = Post2::leftjoin('students','posts_2.student_id','students.id')
+            ->leftjoin('users', 'students.user_id', '=', 'users.id')
+            ->leftjoin('sedes','users.sede_id','sedes.id')
+            ->select('posts_2.id AS id','posts_2.created_at AS created_at')
+            ->where('sedes.id',$id)
+            ->get()
+            ->groupBy(function ($date) {
+                return Carbon::parse($date->created_at)->format('m');
+            });
         //dd($users);
         $usermcount2 = [];
         $userArr2 = [];
@@ -587,9 +588,9 @@ class EstudiantesController extends Controller
             $userArr2[$i]['month'] = $month[$i - 1];
         }
 
-        $pres = Sede::leftjoin('users', 'sedes.id', '=', 'users.sede_id')
-        ->leftjoin('students','users.id','students.user_id')
-        ->leftjoin('presentations','students.id','presentations.student_id')
+        $pres = Presentation::leftjoin('students','presentations.student_id','students.id')
+        ->leftjoin('users', 'students.user_id', '=', 'users.id')
+        ->leftjoin('sedes','users.sede_id','sedes.id')
         ->select('presentations.id AS id','presentations.created_at AS created_at')
         ->where('sedes.id',$id)
         ->get()
