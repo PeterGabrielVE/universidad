@@ -21,7 +21,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">{{ Auth::user()->name ?? null }} {{ Auth::user()->last_name ?? null }}</h1>
+                    <h1 class="h3 mb-2 text-gray-800">{{ Auth::user()->first_name ?? null }} {{ Auth::user()->last_name ?? null }}</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -61,6 +61,7 @@
                                         </thead>
 
                                         <tbody>
+                                            @if(Auth::user()->doctorado_id == 1)
                                             <tr>
                                                 <td>@if(isset($post1->extenso))
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post1->extenso.'')}}">
@@ -128,6 +129,75 @@
                                                     @endif
                                                 </td>
                                             </tr>
+                                            @else
+                                            <tr>
+                                                <td>@if(isset($post1->extenso))
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post1->extenso.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                                <td>@if(isset($post1->carta_aceptacion))
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post1->carta_aceptacion.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                                <td>@if(isset($post2->extenso))
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post2->extenso.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.document.post2',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                                <td>@if(isset($post2->carta_aceptacion))
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post2->carta_aceptacion.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+
+                                                <td>@if(isset($pre->extenso))
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->extenso.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                                <td>@if(isset($pre->carta_aceptacion))
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->carta_aceptacion.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                                <td>@if(isset($pre->poster))
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->poster.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                                <td>@if(isset($pre->certificado))
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->certificado.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            @endif
                                         </tbody>
                                     </table>
 

@@ -60,8 +60,7 @@
                                     <tbody>
                                         @foreach ($estudiantes as $estudiante)
                                         <tr>
-
-                                            <td>{{ $estudiante->user->name ?? '' }} {{ $estudiante->user->last_name ?? '' }}</td>
+                                            <td>{{ $estudiante->user->first_name ?? '' }} {{ $estudiante->user->last_name ?? '' }}</td>
                                             <td>{{ $estudiante->user->identification_card ?? '' }}</td>
                                             <td>{{ $estudiante->user->prefijo->Prefijo ?? '' }}-{{ $estudiante->user->phone ?? '' }}</td>
                                             <td>{{ $estudiante->user->email ?? '' }}</td>

@@ -79,7 +79,7 @@
                                                       {{ csrf_field() }}
                                                       <div class="form-group mr-2">
                                                           <label for="budgetState" class="mr-3">Cédula</label>
-                                                          <select class="form-control select" name="cedula" data-width="300px" id="student" data-placeholder="{{__('Buscar Estudiante')}}..." data-allow-clear="1" required="true">
+                                                          <select class="form-control select" name="cedula" data-width="300px" id="student" data-placeholder="{{__('Buscar Estudiante')}}..." data-allow-clear="1" required="true" onkeypress="return valideKey(event);">
                                                               <option value="">Seleccione</option>
                                                              @foreach ($estudiantes as $ced)
                                                                  <option value="{{ $ced->id }}">{{ $ced->identification_card }}</option>
@@ -132,6 +132,13 @@
     $('.select').select2();
     });
 
+    $(document).on('keypress', '.select2-search__field', function () {
+    $(this).val($(this).val().replace(/[^\d].+/, ""));
+    if ((event.which < 48 || event.which > 57)) {
+      event.preventDefault();
+    }
+});
+
     function downloadPdfSede(){
         let sede = $('#sede').val();
         var url = {!! json_encode(url('/download/sede')) !!};
@@ -167,6 +174,8 @@
             window.open(`${url}/${ced}`, '_blank');
         }
    }
+
+
 
 </script>
 @endsection

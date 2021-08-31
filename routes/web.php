@@ -61,3 +61,5 @@ Route::post('store/calificacion/{id}', 'EstudiantesController@storeCalificacion'
 Route::get('download/document/{file}','EstudiantesController@downloadDocument');
 Route::get('download/sede/{id}','EstudiantesController@downloadSedePdf');
 Route::get('download/student/{id}','EstudiantesController@downloadStudentPdf');
+Route::get('todos/documento/estudiante/{id}', 'EstudiantesController@setAlldocument')->name('estudiantes.all_document');
+Route::post('setAll/documento/estudiante/{id}', 'EstudiantesController@documents_store_ciencia')->name('estudiantes.set_all_document');

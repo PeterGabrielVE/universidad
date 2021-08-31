@@ -47,6 +47,7 @@
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                                     {!! Form::label('lbl_nombres', 'Nombres:', ['class'=>'col-form-label s-12']) !!}
                                                     {!! Form::text('first_name', $user->first_name ?? null, ['class'=>'form-control form-control-user', 'id'=>'first_name','placeholder'=>'Nombres']) !!}
+                                                    {!! Form::hidden('user_id', $user->id ?? null, ['class'=>'form-control form-control-user']) !!}
 
                                                 </div>
                                                 <div class="col-sm-6">

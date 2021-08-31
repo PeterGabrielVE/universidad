@@ -159,7 +159,7 @@ class EstudiantesController extends Controller
     public function update(Request $req, $id)
     {
         try{
-        $user = User::find(Auth::id());
+        $user = User::find($req->user_id);
         $user->first_name = $req->first_name;
         $user->last_name = $req->last_name;
         $user->sede_id = $req->sede_id;
@@ -200,6 +200,8 @@ class EstudiantesController extends Controller
     {
         try {
             $estudiante = Estudiante::find($id);
+            $user = User::find($estudiante->user_id);
+            $user->delete();
             $estudiante->delete();
             Alert::success('Usuario', 'Eliminado exitosamente!');
             return back();
@@ -397,10 +399,20 @@ class EstudiantesController extends Controller
 
     }
 
-    public function documents_store_ciencia($file1,$file2,$file3,$file4,$file5,$file6,$file7,$file8, $id)
+    public function documents_store_ciencia(Request $req, $id)
     {
+        try{
         $date = Carbon::now();
         $email = Auth::user()->email;
+        $file1 = $req->c_post1_extenso;
+        $file2 = $req->c_post1_carta;
+        $file3 = $req->c_post2_extenso;
+        $file4 = $req->c_post2_carta;
+
+        $file5 = $req->c_extenso;
+        $file6 = $req->c_carta_aceptacion;
+        $file7 = $req->c_poster;
+        $file8 = $req->c_certificado;
 
         if($file1 !=null && $file2 !=null && $file3 !=null && $file4 !=null
         && $file5 !=null && $file6 !=null && $file7 !=null && $file8 !=null){
@@ -466,9 +478,16 @@ class EstudiantesController extends Controller
             $pre->created_at = $date;
             $pre->updated_at = $date;
             $pre->save();
-
+            Alert::success('Estudiante', 'Guardado exitosamente!');
+            return redirect()->route('estudiantes.show',$id);
         }else{
+            Alert::error('Usuario', '¡Error durante el almacenamiento!');
             return back();
+        }
+
+        }catch (\Exception $e){
+            Alert::error('Usuario', '¡Error durante el almacenamiento!');
+            return redirect()->back();
         }
     }
 
@@ -650,5 +669,12 @@ class EstudiantesController extends Controller
         $pdf = PDF::loadView('pages.reports.student', compact('total','user'));
 
         return $pdf->stream('report-estudiante.pdf');
+    }
+
+    public function setAllDocument($id)
+    {
+        $estudiante = Estudiante::find($id);
+        return view('pages.estudiantes.all_documents',compact('estudiante'));
+
     }
 }
