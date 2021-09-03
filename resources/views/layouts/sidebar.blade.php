@@ -98,11 +98,28 @@
                 </a>
             </li>
             <hr class="sidebar-divider">
-            <li class="nav-item">
-                <a class="nav-link collapsed text-uft" href="{{ route('estudiantes.document',Auth::user()->estudiante(Auth::user()->id)) }}">
-                    <span>Mis Documentos</span>
-                </a>
-            </li>
+
+                @if (Auth::user()->doctorado_id == 3)
+                    <li class="nav-item">
+                        <a class="nav-link collapsed text-uft" href="#" data-toggle="collapse" data-target="#collapseFour"
+                        aria-expanded="true" aria-controls="collapseFour">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Mis Documentos</span>
+                    </a>
+                    <div id="collapseFour" class="collapse" aria-labelledby="collapseFour" data-parent="#accordionSidebar">
+                        <div class="bg-uft py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="{{ route('estudiantes.document',Auth::user()->estudiante(Auth::user()->id)) }}">Ciencias de la Educación</a>
+                            <a class="collapse-item" href="{{ route('estudiantes/documentos/gerencia',Auth::user()->estudiante(Auth::user()->id)) }}">Gerencia Avanzada</a>
+                        </div>
+                    </div>
+                    </li>
+                @else
+                <li class="nav-item">
+                    <a class="nav-link collapsed text-uft" href="{{ route('estudiantes.document',Auth::user()->estudiante(Auth::user()->id)) }}">
+                        <span>Mis Documentos</span>
+                    </a>
+                </li>
+                @endif
             <hr class="sidebar-divider">
             @endif
         </ul>

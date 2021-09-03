@@ -677,4 +677,73 @@ class EstudiantesController extends Controller
         return view('pages.estudiantes.all_documents',compact('estudiante'));
 
     }
+
+    public function setDocumentGerencia($id)
+    {
+        $estudiante = Estudiante::find($id);
+        $post1 = Post1::where('student_id',$id)->first();
+        $post2 = Post2::where('student_id',$id)->first();
+        $pre = Presentation::where('student_id',$id)->first();
+        return view('pages.estudiantes.set_document_gerencia',compact('estudiante','post1','post2','pre'));
+
+    }
+
+    public function document_doctorado($id,$doc)
+    {
+        $estudiante = Estudiante::find($id);
+        if($doc == 1){
+            return view('pages.estudiantes.document2',compact('estudiante','doc'));
+        }else{
+            return view('pages.estudiantes.document2',compact('estudiante','doc'));
+        }
+
+    }
+
+    public function documentPost1Store(Request $request, $id)
+    {
+        try{
+        $file1 = $request->post1_extenso;
+        $file2 = $request->post1_carta;
+        $date = Carbon::now();
+        $email = Auth::user()->email;
+
+        if($file1 !=null && $file2 !=null){
+
+            $path = public_path().'/document/';
+            $extension = $file1->getClientOriginalExtension();
+            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
+            $file1->move($path, $fileName);
+
+            $extension2 = $file2->getClientOriginalExtension();
+            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
+            $file2->move($path, $fileName2);
+
+
+            $post1 = new Post1();
+            $post1->student_id = $id;
+            $post1->extenso = $fileName;
+            $post1->carta_aceptacion = $fileName2;
+            $post1->doctorado_id = 1;
+            $post1->created_at = $date;
+            $post1->updated_at = $date;
+            $post1->save();
+            Alert::success('Estudiante', 'Guardado exitosamente!');
+            return redirect()->route('estudiante.documento.post2',$id);
+        }else{
+            return back();
+        }
+
+        }catch (\Exception $e){
+            Alert::error('Usuario', '¡Error durante el almacenamiento!');
+            return redirect()->back();
+        }
+
+    }
+
+    public function documentPost2($id)
+    {
+        $estudiante = Estudiante::find($id);
+        return view('pages.estudiantes.documento_post_2',compact('estudiante'));
+
+    }
 }

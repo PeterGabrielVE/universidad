@@ -49,13 +49,17 @@ Route::get('crearEstudiante/{cedula}', 'EstudiantesController@createEstudiante')
 Route::get('documentEstudiante/{id}', 'EstudiantesController@document')->name('estudiante.document');
 
 Route::post('documentStore/{id}', 'EstudiantesController@documentStore')->name('estudiante.documentStore');
+Route::post('documentPost1Store/{id}', 'EstudiantesController@documentPost1Store')->name('estudiante.document.post1.store');
 Route::get('document2Estudiante/{id}', 'EstudiantesController@document2')->name('estudiante.document.post2');
+Route::get('documentpost2Estudiante/{id}', 'EstudiantesController@documentPost2')->name('estudiante.documento.post2');
 Route::post('documentStore2/{id}', 'EstudiantesController@documentStorePost2')->name('estudiante.documentStorePost2');
+Route::post('documentoStore2/{id}', 'EstudiantesController@documentoStorePost2')->name('estudiante.documentoStorePost2');
 Route::get('presentations/{id}', 'EstudiantesController@presentation')->name('estudiante.presentation');
 Route::post('presentationStore/{id}', 'EstudiantesController@presentationStore')->name('estudiante.presentationStore');
 Route::get('reports', 'EstudiantesController@reports')->name('reports');
 
 Route::get('documento/estudiante/{id}', 'EstudiantesController@setdocument')->name('estudiantes.document');
+Route::get('documentos/estudiante/{id}/{doc}', 'EstudiantesController@document_doctorado')->name('estudiante.documentos');
 Route::get('calificacion/estudiante/{id}', 'EstudiantesController@calificacion')->name('estudiantes.calificacion');
 Route::post('store/calificacion/{id}', 'EstudiantesController@storeCalificacion')->name('calificacion.store');
 Route::get('download/document/{file}','EstudiantesController@downloadDocument');
@@ -63,3 +67,5 @@ Route::get('download/sede/{id}','EstudiantesController@downloadSedePdf');
 Route::get('download/student/{id}','EstudiantesController@downloadStudentPdf');
 Route::get('todos/documento/estudiante/{id}', 'EstudiantesController@setAlldocument')->name('estudiantes.all_document');
 Route::post('setAll/documento/estudiante/{id}', 'EstudiantesController@documents_store_ciencia')->name('estudiantes.set_all_document');
+Route::get('estudiantes/documentos/ciencias', 'EstudiantesController@setdocument')->name('estudiantes/documentos/ciencias');
+Route::get('estudiantes/documentos/gerencia/{id}', 'EstudiantesController@setDocumentGerencia')->name('estudiantes/documentos/gerencia');
