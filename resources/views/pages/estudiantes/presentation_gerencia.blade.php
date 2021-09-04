@@ -29,7 +29,7 @@
                             <div class="row">
                                 <div class="col-lg-12 margin-tb">
                                     <div class="pull-left">
-                                        <h6 class="m-0 font-weight-bold text-uft">Documentos Estudiante</h6>
+                                        <h6 class="m-0 font-weight-bold text-uft">Documentos Presentación</h6>
                                     </div>
                                     <div class="pull-right">
                                         <a href="{{route('estudiantes.index')}}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
@@ -47,21 +47,34 @@
                                 </div>
                                  <div class="col-lg-12">
                                     <div>
-                                        {!! Form::open(['route'=>["estudiante.document.post1.store",$estudiante->id],'method'=>'POST', 'class'=>'user','files'=>true,'enctype'=>'multipart/form-data']) !!}
+                                        {!! Form::open(['route'=>["estudiante.presentationGerenciaStore",$estudiante->id],'method'=>'POST', 'class'=>'user','files'=>true,'enctype'=>'multipart/form-data']) !!}
                                             <div class="form-group row">
-                                                <div class="col-md-3 offset-md-1">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         {!! Form::label('lbl_nombres', 'Extenso', ['class'=>'col-form-label s-12']) !!}
-                                                        <input id="file" class="file" name="post1_extenso" type="file" size="15" required>
+                                                        <input id="file1" class="file" name="extenso" type="file" size="15" required>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3 offset-md-1">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         {!! Form::label('lbl_nombres', 'Carta de Aceptación', ['class'=>'col-form-label s-12']) !!}
-                                                        <input id="file2" class="file" name="post1_carta" type="file" size="15" required>
+                                                        <input id="file2" class="file" name="carta_aceptacion" type="file" size="15" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        {!! Form::label('lbl_nombres', 'Extenso', ['class'=>'col-form-label s-12']) !!}
+                                                        <input id="file3" class="file" name="poster" type="file" size="15" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        {!! Form::label('lbl_nombres', 'Carta de Aceptación', ['class'=>'col-form-label s-12']) !!}
+                                                        <input id="file4" class="file" name="certificado" type="file" size="15" required>
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <div class="form-group row">
                                                 <div class="col-lg-3"></div>
                                                 <div class="col-lg-3">
@@ -84,18 +97,11 @@
 
             </div>
             <!-- End of Main Content -->
-
-            <!-- Footer -->
-            @include('layouts.footer')
-            <!-- End of Footer -->
-
         </div>
         <!-- End of Content Wrapper -->
 
     </div>
     <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
 
 @endsection
 @section('js')

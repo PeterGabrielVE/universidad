@@ -51,11 +51,13 @@ Route::get('documentEstudiante/{id}', 'EstudiantesController@document')->name('e
 Route::post('documentStore/{id}', 'EstudiantesController@documentStore')->name('estudiante.documentStore');
 Route::post('documentPost1Store/{id}', 'EstudiantesController@documentPost1Store')->name('estudiante.document.post1.store');
 Route::get('document2Estudiante/{id}', 'EstudiantesController@document2')->name('estudiante.document.post2');
-Route::get('documentpost2Estudiante/{id}', 'EstudiantesController@documentPost2')->name('estudiante.documento.post2');
+Route::get('documentpost2Estudiante/{id}', 'EstudiantesController@documentoPost2')->name('estudiante.documento.post2');
 Route::post('documentStore2/{id}', 'EstudiantesController@documentStorePost2')->name('estudiante.documentStorePost2');
 Route::post('documentoStore2/{id}', 'EstudiantesController@documentoStorePost2')->name('estudiante.documentoStorePost2');
 Route::get('presentations/{id}', 'EstudiantesController@presentation')->name('estudiante.presentation');
+Route::get('presentations/gerencia/{id}', 'EstudiantesController@presentation_gerencia')->name('estudiante.presentation.gerencia');
 Route::post('presentationStore/{id}', 'EstudiantesController@presentationStore')->name('estudiante.presentationStore');
+Route::post('presentationGerenciaStore/{id}', 'EstudiantesController@presentationGerenciaStore')->name('estudiante.presentationGerenciaStore');
 Route::get('reports', 'EstudiantesController@reports')->name('reports');
 
 Route::get('documento/estudiante/{id}', 'EstudiantesController@setdocument')->name('estudiantes.document');
