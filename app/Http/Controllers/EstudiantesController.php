@@ -951,6 +951,56 @@ class EstudiantesController extends Controller
 
     }
 
+    public function editDocumentPres($id,$doc)
+    {
+        $estudiante = Estudiante::find($id);
+        $pres = Presentation::where('student_id',$id)->where('doctorado_id',$doc)->first();
+        return view('pages.estudiantes.documents.edit_document_pres',compact('estudiante','pres'));
+
+    }
+
+    public function documentPresUpdate(Request $request, $id, $doc)
+    {
+       try{
+        $file1 = $request->post2_extenso;
+        $file2 = $request->post2_carta;
+        $date = Carbon::now();
+        $email = Auth::user()->email;
+
+        if($file1 !=null && $file2 !=null){
+
+            $path = public_path().'/document/';
+            $extension = $file1->getClientOriginalExtension();
+            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
+            $file1->move($path, $fileName);
+
+            $extension2 = $file2->getClientOriginalExtension();
+            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
+            $file2->move($path, $fileName2);
+
+
+            $estudiante = Estudiante::find($id);
+            $post1 = Post2::where('student_id',$id)
+                    ->where('doctorado_id',$doc)
+                    ->first();
+
+            $post1->extenso = $fileName;
+            $post1->carta_aceptacion = $fileName2;
+            $post1->updated_at = $date;
+            $post1->save();
+            Alert::success('Estudiante', 'Actualizado exitosamente!');
+            return redirect()->route('estudiantes.index');
+        }else{
+            return back();
+        }
+
+        }catch (\Exception $e){
+            Alert::error('Usuario', '¡Error durante el almacenamiento!');
+            return redirect()->back();
+        }
+
+    }
+
 
 
 

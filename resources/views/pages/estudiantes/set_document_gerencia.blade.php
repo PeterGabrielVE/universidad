@@ -106,6 +106,8 @@
                                                 <td>@if(isset($pre->extenso))
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->extenso.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPres/'.$estudiante->id.'/1')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
                                                     @else
                                                     <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.presentation',$estudiante->id)}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
@@ -114,6 +116,8 @@
                                                 <td>@if(isset($pre->carta_aceptacion))
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->carta_aceptacion.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPres/'.$estudiante->id.'/1')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
                                                     @else
                                                     <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.presentation',$estudiante->id)}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
@@ -122,6 +126,8 @@
                                                 <td>@if(isset($pre->poster))
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->poster.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPres/'.$estudiante->id.'/1')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
                                                     @else
                                                     <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.presentation',$estudiante->id)}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
@@ -130,6 +136,8 @@
                                                 <td>@if(isset($pre->certificado))
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->certificado.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPres/'.$estudiante->id.'/1')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
                                                     @else
                                                     <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.presentation',$estudiante->id)}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
