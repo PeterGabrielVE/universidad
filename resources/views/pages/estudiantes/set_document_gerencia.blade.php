@@ -50,9 +50,9 @@
                                         <thead>
                                             <tr>
                                                 <th>Publ. 1 - Extenso</th>
-                                                <th>Publ. 1 - Carta de Aceptación</th>
+                                                <th>Publ. 1 - Constancia de Aceptación</th>
                                                 <th>Publ. 2 - Extenso</th>
-                                                <th>Publ. 2 - Carta de Aceptación</th>
+                                                <th>Publ. 2 - Constancia de Aceptación</th>
                                                 <th>Ponencia - Extenso</th>
                                                 <th>Ponencia - Carta de Aceptación</th>
                                                 <th>Ponencia  - Presentación</th>
@@ -65,6 +65,8 @@
                                                 <td>@if(isset($post1->extenso))
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post1->extenso.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPost1/'.$estudiante->id.'/1')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
                                                     @else
                                                     <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.documentos',$estudiante->id)}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
@@ -73,6 +75,8 @@
                                                 <td>@if(isset($post1->carta_aceptacion))
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post1->carta_aceptacion.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPost1/'.$estudiante->id.'/1')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
                                                     @else
                                                     <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.documentos',[$estudiante->id,'1'])}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
@@ -81,6 +85,8 @@
                                                 <td>@if(isset($post2->extenso))
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post2->extenso.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPost2/'.$estudiante->id.'/1')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
                                                     @else
                                                     <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.documento.post2',$estudiante->id)}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
@@ -89,6 +95,8 @@
                                                 <td>@if(isset($post2->carta_aceptacion))
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post2->carta_aceptacion.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPost2/'.$estudiante->id.'/1')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
                                                     @else
                                                     <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.documento.post2',$estudiante->id)}}">
                                                     <i class="fas fa-upload text-uft"></i></a>

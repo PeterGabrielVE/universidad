@@ -71,3 +71,7 @@ Route::get('todos/documento/estudiante/{id}', 'EstudiantesController@setAlldocum
 Route::post('setAll/documento/estudiante/{id}', 'EstudiantesController@documents_store_ciencia')->name('estudiantes.set_all_document');
 Route::get('estudiantes/documentos/ciencias', 'EstudiantesController@setdocument')->name('estudiantes/documentos/ciencias');
 Route::get('estudiantes/documentos/gerencia/{id}', 'EstudiantesController@setDocumentGerencia')->name('estudiantes/documentos/gerencia');
+Route::get('edit/documentPost1/{id}/{doc}','EstudiantesController@editDocumentPost1');
+Route::get('edit/documentPost2/{id}/{doc}','EstudiantesController@editDocumentPost2');
+Route::post('documentPost1Update/{id}/{doc}', 'EstudiantesController@documentPost1Update')->name('estudiante.documentPost1Update');
+Route::post('documentPost2Update/{id}/{doc}', 'EstudiantesController@documentPost2Update')->name('estudiante.documentPost2Update');
