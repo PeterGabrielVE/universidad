@@ -47,7 +47,7 @@
                                 </div>
                                  <div class="col-lg-12">
                                     <div>
-                                        {!! Form::open(['route'=>["estudiante.presentationGerenciaStore",$estudiante->id],'method'=>'POST', 'class'=>'user','files'=>true,'enctype'=>'multipart/form-data']) !!}
+                                        {!! Form::open(['route'=>["estudiante.presentationGerenciaUpdate",[$estudiante->id,1]],'method'=>'POST', 'class'=>'user','files'=>true,'enctype'=>'multipart/form-data']) !!}
                                             <div class="form-group row">
                                                 <div class="col-md-3">
                                                     <div class="form-group">

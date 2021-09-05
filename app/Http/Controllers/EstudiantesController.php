@@ -1001,6 +1001,60 @@ class EstudiantesController extends Controller
 
     }
 
+    public function presentationGerenciaUpdate(Request $request, $id, $doc)
+    {
+        try{
+
+        $file1 = $request->extenso;
+        $file2 = $request->carta_aceptacion;
+        $file3 = $request->poster;
+        $file4 = $request->certificado;
+        $date = Carbon::now();
+        $email = Auth::user()->email;
+
+        if($file1 !=null && $file2 !=null && $file3 !=null && $file4 !=null){
+
+            $path = public_path().'/document/';
+            $extension = $file1->getClientOriginalExtension();
+            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
+            $file1->move($path, $fileName);
+
+            $extension2 = $file2->getClientOriginalExtension();
+            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
+            $file2->move($path, $fileName2);
+
+            $extension3 = $file3->getClientOriginalExtension();
+            $fileName3 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension3;
+            $file3->move($path, $fileName3);
+
+            $extension4 = $file4->getClientOriginalExtension();
+            $fileName4 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension4;
+            $file4->move($path, $fileName4);
+
+            $pre = Presentation::where('student_id',$id)
+            ->where('doctorado_id',$doc)
+            ->first();
+            $pre->student_id = $id;
+            $pre->extenso = $fileName;
+            $pre->carta_aceptacion = $fileName2;
+            $pre->poster = $fileName3;
+            $pre->certificado = $fileName4;
+            $pre->doctorado_id = 1;
+            $pre->created_at = $date;
+            $pre->updated_at = $date;
+            $pre->save();
+            Alert::success('Estudiante', 'Actualizado exitosamente!');
+            return redirect()->route('estudiantes.index',$id);
+        }else{
+            return back();
+        }
+        }catch (\Exception $e){
+            Alert::error('Usuario', '¡Error durante el almacenamiento!');
+            return redirect()->back();
+        }
+    }
+
+
 
 
 

@@ -58,6 +58,7 @@ Route::get('presentations/{id}', 'EstudiantesController@presentation')->name('es
 Route::get('presentations/gerencia/{id}', 'EstudiantesController@presentation_gerencia')->name('estudiante.presentation.gerencia');
 Route::post('presentationStore/{id}', 'EstudiantesController@presentationStore')->name('estudiante.presentationStore');
 Route::post('presentationGerenciaStore/{id}', 'EstudiantesController@presentationGerenciaStore')->name('estudiante.presentationGerenciaStore');
+Route::post('presentationGerenciaUpdate/{id}', 'EstudiantesController@presentationGerenciaUpdate')->name('estudiante.presentationGerenciaUpdate');
 Route::get('reports', 'EstudiantesController@reports')->name('reports');
 
 Route::get('documento/estudiante/{id}', 'EstudiantesController@setdocument')->name('estudiantes.document');

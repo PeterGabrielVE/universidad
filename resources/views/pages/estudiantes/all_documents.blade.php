@@ -106,7 +106,7 @@
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-                                                            {!! Form::label('lbl_nombres', 'Carta de Aceptación', ['class'=>'col-form-label s-12']) !!}
+                                                            {!! Form::label('lbl_nombres', 'Certificado', ['class'=>'col-form-label s-12']) !!}
                                                             <input id="file4" class="file ciencia_required" name="c_certificado" type="file" size="15">
                                                         </div>
                                                     </div>
