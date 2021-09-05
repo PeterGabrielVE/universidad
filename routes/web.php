@@ -78,4 +78,4 @@ Route::get('edit/documentPres/{id}/{doc}','EstudiantesController@editDocumentPre
 Route::post('documentPost1Update/{id}/{doc}', 'EstudiantesController@documentPost1Update')->name('estudiante.documentPost1Update');
 Route::post('documentPost2Update/{id}/{doc}', 'EstudiantesController@documentPost2Update')->name('estudiante.documentPost2Update');
 Route::get('edit/documentos/{id}','EstudiantesController@editDocumentos');
-Route::post('updateAll/documento/estudiante/{id}', 'EstudiantesController@update_store_ciencia')->name('estudiantes.update_all_document');
+Route::post('updateAll/documento/estudiante/{id}', 'EstudiantesController@documents_update_ciencia')->name('estudiantes.update_all_document');
