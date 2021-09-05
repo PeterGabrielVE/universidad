@@ -108,7 +108,7 @@
                     </a>
                     <div id="collapseFour" class="collapse" aria-labelledby="collapseFour" data-parent="#accordionSidebar">
                         <div class="bg-uft py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="{{ route('estudiantes.document',Auth::user()->estudiante(Auth::user()->id)) }}">Ciencias de la Educación</a>
+                            <a class="collapse-item" href="{{ route('estudiantes/documentos/ciencias',Auth::user()->estudiante(Auth::user()->id)) }}">Ciencias de la Educación</a>
                             <a class="collapse-item" href="{{ route('estudiantes/documentos/gerencia',Auth::user()->estudiante(Auth::user()->id)) }}">Gerencia Avanzada</a>
                         </div>
                     </div>

@@ -101,7 +101,7 @@ class EstudiantesController extends Controller
             $file6 = $req->c_carta_aceptacion;
             $file7 = $req->c_poster;
             $file8 = $req->c_certificado;
-            $this->documents_store_ciencia($file1,$file2,$file3,$file4,$file5,$file6,$file7,$file8,$stud->id);
+            $this->documents_store_ciencia($file1,$file2,$file3,$file4,$file5,$file6,$file7,$file8,$stud->id,$doc);
         }
 
 
@@ -435,6 +435,7 @@ class EstudiantesController extends Controller
             $post1->student_id = $id;
             $post1->extenso = $fileName;
             $post1->carta_aceptacion = $fileName2;
+            $post1->doctorado_id = 2;
             $post1->created_at = $date;
             $post1->updated_at = $date;
             $post1->save();
@@ -453,6 +454,7 @@ class EstudiantesController extends Controller
             $post1->student_id = $id;
             $post1->extenso = $fileName3;
             $post1->carta_aceptacion = $fileName4;
+            $post1->doctorado_id = 2;
             $post1->created_at = $date;
             $post1->updated_at = $date;
             $post1->save();
@@ -480,6 +482,7 @@ class EstudiantesController extends Controller
             $pre->carta_aceptacion = $fileName6;
             $pre->poster = $fileName7;
             $pre->certificado = $fileName8;
+            $pre->doctorado_id = 2;
             $pre->created_at = $date;
             $pre->updated_at = $date;
             $pre->save();
@@ -683,6 +686,14 @@ class EstudiantesController extends Controller
 
     }
 
+
+    public function editDocumentos($id)
+    {
+        $estudiante = Estudiante::find($id);
+        return view('pages.estudiantes.documents.all_edit_documents',compact('estudiante'));
+
+    }
+
     public function setDocumentGerencia($id)
     {
         $estudiante = Estudiante::find($id);
@@ -690,6 +701,17 @@ class EstudiantesController extends Controller
         $post2 = Post2::where('student_id',$id)->first();
         $pre = Presentation::where('student_id',$id)->first();
         return view('pages.estudiantes.set_document_gerencia',compact('estudiante','post1','post2','pre'));
+
+    }
+
+
+    public function setDocumentCiencias($id)
+    {
+        $estudiante = Estudiante::find($id);
+        $post1 = Post1::where('student_id',$id)->where('doctorado_id',2)->first();
+        $post2 = Post2::where('student_id',$id)->where('doctorado_id',2)->first();
+        $pre = Presentation::where('student_id',$id)->where('doctorado_id',2)->first();
+        return view('pages.estudiantes.documents.show_documents_ciencias',compact('estudiante','post1','post2','pre'));
 
     }
 

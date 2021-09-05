@@ -50,9 +50,9 @@
                                         <thead>
                                             <tr>
                                                 <th>Publ. 1 - Extenso</th>
-                                                <th>Publ. 1 - Carta de Aceptación</th>
+                                                <th>Publ. 1 - Constancia de Aceptación</th>
                                                 <th>Publ. 2 - Extenso</th>
-                                                <th>Publ. 2 - Carta de Aceptación</th>
+                                                <th>Publ. 2 - Constancia de Aceptación</th>
                                                 <th>Ponencia - Extenso</th>
                                                 <th>Ponencia - Carta de Aceptación</th>
                                                 <th>Ponencia  - Presentación</th>
