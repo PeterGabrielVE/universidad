@@ -28,7 +28,7 @@
                             <div class="row">
                                 <div class="col-lg-12 margin-tb">
                                     <div class="pull-left">
-                                        <h6 class="m-0 font-weight-bold text-uft">Documentos Estudiante: {{ $estudiante->user->name ?? null }} {{ $estudiante->user->last_name ?? null }}</h6>
+                                        <h6 class="m-0 font-weight-bold text-uft">Documentos Estudiante: {{ $estudiante->user->first_name ?? null }} {{ $estudiante->user->last_name ?? null }}</h6>
                                     </div>
                                     <div class="pull-right">
                                         <a href="{{ url()->previous() }}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>

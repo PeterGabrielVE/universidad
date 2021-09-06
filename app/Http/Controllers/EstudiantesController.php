@@ -512,11 +512,28 @@ class EstudiantesController extends Controller
     public function calificacion($id)
     {
         $estudiante = Estudiante::find($id);
-        $post1 = Post1::where('student_id',$id)->first();
-        $post2 = Post2::where('student_id',$id)->first();
-        $pre = Presentation::where('student_id',$id)->first();
+
         $calificacion = ['0'=>'Seleccione calificación','1'=>'Aprobado','2'=>'No Aprobado'];
-        return view('pages.estudiantes.calificacion',compact('estudiante','post1','post2','pre','calificacion'));
+
+        if($estudiante->user->doctorado_id == 3){
+            $post1_gerencia = Post1::where('student_id',$id)->where('doctorado_id',1)->first();
+            $post2_gerencia = Post2::where('student_id',$id)->where('doctorado_id',1)->first();
+            $pre_gerencia = Presentation::where('student_id',$id)->where('doctorado_id',1)->first();
+
+            $post1_ciencia = Post1::where('student_id',$id)->where('doctorado_id',2)->first();
+            $post2_ciencia = Post2::where('student_id',$id)->where('doctorado_id',2)->first();
+            $pre_ciencia = Presentation::where('student_id',$id)->where('doctorado_id',2)->first();
+
+            return view('pages.estudiantes.documents.calificacion_total',compact('estudiante','post1_gerencia','post2_gerencia','pre_gerencia',
+            'post1_ciencia','post2_ciencia','pre_ciencia','calificacion'));
+
+        }else{
+            $post1 = Post1::where('student_id',$id)->first();
+            $post2 = Post2::where('student_id',$id)->first();
+            $pre = Presentation::where('student_id',$id)->first();
+            return view('pages.estudiantes.calificacion',compact('estudiante','post1','post2','pre','calificacion'));
+        }
+
 
     }
 
