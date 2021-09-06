@@ -45,7 +45,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <form action="{{ route('calificacion.store',$estudiante->id) }}"  method="POST">
+                                    <form action="{{ route('calificacion.store.doc',[$estudiante->id,1]) }}"  method="POST">
                                         {{ csrf_field() }}
                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                         <thead>
@@ -164,7 +164,7 @@
                                                     @endif
                                                 </td>
                                                 <td>@if(isset($pre_gerencia->poster))
-                                                    {!! Form::select('pre_poster_note', $calificacion,$pre_ciencia->poster_gerencia_note ?? '', ['class'=>'form-control', 'id'=>'pre_poster_note']) !!}
+                                                    {!! Form::select('pre_poster_note', $calificacion,$pre_gerencia->poster_note ?? '', ['class'=>'form-control', 'id'=>'pre_poster_note']) !!}
                                                     @endif
                                                 </td>
                                             </tr>
@@ -179,8 +179,8 @@
                                                         <p>Ponencia: Certificado - No posee</p>
                                                     @endif
                                                 </td>
-                                                <td>@if(isset($pre_ciencia->certificado))
-                                                    {!! Form::select('pre_certificado_note', $calificacion,$pre_ciencia->certificado_note ?? '', ['class'=>'form-control', 'id'=>'pre_certificado_note']) !!}
+                                                <td>@if(isset($pre_gerencia->certificado))
+                                                    {!! Form::select('pre_certificado_note', $calificacion,$pre_gerencia->certificado_note ?? '', ['class'=>'form-control', 'id'=>'pre_certificado_note']) !!}
                                                     @endif
                                                 </td>
                                             </tr>
@@ -212,7 +212,7 @@
 
                 </div>
                 <div class="table-responsive">
-                    <form action="{{ route('calificacion.store',$estudiante->id) }}"  method="POST">
+                    <form action="{{ route('calificacion.store.doc',[$estudiante->id,2]) }}"  method="POST">
                         {{ csrf_field() }}
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>

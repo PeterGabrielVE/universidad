@@ -65,6 +65,7 @@ Route::get('documento/estudiante/{id}', 'EstudiantesController@setdocument')->na
 Route::get('documentos/estudiante/{id}/{doc}', 'EstudiantesController@document_doctorado')->name('estudiante.documentos');
 Route::get('calificacion/estudiante/{id}', 'EstudiantesController@calificacion')->name('estudiantes.calificacion');
 Route::post('store/calificacion/{id}', 'EstudiantesController@storeCalificacion')->name('calificacion.store');
+Route::post('store/calificacion/{id}/{doc}', 'EstudiantesController@storeDocCalificacion')->name('calificacion.store.doc');
 Route::get('download/document/{file}','EstudiantesController@downloadDocument');
 Route::get('download/sede/{id}','EstudiantesController@downloadSedePdf');
 Route::get('download/student/{id}','EstudiantesController@downloadStudentPdf');

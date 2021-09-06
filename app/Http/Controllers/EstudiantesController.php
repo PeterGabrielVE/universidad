@@ -565,6 +565,34 @@ class EstudiantesController extends Controller
 
     }
 
+    public function storeDocCalificacion(Request $req,$id,$doc)
+    {
+        try{
+        $post1 = Post1::where('student_id',$id)->where('doctorado_id',$doc)->first();
+        $post1->extenso_note = $req->post1_extenso_note;
+        $post1->carta_aceptacion_note = $req->post1_carta_aceptacion_note;
+        $post1->save();
+
+        $post2 = Post2::where('student_id',$id)->where('doctorado_id',$doc)->first();
+        $post2->extenso_note = $req->post2_extenso_note;
+        $post2->carta_aceptacion_note = $req->post2_carta_aceptacion_note;
+        $post2->save();
+
+        $pre = Presentation::where('student_id',$id)->where('doctorado_id',$doc)->first();
+        $pre->extenso_note = $req->pre_extenso_note;
+        $pre->carta_aceptacion_note = $req->pre_carta_aceptacion_note;
+        $pre->poster_note = $req->pre_poster_note;
+        $pre->certificado_note = $req->pre_certificado_note;
+        $pre->save();
+        Alert::success('Estudiante', 'Guardado exitosamente!');
+        return back();
+        }catch (\Exception $e){
+            Alert::error('Usuario', '¡Error durante el almacenamiento!');
+            return redirect()->back();
+        }
+
+    }
+
     public function downloadDocument($file)
     {
          $path = public_path().'/document';
