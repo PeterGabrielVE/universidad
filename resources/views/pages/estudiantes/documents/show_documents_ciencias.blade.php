@@ -21,7 +21,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">{{ Auth::user()->name ?? null }} {{ Auth::user()->last_name ?? null }}</h1>
+                    <h1 class="h3 mb-2 text-gray-800">{{ Auth::user()->first_name ?? null }} {{ Auth::user()->last_name ?? null }}</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -32,7 +32,7 @@
                                         <h6 class="m-0 font-weight-bold text-uft">Documentos Estudiante</h6>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="{{route('estudiantes.index')}}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
+                                        <a href="{{ url()->previous() }}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
                                     </div>
                                 </div>
                             </div>
@@ -42,88 +42,168 @@
                             <div class="row">
                                 <div class="col-12 mb-4">
                                     <div class="pull-left">
-                                        <h6 class="font-weight-bold text-uft">Ingrese todos los documentos</h6>
+
                                     </div>
                                 </div>
-                                 <div class="col-lg-12">
-                                    <div>
-                                        {!! Form::open(['route'=>["estudiantes.set_all_document",$estudiante->id],'method'=>'POST', 'class'=>'user','files'=>true,'enctype'=>'multipart/form-data']) !!}
-                                        <div class="form-group row">
-                                            <div class="col-md-12">
-                                                <h6 class="font-weight-bold text-uft">Publicación 1</h6>
-                                                <div class="form-row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            {!! Form::label('lbl_nombres', 'Extenso', ['class'=>'col-form-label s-12']) !!}
-                                                            <input id="file" class="file ciencia_required" name="c_post1_extenso" type="file" size="15">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            {!! Form::label('lbl_nombres', 'Carta de Aceptación', ['class'=>'col-form-label s-12']) !!}
-                                                            <input id="file2" class="file ciencia_required" name="c_post1_carta" type="file" size="15">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <h6 class="font-weight-bold text-uft">Publicación 2</h6>
-                                                <div class="form-row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            {!! Form::label('lbl_nombres', 'Extenso', ['class'=>'col-form-label s-12']) !!}
-                                                            <input id="file" class="file ciencia_required" name="c_post2_extenso" type="file" size="15">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            {!! Form::label('lbl_nombres', 'Carta de Aceptación', ['class'=>'col-form-label s-12']) !!}
-                                                            <input id="file2" class="file ciencia_required" name="c_post2_carta" type="file" size="15">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <h6 class="font-weight-bold text-uft">Ponencia</h6>
-                                                <div class="form-row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            {!! Form::label('lbl_nombres', 'Extenso', ['class'=>'col-form-label s-12']) !!}
-                                                            <input id="file1" class="file ciencia_required" name="c_extenso" type="file" size="15">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            {!! Form::label('lbl_nombres', 'Carta de Aceptación', ['class'=>'col-form-label s-12']) !!}
-                                                            <input id="file2" class="file ciencia_required" name="c_carta_aceptacion" type="file" size="15">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            {!! Form::label('lbl_nombres', 'Extenso', ['class'=>'col-form-label s-12']) !!}
-                                                            <input id="file3" class="file ciencia_required" name="c_poster" type="file" size="15">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            {!! Form::label('lbl_nombres', 'Certificado', ['class'=>'col-form-label s-12']) !!}
-                                                            <input id="file4" class="file ciencia_required" name="c_certificado" type="file" size="15">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                            <div class="form-group row">
-                                                <div class="col-lg-3"></div>
-                                                <div class="col-lg-3">
-                                                    <button type="submit" class="btn btn-uft btn-block" style="width: 400px;"><i class="icon-save mr-2"></i>Subir</button>
-                                                </div>
-                                                <div class="col-lg-3"></div>
-                                            </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Publ. 1 - Extenso</th>
+                                                <th>Publ. 1 - Constancia de Aceptación</th>
+                                                <th>Publ. 2 - Extenso</th>
+                                                <th>Publ. 2 - Constancia de Aceptación</th>
+                                                <th>Ponencia - Extenso</th>
+                                                <th>Ponencia - Carta de Aceptación</th>
+                                                <th>Ponencia  - Presentación</th>
+                                                <th>Ponencia  - Certificado</th>
+                                            </tr>
+                                        </thead>
 
-                                       {!! Form::close() !!}
+                                        <tbody>
 
-                                    </div>
+                                            <tr>
+                                                <td>@if(isset($post1->extenso))
+                                                    @if(isset($post1->extenso_note))
+                                                        @if($post1->extenso_note == 1)
+                                                            <b>Nota:Aprobado</b>
+                                                        @else
+                                                            <b>Nota: No Aprobado</b>
+                                                        @endif
+                                                    @endif
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post1->extenso.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentos/'.$estudiante->id.'')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                                <td>@if(isset($post1->carta_aceptacion))
+                                                    @if(isset($post1->carta_aceptacion_note))
+                                                        @if($post1->carta_aceptacion_note == 1)
+                                                            <b>Nota:Aprobado</b>
+                                                        @else
+                                                            <b>Nota: No Aprobado</b>
+                                                        @endif
+                                                    @endif
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post1->carta_aceptacion.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentos/'.$estudiante->id.'')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                                <td>@if(isset($post2->extenso))
+                                                    @if(isset($post2->extenso_note))
+                                                        @if($post2->extenso_note == 1)
+                                                            <b>Nota:Aprobado</b>
+                                                        @else
+                                                            <b>Nota: No Aprobado</b>
+                                                        @endif
+                                                     @endif
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post2->extenso.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentos/'.$estudiante->id.'')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.document.post2',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                                <td>@if(isset($post2->carta_aceptacion))
+                                                    @if(isset($post2->carta_aceptacion_note))
+                                                            @if($post2->carta_aceptacion_note == 1)
+                                                                <b>Nota:Aprobado</b>
+                                                            @else
+                                                                <b>Nota: No Aprobado</b>
+                                                            @endif
+                                                     @endif
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post2->carta_aceptacion.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentos/'.$estudiante->id.'')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+
+                                                <td>@if(isset($pre->extenso))
+                                                    @if(isset($pre->extenso_note))
+                                                        @if($pre->extenso_note == 1)
+                                                            <b>Nota:Aprobado</b>
+                                                        @else
+                                                            <b>Nota: No Aprobado</b>
+                                                        @endif
+                                                    @endif
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->extenso.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentos/'.$estudiante->id.'')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                                <td>@if(isset($pre->carta_aceptacion))
+                                                        @if(isset($pre->carta_aceptacion_note))
+                                                            @if($pre->carta_aceptacion_note == 1)
+                                                                <b>Nota:Aprobado</b>
+                                                            @else
+                                                                <b>Nota: No Aprobado</b>
+                                                            @endif
+                                                        @endif
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->carta_aceptacion.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentos/'.$estudiante->id.'')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                                <td>@if(isset($pre->poster))
+                                                    @if(isset($pre->poster_note))
+                                                        @if($pre->poster_note == 1)
+                                                            <b>Nota:Aprobado</b>
+                                                        @else
+                                                            <b>Nota: No Aprobado</b>
+                                                        @endif
+                                                    @endif
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->poster.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentos/'.$estudiante->id.'')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                                <td>@if(isset($pre->certificado))
+                                                    @if(isset($pre->certificado_note))
+                                                        @if($pre->certificado_note == 1)
+                                                            <b>Nota:Aprobado</b>
+                                                        @else
+                                                            <b>Nota: No Aprobado</b>
+                                                        @endif
+                                                    @endif
+                                                    <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->certificado.'')}}">
+                                                    <i class="fas fa-download text-uft"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentos/'.$estudiante->id.'')}}">
+                                                        <i class="fas fa-edit text-uft"></i></a>
+                                                    @else
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiantes.all_document',$estudiante->id)}}">
+                                                    <i class="fas fa-upload text-uft"></i></a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
                                 </div>
                             </div>
                         </div>
@@ -135,11 +215,6 @@
 
             </div>
             <!-- End of Main Content -->
-
-            <!-- Footer -->
-            @include('layouts.footer')
-            <!-- End of Footer -->
-
         </div>
         <!-- End of Content Wrapper -->
 
@@ -154,24 +229,10 @@
 <script src={{asset('bootstrap-fileinput/js/locales/es.js')}}></script>
 <script src={{asset('bootstrap-fileinput/themes/gly/theme.js')}}></script>
 <script>
-		var title = 'Users';
-		var colunms = [0,1,2,3,4];
-
-		$(".file").fileinput({
-			showCaption: false,
-			showRemove: false,
-			showUpload: false,
-			showBrowse: false,
-			browseOnZoneClick: true,
-		});
-
-    $(document).ready(function() {
-        $('#account').addClass('active');
-    });
+	$('#dataTable').dataTable({
+        "bPaginate": false, //Ocultar paginación
+        "bFilter": false,
+        "bInfo": false
+    })
 </script>
 @endsection
-
-
-
-
-

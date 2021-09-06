@@ -63,6 +63,13 @@
                                         <tbody>
                                             <tr>
                                                 <td>@if(isset($post1->extenso))
+                                                        @if(isset($post1->extenso_note))
+                                                            @if($post1->extenso_note == 1)
+                                                                <b>Nota:Aprobado</b>
+                                                            @else
+                                                                <b>Nota: No Aprobado</b>
+                                                            @endif
+                                                        @endif
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post1->extenso.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPost1/'.$estudiante->id.'/1')}}">
@@ -73,6 +80,13 @@
                                                     @endif
                                                 </td>
                                                 <td>@if(isset($post1->carta_aceptacion))
+                                                    @if(isset($post1->carta_aceptacion_note))
+                                                        @if($post1->carta_aceptacion_note == 1)
+                                                            <b>Nota:Aprobado</b>
+                                                        @else
+                                                            <b>Nota: No Aprobado</b>
+                                                        @endif
+                                                    @endif
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post1->carta_aceptacion.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPost1/'.$estudiante->id.'/1')}}">
@@ -83,6 +97,13 @@
                                                     @endif
                                                 </td>
                                                 <td>@if(isset($post2->extenso))
+                                                    @if(isset($post2->extenso_note))
+                                                        @if($post2->extenso_note == 1)
+                                                            <b>Nota:Aprobado</b>
+                                                        @else
+                                                            <b>Nota: No Aprobado</b>
+                                                        @endif
+                                                    @endif
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post2->extenso.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPost2/'.$estudiante->id.'/1')}}">
@@ -93,6 +114,13 @@
                                                     @endif
                                                 </td>
                                                 <td>@if(isset($post2->carta_aceptacion))
+                                                        @if(isset($post2->carta_aceptacion_note))
+                                                            @if($post2->carta_aceptacion_note == 1)
+                                                                <b>Nota:Aprobado</b>
+                                                            @else
+                                                                <b>Nota: No Aprobado</b>
+                                                            @endif
+                                                        @endif
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post2->carta_aceptacion.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPost2/'.$estudiante->id.'/1')}}">
@@ -104,6 +132,13 @@
                                                 </td>
 
                                                 <td>@if(isset($pre->extenso))
+                                                    @if(isset($pre->extenso_note))
+                                                        @if($pre->extenso_note == 1)
+                                                            <b>Nota:Aprobado</b>
+                                                        @else
+                                                            <b>Nota: No Aprobado</b>
+                                                        @endif
+                                                    @endif
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->extenso.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPres/'.$estudiante->id.'/1')}}">
@@ -114,6 +149,13 @@
                                                     @endif
                                                 </td>
                                                 <td>@if(isset($pre->carta_aceptacion))
+                                                        @if(isset($pre->carta_aceptacion_note))
+                                                            @if($pre->carta_aceptacion_note == 1)
+                                                                <b>Nota:Aprobado</b>
+                                                            @else
+                                                                <b>Nota: No Aprobado</b>
+                                                            @endif
+                                                        @endif
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->carta_aceptacion.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPres/'.$estudiante->id.'/1')}}">
@@ -124,6 +166,13 @@
                                                     @endif
                                                 </td>
                                                 <td>@if(isset($pre->poster))
+                                                    @if(isset($pre->poster_note))
+                                                            @if($pre->poster_note == 1)
+                                                                <b>Nota:Aprobado</b>
+                                                            @else
+                                                                <b>Nota: No Aprobado</b>
+                                                            @endif
+                                                     @endif
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->poster.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPres/'.$estudiante->id.'/1')}}">
@@ -134,6 +183,13 @@
                                                     @endif
                                                 </td>
                                                 <td>@if(isset($pre->certificado))
+                                                    @if(isset($pre->certificado_note))
+                                                        @if($pre->certificado_note == 1)
+                                                            <b>Nota:Aprobado</b>
+                                                        @else
+                                                            <b>Nota: No Aprobado</b>
+                                                        @endif
+                                                    @endif
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$pre->certificado.'')}}">
                                                     <i class="fas fa-download text-uft"></i></a>
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPres/'.$estudiante->id.'/1')}}">
