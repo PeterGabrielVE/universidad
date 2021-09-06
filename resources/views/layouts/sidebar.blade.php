@@ -115,9 +115,16 @@
                     </li>
                 @else
                 <li class="nav-item">
-                    <a class="nav-link collapsed text-uft" href="{{ route('estudiantes.document',Auth::user()->estudiante(Auth::user()->id)) }}">
+                    @if (Auth::user()->doctorado_id == 1)
+                    <a class="nav-link collapsed text-uft" href="{{ route('estudiantes/documentos/gerencia',Auth::user()->estudiante(Auth::user()->id)) }}">
                         <span>Mis Documentos</span>
                     </a>
+                    @endif
+                    @if (Auth::user()->doctorado_id == 2)
+                    <a class="nav-link collapsed text-uft" href="{{ route('estudiantes/documentos/ciencias',Auth::user()->estudiante(Auth::user()->id)) }}">
+                        <span>Mis Documentos</span>
+                    </a>
+                    @endif
                 </li>
                 @endif
             <hr class="sidebar-divider">

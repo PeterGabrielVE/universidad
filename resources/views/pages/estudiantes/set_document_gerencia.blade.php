@@ -32,7 +32,7 @@
                                         <h6 class="m-0 font-weight-bold text-uft">Documentos de Gerencia Avanzada</h6>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="{{ url()->previous() }}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
+                                        <a href="{{route('estudiantes.index')}}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
                                     </div>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPost1/'.$estudiante->id.'/1')}}">
                                                         <i class="fas fa-edit text-uft"></i></a>
                                                     @else
-                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.documentos',$estudiante->id)}}">
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.documentos',[$estudiante->id,1])}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
                                                     @endif
                                                 </td>
@@ -109,7 +109,7 @@
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPost2/'.$estudiante->id.'/1')}}">
                                                         <i class="fas fa-edit text-uft"></i></a>
                                                     @else
-                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.documento.post2',$estudiante->id)}}">
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.documento.post2',[$estudiante->id,1])}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
                                                     @endif
                                                 </td>
@@ -126,7 +126,7 @@
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPost2/'.$estudiante->id.'/1')}}">
                                                         <i class="fas fa-edit text-uft"></i></a>
                                                     @else
-                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.documento.post2',$estudiante->id)}}">
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.documento.post2',[$estudiante->id,1])}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
                                                     @endif
                                                 </td>
@@ -144,7 +144,7 @@
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPres/'.$estudiante->id.'/1')}}">
                                                         <i class="fas fa-edit text-uft"></i></a>
                                                     @else
-                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.presentation',$estudiante->id)}}">
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.presentation',[$estudiante->id,1])}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
                                                     @endif
                                                 </td>
@@ -161,7 +161,7 @@
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPres/'.$estudiante->id.'/1')}}">
                                                         <i class="fas fa-edit text-uft"></i></a>
                                                     @else
-                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.presentation',$estudiante->id)}}">
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.presentation',[$estudiante->id,1])}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
                                                     @endif
                                                 </td>
@@ -178,7 +178,7 @@
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPres/'.$estudiante->id.'/1')}}">
                                                         <i class="fas fa-edit text-uft"></i></a>
                                                     @else
-                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.presentation',$estudiante->id)}}">
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.presentation',[$estudiante->id,1])}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
                                                     @endif
                                                 </td>
@@ -195,7 +195,7 @@
                                                     <a class="btn btn-default btn-sm" title="Actualizar" href="{{url('edit/documentPres/'.$estudiante->id.'/1')}}">
                                                         <i class="fas fa-edit text-uft"></i></a>
                                                     @else
-                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.presentation',$estudiante->id)}}">
+                                                    <a class="btn btn-default btn-sm" title="Subir" href="{{ route('estudiante.presentation',[$estudiante->id,1])}}">
                                                     <i class="fas fa-upload text-uft"></i></a>
                                                     @endif
                                                 </td>

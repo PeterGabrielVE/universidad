@@ -700,7 +700,8 @@ class EstudiantesController extends Controller
         $post1 = Post1::where('student_id',$id)->first();
         $post2 = Post2::where('student_id',$id)->first();
         $pre = Presentation::where('student_id',$id)->first();
-        return view('pages.estudiantes.set_document_gerencia',compact('estudiante','post1','post2','pre'));
+        $doc = 1;
+        return view('pages.estudiantes.set_document_gerencia',compact('estudiante','post1','post2','pre','doc'));
 
     }
 
