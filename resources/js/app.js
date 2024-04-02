@@ -4,6 +4,9 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+import 'toastr/toastr.js';
+import 'toastr/toastr.scss';
+
 require('./bootstrap');
 
 window.Vue = require('vue');

@@ -9,7 +9,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" id="token">
     <link rel="icon" href={{  URL::asset('img/basic/favicon.ico')}} type="image/x-icon">
     <title>{{config('app.name')}}</title>
-     @toastr_css
     <!-- CSS -->
     <link rel="stylesheet" href=  {{asset('css/app.css')}}>
     <link rel="stylesheet" href=  {{asset('css/all.min.css')}}>
