@@ -30,8 +30,8 @@ class HomeController extends Controller
         $count_coord = User::where('rol_id','2')->select('id')->count();
         $count_dir = User::where('rol_id','2')->select('id')->count();
         $count_asis = User::where('rol_id','3')->select('id')->count();
-        //dd((Auth::user()->id));
-        if(Auth::user()->roles->first()->id == 4){
+        //dd((Auth::user()));
+        if(Auth::user()->role_id == 4){
             $student = Estudiante::where('user_id',Auth::user()->id)->first();
             if($student){
                 return redirect()->route('estudiantes.show',$student->id);

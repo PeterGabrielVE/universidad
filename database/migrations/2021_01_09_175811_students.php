@@ -20,7 +20,7 @@ class Students extends Migration
             $table->string('identification_card');
             $table->string('email');
             $table->string('phone');
-            $table->string('lapse_id');
+            $table->unsignedBigInteger('lapse_id');
             $table->unsignedBigInteger('country_id');
             $table->string('equivalency');
             $table->string('status');
