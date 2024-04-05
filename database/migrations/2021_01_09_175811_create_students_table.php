@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Students extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -15,20 +15,17 @@ class Students extends Migration
     {
          Schema::create('students', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('identification_card');
-            $table->string('email');
-            $table->string('phone');
             $table->unsignedBigInteger('lapse_id');
             $table->unsignedBigInteger('country_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('equivalency');
             $table->string('status');
             $table->timestamps();
 
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
-
             $table->foreign('lapse_id')->references('id')->on('lapses')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 
@@ -41,4 +38,4 @@ class Students extends Migration
     {
         Schema::dropIfExists('students');
     }
-}
+};
