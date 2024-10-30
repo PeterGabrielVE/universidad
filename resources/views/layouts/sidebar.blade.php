@@ -9,7 +9,7 @@
                         </div>
                     </div>
                     <div class="col-12 pt-2">
-                        <div class="sidebar-brand-text row text-uft">UFT</div>
+                        <div class="sidebar-brand-text row text-uft">Gabook</div>
                     </div>
                 </div>
             </a>
