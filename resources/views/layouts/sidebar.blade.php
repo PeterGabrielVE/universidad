@@ -47,6 +47,128 @@
             </li>
             <hr class="sidebar-divider">
             @endif
+            <li class="nav-item">
+                <a class="nav-link text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Roles</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Administrativo</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Docentes</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Estudiantes</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>PPFF</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Grados</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Paralelos</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Asignación</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Materias</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Inscripción</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Kardex</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Calificación</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Gestión</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Niveles</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Turno</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Permisos</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Instituciones</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+
             @if (Auth::user()->rol_id == 2 || Auth::user()->rol_id == 3)
             <li class="nav-item">
                 <a class="nav-link collapsed text-uft" href="#" data-toggle="collapse" data-target="#collapseTwo"

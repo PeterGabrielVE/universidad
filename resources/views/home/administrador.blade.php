@@ -326,7 +326,20 @@
                             </div>
                         </div>
 
-
+                        <div class="col-md-3 col-sm-4">
+                            <div class="wrimagecard wrimagecard-topimage">
+                                <a href="#">
+                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
+                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
+                                    </div>
+                                    <div class="wrimagecard-topimage_title">
+                                        <h4>Instituciones
+                                            <div class="pull-right badge" id="WrThemesIcons"></div>
+                                        </h4>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
 
                     </div>
 
