@@ -40,7 +40,7 @@ class HomeController extends Controller
             }
 
         }else{
-            return view('home', compact('count_estudiante','count_coord','count_asis','count_dir'));
+            return view('home.administrador', compact('count_estudiante','count_coord','count_asis','count_dir'));
         }
 
     }
