@@ -39,8 +39,8 @@
                             <div class="wrimagecard wrimagecard-topimage">
                                 <a href="#">
                                     <div class="wrimagecard-topimage_header"
-                                        style="background-color:rgba(187, 120, 36, 0.1) ">
-                                        <center><i class = "fa fa-users" style="color:#BB7824"></i></center>
+                                        style="background-color:rgba(22, 160, 133, 0.1) ">
+                                        <center><i class = "fa fa-users" style="color:#16A085"></i></center>
                                     </div>
                                     <div class="wrimagecard-topimage_title">
                                         <h4>Roles
@@ -55,7 +55,7 @@
                                 <a href="#">
                                     <div class="wrimagecard-topimage_header"
                                         style="background-color:rgba(187, 120, 36, 0.1) ">
-                                        <center><i class = "fa fa-cubes" style="color:#BB7824"></i></center>
+                                        <center><i class = "fa fa-users" style="color:#BB7824"></i></center>
                                     </div>
                                     <div class="wrimagecard-topimage_title">
                                         <h4>Usuarios
