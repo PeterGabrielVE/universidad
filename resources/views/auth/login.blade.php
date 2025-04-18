@@ -14,13 +14,14 @@
 
 <body>
     <div class="login-box">
+
         <img src="{{ asset('img/logo.png') }}" alt="Logo" class="logo">
         <form method="POST" action="{{ route('login') }}">
             @csrf
             <div class="login-field">
                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
                     name="email" value="{{ old('email') }}" placeholder=" " required autofocus>
-                <label for="email">Correo</label>
+                <label for="email">{{ __('Correo') }}</label>
                 @error('email')
                     <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
@@ -28,20 +29,23 @@
             <div class="login-field">
                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
                     name="password" placeholder=" " required value="{{ old('password') }}">
-                <label for="password">Contraseña</label>
+                <label for="password">{{ __('Contraseña') }}</label>
                 @error('password')
                     <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
             </div>
-            <button type="submit">Ingresar</button>
+            <button type="submit">{{ __('Ingresar') }}</button>
         </form>
+        <div class="mt-3 text-center">
+            {{ __('¿No tienes una cuenta?') }} <a href="{{ route('register') }}">{{ __('Crear cuenta') }}</a>
+        </div>
     </div>
     <script src="{{ asset('js/app.js') }}"></script>
     @if (session('success'))
         <script>
             Swal.fire({
                 icon: 'success',
-                title: 'Éxito',
+                title: '{{ __('Éxito') }}',
                 text: '{{ session('success') }}',
                 timer: 3000
             });
@@ -51,7 +55,7 @@
         <script>
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
+                title: '{{ __('Error') }}',
                 text: '{{ session('error') }}',
                 timer: 3000
             });
