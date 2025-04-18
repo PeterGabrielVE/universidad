@@ -1,0 +1,54 @@
+# Ignore Git-related files
+.git
+.gitignore
+
+# Ignore Composer vendor directory (installed in Dockerfile)
+vendor
+
+# Ignore Node.js dependencies (if using frontend tools like Laravel Mix)
+node_modules
+package-lock.json
+yarn.lock
+
+# Ignore Laravel storage logs and caches (generated at runtime)
+storage/logs/*
+storage/framework/*
+storage/app/*
+!storage/app/public
+bootstrap/cache/*
+
+# Ignore environment files (optional, as .env is copied explicitly in Dockerfile)
+.env
+.env.*
+!.env.example
+
+# Ignore Docker-related files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Ignore IDE and editor files
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# Ignore documentation and test files
+README.md
+CHANGELOG.md
+tests
+phpunit.xml
+
+# Ignore build artifacts and temporary files
+*.log
+*.bak
+*.swp
+*.tmp
+temp/
+tmp/
+
+# Ignore frontend build output (if applicable)
+public/build/*
+public/css/*
+public/js/*
+!public/.htaccess

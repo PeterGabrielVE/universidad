@@ -1,0 +1,45 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gabook-laravel
+    container_name: gabook-app
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=gabook
+      - DB_USERNAME=root
+      - DB_PASSWORD=rootpassword
+    networks:
+      - gabook-network
+
+  db:
+    image: mysql:8.0
+    container_name: gabook-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: gabook
+      MYSQL_USER: gabook_user
+      MYSQL_PASSWORD: gabook_password
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - gabook-network
+
+volumes:
+  db-data:
+
+networks:
+  gabook-network:
+    driver: bridge
