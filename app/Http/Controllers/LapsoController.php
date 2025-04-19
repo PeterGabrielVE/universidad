@@ -6,7 +6,7 @@ use App\Lapso;
 use App\Lapso_estudiante;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class LapsoController extends Controller
 {
@@ -18,7 +18,7 @@ class LapsoController extends Controller
     public function index()
     {
         $lapsos = Lapso::latest()->paginate(5);
-        
+
         return view('pages.lapsos.index',compact('lapsos'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -51,9 +51,9 @@ class LapsoController extends Controller
         $mes2 = date("m", $fecha2);
         $mes2 = $this->obtenerMes($mes2);
         $anno2 = date("Y", $fecha2);
-    
+
         $name = 'Lapso '.$mes1.' '.$anno1.'-'.$mes2.' '.$anno2;
-        
+
         $name = array('name'=>$name);
         $data = array_replace($data,$name);
 
@@ -66,7 +66,7 @@ class LapsoController extends Controller
         $lapso = Lapso::create($data);
 
         $lapsos = Lapso::latest()->paginate(5);
-  
+
         return view('pages.lapsos.index',compact('lapsos'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -190,14 +190,14 @@ class LapsoController extends Controller
                 return "Diciembre";
                 break;
             default:
-                break;   
+                break;
         }
     }
 
     public function getPensum(){
-        
+
         $asignaturas = DB::table('courses')->orderBy('semester_id','ASC')->get();
         return view('pages.lapsos.pensum',compact('asignaturas'));
-    }    
+    }
 
 }

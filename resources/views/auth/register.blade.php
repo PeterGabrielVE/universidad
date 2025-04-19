@@ -1,77 +1,91 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"">
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}" id="token">
+    <link rel="icon" href="{{ asset('img/basic/favicon.ico') }}" type="image/x-icon">
+    <title>{{ __('Register') }} - {{ config('app.name') }}</title>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
+<body>
 
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
+    <div class="login-box">
+        <img src="{{ asset('img/logo.png') }}" alt="Logo" class="logo">
+        <form method="POST" action="{{ route('register') }}">
+            @csrf
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+            <div class="login-field">
+                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" placeholder=" " required autocomplete="name" autofocus>
+                <label for="name">{{ __('auth.name') }}</label>
+                @error('name')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
             </div>
+
+            <div class="login-field">
+                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" placeholder=" " required autocomplete="email">
+                <label for="email">{{ __('E-Mail Address') }}</label>
+                @error('email')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="login-field">
+                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder=" " required autocomplete="new-password">
+                <label for="password">{{ __('Password') }}</label>
+                @error('password')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="login-field">
+                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder=" " required autocomplete="new-password">
+                <label for="password-confirm">{{ __('Confirm Password') }}</label>
+            </div>
+
+            <button type="submit">{{ __('Register') }}</button>
+        </form>
+        <div class="mt-3 text-center">
+            <a href="{{ route('login') }}">{{ __('Already have an account?') }}</a>
         </div>
     </div>
-</div>
-@endsection
+    <script src="{{ asset('js/app.js') }}"></script>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '{{ __('Success') }}',
+                text: '{{ session('success') }}',
+                timer: 3000
+            });
+        </script>
+    @endif
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: '{{ __('Error') }}',
+                text: '{{ session('error') }}',
+                timer: 3000
+            });
+        </script>
+    @endif
+</body>
+
+<script src={{ asset('js/jquery.min.js') }}></script>
+<script src={{ asset('js/bootstrap.bundle.min.js') }}></script>
+<script src={{ asset('js/jquery.easing.min.js') }}></script>
+<script src={{ asset('js/sb-admin-2.min.js') }}></script>
+<script src={{ asset('js/functions.js') }}></script>
+<script src={{ asset('js/jquery.dataTables.min.js') }}></script>
+<script src={{ asset('js/dataTables.bootstrap4.min.js') }}></script>
+
+<script src={{ asset('js/datatables-demo.js') }}></script>
+
+</html>
+@yield('js')

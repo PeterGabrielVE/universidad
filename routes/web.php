@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LanguageController;
-
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\LoginController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,10 +16,15 @@ use App\Http\Controllers\LanguageController;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
+Route::middleware(['web'])->group(function () {
+    // Tus rutas web aquí
+    Route::get('/', [LoginController::class, 'showLoginForm'])->name('login')->middleware(['web', \App\Http\Middleware\SetLocale::class]);
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware(['web', \App\Http\Middleware\SetLocale::class]);
+    Route::post('/register', [RegisterController::class, 'register']);
+    Route::post('/language/switch', [LanguageController::class, 'switch'])->name('language.switch');
 });
-
 Auth::routes();
 
 Route::post('/language/switch', [LanguageController::class, 'switch'])->name('language.switch');
@@ -78,8 +84,12 @@ Route::get('estudiantes/documentos/ciencias/{id}', 'EstudiantesController@setdoc
 Route::get('estudiantes/documentos/gerencia/{id}', 'EstudiantesController@setDocumentGerencia')->name('estudiantes/documentos/gerencia');
 Route::get('edit/documentPost1/{id}/{doc}','EstudiantesController@editDocumentPost1');
 Route::get('edit/documentPost2/{id}/{doc}','EstudiantesController@editDocumentPost2');
-Route::get('edit/documentPres/{id}/{doc}','EstudiantesController@editDocumentPres');
+Route::get('edit/documentPres/{id}/{doc}','EAstudiantesController@editDocumentPres');
 Route::post('documentPost1Update/{id}/{doc}', 'EstudiantesController@documentPost1Update')->name('estudiante.documentPost1Update');
 Route::post('documentPost2Update/{id}/{doc}', 'EstudiantesController@documentPost2Update')->name('estudiante.documentPost2Update');
 Route::get('edit/documentos/{id}','EstudiantesController@editDocumentos');
 Route::post('updateAll/documento/estudiante/{id}', 'EstudiantesController@documents_update_ciencia')->name('estudiantes.update_all_document');
+
+Route::get('/test-session', function () {
+    dd(session()->all());
+});
