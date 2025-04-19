@@ -24,8 +24,9 @@ class RoleController extends Controller
 
     public function store(RoleRequest $request): RedirectResponse
     {
+        //dd($request->all());
         $this->roleService->create($request->validated());
-        return redirect()->route('pages.roles.index')->with('success', 'Role created successfully.');
+        return redirect()->route('roles.index')->with('success', 'Role created successfully.');
     }
 
     public function show($id): View|RedirectResponse

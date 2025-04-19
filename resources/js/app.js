@@ -6,6 +6,8 @@
 
 import 'toastr/toastr.js';
 import 'toastr/toastr.scss';
+import { createApp } from 'vue';
+import CreateRoleModal from './components/CreateRoleModal.vue';
 
 require('./bootstrap');
 
@@ -30,6 +32,6 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const app = new Vue({
-    el: '#app',
-});
+const app = createApp({});
+app.component('create-role-modal', CreateRoleModal);
+app.mount('#app');
