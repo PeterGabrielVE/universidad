@@ -9,6 +9,7 @@ services:
       - "8000:80"
     volumes:
       - .:/var/www/html
+      - /var/www/html/node_modules
     depends_on:
       - db
     environment:
@@ -19,6 +20,17 @@ services:
       - DB_DATABASE=gabook
       - DB_USERNAME=root
       - DB_PASSWORD=rootpassword
+    command: >
+      sh -c "
+      composer install --no-interaction --optimize-autoloader &&
+      npm install &&
+      php artisan key:generate &&
+      php artisan config:clear &&
+      php artisan cache:clear &&
+      chmod -R 775 storage bootstrap/cache &&
+      chown -R www-data:www-data storage bootstrap/cache &&
+      apache2-foreground
+      "
     networks:
       - gabook-network
 
