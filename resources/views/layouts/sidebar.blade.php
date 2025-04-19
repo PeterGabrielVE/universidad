@@ -1,17 +1,9 @@
 <ul class="navbar-nav bg-white sidebar sidebar-uft accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center mb-4 mt-2" href="{{ route('home') }}">
-                <div class="row text-center">
-                    <div class="col-12 mt-4">
-                        <div class="sidebar-brand-icon">
-                            <img class="img-profile rounded-circle" src="{{URL::asset('img/logo.png')}}" alt="Logo" height="70" width="70">
-                        </div>
-                    </div>
-                    <div class="col-12 pt-2">
-                        <div class="sidebar-brand-text row text-uft">Gabook</div>
-                    </div>
-                </div>
+            <a class="sidebar-brand d-flex flex-column align-items-center justify-content-center py-3 mt-3" href="{{ route('home') }}">
+                <img src="{{URL::asset('img/logo.png')}}" alt="Gabook Logo" style="height: 60px; width: auto; display: block;">
+                <div class="sidebar-brand-text text-uppercase fw-bold text-white mt-2" style="font-size: 1.2rem;">GABOOK</div>
             </a>
 
             <!-- Divider -->

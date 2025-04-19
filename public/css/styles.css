@@ -1,34 +1,81 @@
-.pull-left {
-  float: left !important;
+/* Utilidades */
+.pull-left { float: left !important; }
+.pull-right { float: right !important; }
+
+/* Colores institucionales */
+.text-uft {
+    color: #8f0000;
 }
 
-.pull-right {
-  float: right !important;
-}
-.text-uft{
-	color:#8f0000;
-}
-
-.btn-uft{
-	color:#FFFFFF;
-	background-color: #8f0000;
-}
-
-.bg-login-image-uft{
-	background:url(../img/logouft.jpg);
-	background-position:center;
-	background-size:cover;
-	padding-top: 10px;
-}
-
-.sidebar-uft{
-    color: #7d1414 !important;
-}
-
-.text-uft:hover{
+.text-uft:hover {
     color: #000000 !important;
 }
 
-.bg-gradient-primary .text-white:hover{
-    color: #000000 !important;
+.btn-uft {
+    color: #FFFFFF;
+    background-color: #8f0000;
+}
+
+/* Imagen de fondo login */
+.bg-login-image-uft {
+    background: url(../img/logouft.jpg) center center / cover;
+    padding-top: 10px;
+}
+
+/* Sidebar General */
+#accordionSidebar {
+    width: 250px;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-image: linear-gradient(to bottom, #7d1414 0%, #c85a3d 100%);
+    background-size: 250px 100%;
+    background-repeat: no-repeat;
+    background-color: #7d1414;
+    box-shadow: inset -1px 0 0 rgba(0,0,0,0.1);
+}
+
+/* Sidebar branding */
+.sidebar-brand {
+    margin-bottom: 1rem;
+}
+
+/* Sidebar nav items */
+.sidebar .nav-item .nav-link {
+    color: #ffffff;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    margin: 0 0.25rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-item .nav-link:hover,
+.sidebar .nav-item.active .nav-link {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Iconos */
+.sidebar .nav-item i {
+    color: #ffffff;
+    margin-right: 0.5rem;
+}
+
+/* Collapse */
+.collapse-inner a {
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.collapse-inner a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 0.25rem;
+}
+
+/* Divider limpio */
+.sidebar-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 0.8rem 1rem;
 }
