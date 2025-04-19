@@ -40,7 +40,7 @@
             <hr class="sidebar-divider">
             @endif
             <li class="nav-item">
-                <a class="nav-link text-uft" href="{{ route('reports') }}">
+                <a class="nav-link text-uft" href="{{ route('roles') }}">
                     <i class="fas fa-fw fa-file"></i>
                     <span>Roles</span>
                 </a>

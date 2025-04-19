@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\RoleController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,17 +28,17 @@ Route::middleware(['web'])->group(function () {
 });
 Auth::routes();
 
-Route::post('/language/switch', [LanguageController::class, 'switch'])->name('language.switch');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
 
 	// users, roles, presmissions
 	Route::resource('user', 'UserController');
-	Route::resource('rol', 'RolController');
+    Route::resource('roles', RoleController::class);
 	Route::resource('permission', 'PermissionController');
 	Route::resource('estudiantes', 'EstudiantesController');
 	Route::resource('lapso', 'LapsoController');
+
 
 });
 
@@ -90,6 +91,8 @@ Route::post('documentPost2Update/{id}/{doc}', 'EstudiantesController@documentPos
 Route::get('edit/documentos/{id}','EstudiantesController@editDocumentos');
 Route::post('updateAll/documento/estudiante/{id}', 'EstudiantesController@documents_update_ciencia')->name('estudiantes.update_all_document');
 
+
+Route::post('roles/index', 'RoleController@index')->name('roles');
 Route::get('/test-session', function () {
     dd(session()->all());
 });
