@@ -1,49 +1,51 @@
 <template>
-    <div class="modal fade show" tabindex="-1" role="dialog" style="display: block;" v-if="show">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Crear Nuevo Rol</h5>
-                    <button type="button" class="close" @click="$emit('close')">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Formulario para crear rol -->
-                    <form @submit.prevent="submitForm">
-                        <div class="form-group">
-                            <label>Nombre del Rol</label>
-                            <input type="text" class="form-control" v-model="roleName" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </form>
-                </div>
+    <div v-if="isOpen" class="modal fade show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Crear Nuevo Rol</h5>
+            <button type="button" class="btn-close" @click="$emit('close')"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="roleName" class="form-label">Nombre del Rol</label>
+              <input
+                v-model="roleName"
+                type="text"
+                id="roleName"
+                class="form-control"
+                placeholder="Ingrese el nombre del rol"
+              />
             </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="$emit('close')">Cancelar</button>
+            <button type="button" class="btn btn-primary" @click="createRole">Guardar</button>
+          </div>
         </div>
+      </div>
     </div>
-</template>
+  </template>
 
-<script>
-export default {
+  <script>
+  export default {
     props: {
-        show: Boolean
+      isOpen: {
+        type: Boolean,
+        required: true
+      }
     },
     data() {
-        return {
-            roleName: ''
-        };
+      return {
+        roleName: ''
+      };
     },
     methods: {
-        submitForm() {
-            // Lógica para guardar el rol
-            this.$emit('close');
-        }
+      createRole() {
+        console.log('Rol a crear:', this.roleName);
+        // Aquí puedes emitir el nombre del rol para guardarlo
+        this.$emit('close');
+      }
     }
-};
-</script>
-
-<style scoped>
-.modal {
-    background-color: rgba(0,0,0,0.5);
-}
-</style>
+  };
+  </script>

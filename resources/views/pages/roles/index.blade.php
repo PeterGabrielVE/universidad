@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div id="app"> <!-- Mueve el div#app aquí para envolver todo el contenido -->
+
         <div id="wrapper">
             @include('layouts.sidebar')
             <div id="content-wrapper" class="d-flex flex-column">
@@ -22,6 +22,7 @@
                                             <button @click="showModal = true" class="btn btn-uft">
                                                 <i class="fas fa-plus pr-2"></i>Crear Nuevo Rol
                                             </button>
+
                                         </div>
                                     </div>
                                 </div>
@@ -70,5 +71,5 @@
 
         <!-- Modal de Vue -->
         <create-role-modal :is-open="showModal" @close="showModal = false"></create-role-modal>
-    </div> <!-- Cierre del div#app -->
+
 @endsection

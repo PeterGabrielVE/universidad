@@ -26,8 +26,11 @@ window.Vue = require('vue');
 const app = createApp({
     data() {
         return {
-            showModal: false
+            showModal:false
         }
+    },
+    mounted() {
+        console.log('Vue está montado y funcionando ✅');
     }
 });
 
