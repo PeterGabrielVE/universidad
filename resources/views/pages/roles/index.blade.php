@@ -19,7 +19,7 @@
                                         </div>
                                         <div class="pull-right">
 
-                                            <button @click="showModal = true" class="btn btn-uft">
+                                            <button @click="openModal()" class="btn btn-uft">
                                                 <i class="fas fa-plus pr-2"></i>Crear Nuevo Rol
                                             </button>
 
@@ -28,9 +28,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                @if (session('success'))
-                                    <div class="alert alert-success">{{ session('success') }}</div>
-                                @endif
+                            
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                         <thead>
@@ -46,16 +44,12 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $role->name }}</td>
                                                     <td>
-                                                        <form action="{{ route('roles.destroy', $role->id) }}"
-                                                            method="POST">
-                                                            <a href="{{ route('roles.edit', $role->id) }}"
-                                                                class="btn btn-uft btn-sm"><i class="fas fa-edit"></i></a>
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-uft btn-sm"
-                                                                onclick="return confirm('¿Estás seguro de eliminar este rol?')"><i
-                                                                    class="fas fa-trash"></i></button>
-                                                        </form>
+                                                        <button @click="editRole({{ $role }})" class="btn btn-uft btn-sm">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button @click="confirmDelete({{ $role->id }})" class="btn btn-uft btn-sm">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -70,6 +64,16 @@
         </div>
 
         <!-- Modal de Vue -->
-        <create-role-modal :is-open="showModal" @close="showModal = false"></create-role-modal>
+        <create-role-modal :show="showModal" 
+        :role="currentRole"
+        @close="closeModal"
+        @saved="handleSaved"> </create-role-modal>
 
 @endsection
+
+@push('scripts')
+<script>
+    // Pasar datos iniciales desde Laravel
+    window.initialRoles = @json($roles);
+</script>
+@endpush

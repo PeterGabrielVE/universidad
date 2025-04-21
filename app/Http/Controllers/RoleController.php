@@ -6,7 +6,7 @@ use App\Services\RoleService;
 use App\Http\Requests\RoleRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-
+use Illuminate\Http\JsonResponse;
 class RoleController extends Controller
 {
     public function __construct(private RoleService $roleService) {}
@@ -51,15 +51,42 @@ class RoleController extends Controller
     return view('pages.roles.edit', compact('role'));
     }
 
-    public function update(RoleRequest $request,$id): RedirectResponse
+    public function update(RoleRequest $request,$id):JsonResponse
     {
-        $this->roleService->update($id, $request->validated());
-        return redirect()->route('pages.roles.index')->with('success', 'Role updated successfully.');
+        try {
+            $role = $this->roleService->update($id, $request->validated());
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Rol actualizado correctamente',
+                'data' => $role // Opcional: devolver el rol actualizado
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el rol',
+                'error' => $e->getMessage() // Solo para desarrollo, en producción quitar
+            ], 500);
+        }
     }
 
-    public function destroy($id): RedirectResponse
+    public function destroy($id): JsonResponse
     {
-        $this->roleService->delete($id);
-        return redirect()->route('pages.roles.index')->with('success', 'Role deleted successfully.');
+        try {
+            $this->roleService->delete($id);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Rol eliminado correctamente'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el rol',
+                'error' => $e->getMessage() // Remover en producción
+            ], 500);
+        }
     }
 }
