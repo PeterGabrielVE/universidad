@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
+    <div id="app">
         <div id="wrapper">
             @include('layouts.sidebar')
             <div id="content-wrapper" class="d-flex flex-column">
@@ -18,44 +18,52 @@
                                             <h6 class="m-0 font-weight-bold text-uft">Listado de Roles</h6>
                                         </div>
                                         <div class="pull-right">
-
                                             <button @click="openModal()" class="btn btn-uft">
                                                 <i class="fas fa-plus pr-2"></i>Crear Nuevo Rol
                                             </button>
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
-                            
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Nombre</th>
-                                                <th style="width:20%">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($roles as $role)
+                                <div v-if="loading" class="text-center py-4">
+                                    <div class="spinner-border text-uft" role="status">
+                                        <span class="visually-hidden">Cargando...</span>
+                                    </div>
+                                    <p class="mt-2">Cargando roles...</p>
+                                </div>
+
+                                <template v-else>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" width="100%" cellspacing="0">
+                                            <thead>
                                                 <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $role->name }}</td>
+                                                    <th>#</th>
+                                                    <th>Nombre</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(role, index) in roles" :key="role.id">
+                                                    <td>@{{ index + 1 }}</td>
+                                                    <td>@{{ role.name }}</td>
                                                     <td>
-                                                        <button @click="editRole({{ $role }})" class="btn btn-uft btn-sm">
-                                                            <i class="fas fa-edit"></i>
+                                                        <button @click="editRole(role)" class="btn btn-uft btn-sm me-2">
+                                                            <i class="fas fa-edit"></i> Editar
                                                         </button>
-                                                        <button @click="confirmDelete({{ $role->id }})" class="btn btn-uft btn-sm">
-                                                            <i class="fas fa-trash"></i>
+                                                        <button @click="confirmDelete(role.id)" class="btn btn-danger btn-sm">
+                                                            <i class="fas fa-trash"></i> Eliminar
                                                         </button>
                                                     </td>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div v-if="roles.length === 0" class="alert alert-info mt-3">
+                                        No hay roles registrados. Crea tu primer rol.
+                                    </div>
+                                </template>
                             </div>
                         </div>
                     </div>
@@ -63,17 +71,21 @@
             </div>
         </div>
 
-        <!-- Modal de Vue -->
-        <create-role-modal :show="showModal" 
-        :role="currentRole"
-        @close="closeModal"
-        @saved="handleSaved"> </create-role-modal>
-
+        <!-- Modal Component -->
+        <create-role-modal
+            :show="showModal"
+            :role="currentRole"
+            @close="closeModal"
+            @saved="handleRoleSaved">
+        </create-role-modal>
+    </div>
 @endsection
 
 @push('scripts')
-<script>
-    // Pasar datos iniciales desde Laravel
-    window.initialRoles = @json($roles);
-</script>
+    <script>
+        // Pasamos los datos iniciales desde Laravel
+        console.log(@json($roles))
+        window.initialRoles = @json($roles);
+        window.csrfToken = "{{ csrf_token() }}";
+    </script>
 @endpush

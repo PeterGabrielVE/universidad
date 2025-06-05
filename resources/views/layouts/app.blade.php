@@ -15,7 +15,7 @@
     <link rel="stylesheet" href={{ asset('css/all.min.css') }}>
     <link rel="stylesheet" href={{ asset('css/sb-admin-2.min.css') }}>
     <link rel="stylesheet" href={{ asset('css/styles.css') }}>
-    <link rel="stylesheet" href={{ asset('bootstrap-fileinput/css/fileinput.css') }}>
+
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
@@ -59,6 +59,7 @@
     <!-- Page level custom scripts -->
     <script src={{ asset('js/datatables-demo.js') }}></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @stack('scripts')
 </body>
 
 </html>

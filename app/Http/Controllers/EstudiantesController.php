@@ -18,7 +18,7 @@ use App\Post2;
 use App\Presentation;
 use App\Doctorado;
 use App\Sede;
-use App\Rol;
+use App\Models\Role;
 use App\User;
 
 class EstudiantesController extends Controller
@@ -28,7 +28,7 @@ class EstudiantesController extends Controller
         $rol = 4;
         $title = "Estudiante";
     	$estudiantes = Estudiante::latest()->paginate(5);
-        $roles = Rol::get()->pluck('name','id');
+        $roles = Role::get()->pluck('name','id');
         return view('pages.estudiantes.index',compact('estudiantes','roles','rol','title'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
 

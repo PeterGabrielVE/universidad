@@ -1,31 +1,30 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries.
- */
-
-import 'toastr/toastr.js';
-import 'toastr/toastr.scss';
+import './bootstrap';
 import { createApp } from 'vue';
-import CreateRoleModal from './components/CreateRoleModal.vue';
+import axios from 'axios';
+import toastr from 'toastr';
 import Swal from 'sweetalert2';
+import CreateRoleModal from './components/CreateRoleModal.vue';
 
-require('./bootstrap');
-
-// Configuración global de Toastr si es necesario
-window.toastr = require('toastr');
+// Configura Toastr
+window.toastr = toastr;
 toastr.options = {
   "closeButton": true,
   "progressBar": true,
   "positionClass": "toast-top-right"
 };
 
-// Creamos la aplicación Vue
+// Configura Axios
+window.axios = axios;
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+// Crea la aplicación Vue
 const app = createApp({
   data() {
     return {
       showModal: false,
       currentRole: null,
-      roles: window.initialRoles || [] // Datos iniciales pasados desde Blade
+      roles: window.initialRoles || [],
+      loading: false
     };
   },
   methods: {
@@ -35,14 +34,21 @@ const app = createApp({
     },
     closeModal() {
       this.showModal = false;
-      this.currentRole = null;
     },
     editRole(role) {
-        this.currentRole = {...role};
-        this.showModal = true;
-      },
-    handleRoleSaved() {
-      window.location.reload(); // O podrías actualizar la lista de roles via AJAX
+      this.openModal(role);
+    },
+    async loadRoles() {
+      this.loading = true;
+      try {
+        const response = await axios.get('/api/roles');
+        this.roles = response.data;
+      } catch (error) {
+        toastr.error('Error al cargar roles');
+        console.error(error);
+      } finally {
+        this.loading = false;
+      }
     },
     confirmDelete(id) {
       Swal.fire({
@@ -62,24 +68,30 @@ const app = createApp({
     },
     async deleteRole(id) {
       try {
-        const response = await axios.delete(`/roles/${id}`);
-        Swal.fire('¡Eliminado!', 'El rol ha sido eliminado.', 'success');
-        window.location.reload();
+        await axios.delete(`/api/roles/${id}`);
+        toastr.success('Rol eliminado');
+        this.loadRoles();
       } catch (error) {
-        Swal.fire('Error', 'Ocurrió un error al eliminar el rol.', 'error');
+        toastr.error('Error al eliminar rol');
+        console.error(error);
       }
+    },
+    handleRoleSaved() {
+      this.loadRoles();
+      this.closeModal();
+      toastr.success('Rol guardado correctamente');
     }
   },
   mounted() {
-    console.log('Aplicación Vue montada correctamente');
+    console.log('Aplicación montada', this.roles);
+    if (this.roles.length === 0) {
+      this.loadRoles();
+    }
   }
 });
 
-// Registramos componentes globales
+// Registra el componente
 app.component('create-role-modal', CreateRoleModal);
 
-// Montamos la aplicación
+// Monta la aplicación
 app.mount('#app');
-
-// Opcional: Hacer disponible para accesos directos en consola
-window.VueApp = app;
