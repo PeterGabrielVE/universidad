@@ -27,10 +27,8 @@
                             </div>
                             <div class="card-body">
                                 <div v-if="loading" class="text-center py-4">
-                                    <div class="spinner-border text-uft" role="status">
-                                        <span class="visually-hidden">Cargando...</span>
-                                    </div>
-                                    <p class="mt-2">Cargando roles...</p>
+                                    <div class="spinner-border text-uft" role="status"></div>
+
                                 </div>
 
                                 <template v-else>
@@ -83,8 +81,6 @@
 
 @push('scripts')
     <script>
-        // Pasamos los datos iniciales desde Laravel
-        console.log(@json($roles))
         window.initialRoles = @json($roles);
         window.csrfToken = "{{ csrf_token() }}";
     </script>

@@ -26,7 +26,7 @@ class RoleController extends Controller
     {
         //dd($request->all());
         $this->roleService->create($request->validated());
-        return redirect()->route('roles.index')->with('success', 'Role created successfully.');
+        return redirect()->route('roles.index');
     }
 
     public function show($id): View|RedirectResponse
@@ -34,7 +34,7 @@ class RoleController extends Controller
         $role = $this->roleService->show($id);
 
     if (!$role) {
-        return redirect()->route('roles.index')->with('error', 'Rol no encontrado');
+        return redirect()->route('roles.index');
     }
 
     return view('pages.roles.edit', compact('role'));
@@ -45,7 +45,7 @@ class RoleController extends Controller
         $role = $this->roleService->show($id);
 
     if (!$role) {
-        return redirect()->route('roles.index')->with('error', 'Rol no encontrado');
+        return redirect()->route('roles.index');
     }
 
     return view('pages.roles.edit', compact('role'));
@@ -55,13 +55,13 @@ class RoleController extends Controller
     {
         try {
             $role = $this->roleService->update($id, $request->validated());
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Rol actualizado correctamente',
                 'data' => $role // Opcional: devolver el rol actualizado
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -75,12 +75,12 @@ class RoleController extends Controller
     {
         try {
             $this->roleService->delete($id);
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Rol eliminado correctamente'
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
