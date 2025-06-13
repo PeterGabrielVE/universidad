@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/roles', [RoleController::class, 'index']);
+Route::resource('roles', RoleController::class);
