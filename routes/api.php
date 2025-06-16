@@ -21,3 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/roles', [RoleController::class, 'index']);
 Route::resource('roles', RoleController::class);
+
+
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::apiResource('users', UserController::class);
+});
