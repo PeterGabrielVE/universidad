@@ -2,43 +2,29 @@
 
 @section('content')
 <div id="wrapper">
+    <!-- Sidebar -->
+    @include('layouts.sidebar')
+    <!-- End of Sidebar -->
 
-        <!-- Sidebar -->
-        @include('layouts.sidebar')
-        <!-- End of Sidebar -->
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column w-100">
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Topbar -->
+            @include('layouts.navbar')
+            <!-- End of Topbar -->
 
-            <!-- Main Content -->
-            <div id="content">
-
-                <!-- Topbar -->
-                 @include('layouts.navbar')
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Usuarios</h1>
-
-                    <!-- DataTales Example -->
-                        
-                        <div id="app">
-                            <users-index></users-index>
-                        </div>
-                        
-
+            <!-- Begin Page Content -->
+            <div class="px-4 py-4 w-full container-fluid">
+                <div id="app" class="w-full">
+                    <users-index></users-index>
                 </div>
-
-                <!-- /.container-fluid -->
-
             </div>
-            <!-- End of Main Content -->
-
+            <!-- /.container-fluid -->
         </div>
-        <!-- End of Content Wrapper -->
-
+        <!-- End of Main Content -->
     </div>
-    <!-- End of Page Wrapper -->
+    <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
 @endsection

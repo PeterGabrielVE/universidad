@@ -1,12 +1,26 @@
 import axios from 'axios';
 
-axios.defaults.withCredentials = true;
+// Configuración base de axios
+axios.defaults.withCredentials = true; // Para enviar cookies
+axios.defaults.baseURL = 'http://localhost:8000';
 
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.get('/generate-token')
+    .then(response => {
+        localStorage.setItem('auth_token', response.data.token);
+    })
+    .catch(error => {
+        console.error('Error al obtener el token:', error);
+    });
+const api = axios.create({
+  baseURL:'http://localhost:8000',
+  withCredentials: true,
+});
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('auth_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
-const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-if (token) {
-  axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
-}
-
-export default axios;
+export default api;

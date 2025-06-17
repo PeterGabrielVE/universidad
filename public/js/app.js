@@ -22136,28 +22136,41 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     var __expose = _ref.expose;
     __expose();
     var users = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([]);
-    var search = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)('');
+    var search = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)("");
     var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_2__.useRouter)();
     var fetchUsers = /*#__PURE__*/function () {
       var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var res;
+        var token, res, _error$response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              _context.next = 2;
-              return _plugins_axios__WEBPACK_IMPORTED_MODULE_1__["default"].get('/api/v1/users', {
+              token = localStorage.getItem('auth_token');
+              _context.prev = 1;
+              _context.next = 4;
+              return _plugins_axios__WEBPACK_IMPORTED_MODULE_1__["default"].get("/api/v1/users", {
                 params: {
                   search: search.value
                 }
               });
-            case 2:
+            case 4:
               res = _context.sent;
               users.value = res.data;
-            case 4:
+              _context.next = 12;
+              break;
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context["catch"](1);
+              console.error("Error fetching users:", _context.t0);
+              // Redirigir a login si no está autenticado
+              if (((_error$response = _context.t0.response) === null || _error$response === void 0 ? void 0 : _error$response.status) === 401) {
+                //router.push('/login');
+                console.log("Redirigiendo a login...");
+              }
+            case 12:
             case "end":
               return _context.stop();
           }
-        }, _callee);
+        }, _callee, null, [[1, 8]]);
       }));
       return function fetchUsers() {
         return _ref2.apply(this, arguments);
@@ -22168,7 +22181,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              if (!confirm('¿Estás seguro de eliminar este usuario?')) {
+              if (!confirm("¿Estás seguro de eliminar este usuario?")) {
                 _context2.next = 4;
                 break;
               }
@@ -22188,12 +22201,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     }();
     var goToCreate = function goToCreate() {
       return router.push({
-        name: 'users.create'
+        name: "users.create"
       });
     };
     var goToEdit = function goToEdit(id) {
       return router.push({
-        name: 'users.edit',
+        name: "users.edit",
         params: {
           id: id
         }
@@ -22213,7 +22226,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       get useRouter() {
         return vue_router__WEBPACK_IMPORTED_MODULE_2__.useRouter;
       },
-      get axios() {
+      get api() {
         return _plugins_axios__WEBPACK_IMPORTED_MODULE_1__["default"];
       }
     };
@@ -22319,70 +22332,87 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "p-6"
+  "class": "bg-white rounded shadow-md p-6 w-full"
 };
 var _hoisted_2 = {
-  "class": "flex justify-between items-center mb-4"
+  "class": "flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4"
 };
 var _hoisted_3 = {
-  "class": "w-full table-auto border"
+  "class": "overflow-x-auto"
 };
 var _hoisted_4 = {
-  "class": "border px-4 py-2"
+  "class": "min-w-full text-left border border-gray-300 rounded"
 };
 var _hoisted_5 = {
-  "class": "border px-4 py-2"
+  "class": "px-4 py-2 border"
 };
 var _hoisted_6 = {
-  "class": "border px-4 py-2"
+  "class": "px-4 py-2 border"
 };
 var _hoisted_7 = {
-  "class": "border px-4 py-2"
+  "class": "px-4 py-2 border"
 };
 var _hoisted_8 = {
-  "class": "border px-4 py-2"
+  "class": "px-4 py-2 border"
 };
-var _hoisted_9 = ["onClick"];
+var _hoisted_9 = {
+  "class": "px-4 py-2 border text-center"
+};
 var _hoisted_10 = ["onClick"];
+var _hoisted_11 = ["onClick"];
+var _hoisted_12 = {
+  key: 0
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
-    "class": "text-2xl font-bold mb-4"
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_cache[3] || (_cache[3] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
+    "class": "text-3xl font-semibold mb-6 text-gray-800"
   }, "Usuarios", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return $setup.search = $event;
     }),
     onInput: $setup.fetchUsers,
     type: "text",
-    placeholder: "Buscar...",
-    "class": "border p-2 rounded"
+    placeholder: "Buscar por nombre o email...",
+    "class": "border border-gray-300 rounded-md px-4 py-2 w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
   }, null, 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.search]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: $setup.goToCreate,
-    "class": "bg-blue-600 text-white px-4 py-2 rounded"
-  }, "Crear Usuario")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_3, [_cache[1] || (_cache[1] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": "border px-4 py-2"
+    "class": "bg-blue-600 hover:bg-blue-700 transition text-white font-medium px-5 py-2 rounded-md shadow"
+  }, " Crear Usuario ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_4, [_cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", {
+    "class": "bg-gray-100"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    "class": "px-4 py-2 border"
   }, "Nombre"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": "border px-4 py-2"
+    "class": "px-4 py-2 border"
   }, "Email"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": "border px-4 py-2"
+    "class": "px-4 py-2 border"
   }, "Rol"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": "border px-4 py-2"
+    "class": "px-4 py-2 border"
   }, "Estado"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": "border px-4 py-2"
+    "class": "px-4 py-2 border text-center"
   }, "Acciones")])], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.users, function (user) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
-      key: user.id
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.name), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.email), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.role), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.status), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      key: user.id,
+      "class": "hover:bg-gray-50 transition"
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.name), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.email), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.role), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
+        'text-green-600 font-semibold': user.status === 'activo',
+        'text-red-600 font-semibold': user.status !== 'activo'
+      })
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.status), 3 /* TEXT, CLASS */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       onClick: function onClick($event) {
         return $setup.goToEdit(user.id);
       },
-      "class": "text-blue-600"
-    }, "Editar", 8 /* PROPS */, _hoisted_9), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      "class": "text-blue-600 hover:underline mr-2"
+    }, " Editar ", 8 /* PROPS */, _hoisted_10), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       onClick: function onClick($event) {
         return $setup.deleteUser(user.id);
       },
-      "class": "text-red-600 ml-2"
-    }, "Eliminar", 8 /* PROPS */, _hoisted_10)])]);
-  }), 128 /* KEYED_FRAGMENT */))])])]);
+      "class": "text-red-600 hover:underline"
+    }, " Eliminar ", 8 /* PROPS */, _hoisted_11)])]);
+  }), 128 /* KEYED_FRAGMENT */)), $setup.users.length === 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_12, _cache[1] || (_cache[1] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    colspan: "5",
+    "class": "text-center py-4 text-gray-500"
+  }, " No se encontraron usuarios. ", -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])]);
 }
 
 /***/ }),
@@ -67446,15 +67476,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-var _document$querySelect;
 
-(axios__WEBPACK_IMPORTED_MODULE_0___default().defaults).withCredentials = true;
-(axios__WEBPACK_IMPORTED_MODULE_0___default().defaults).headers.common['X-Requested-With'] = 'XMLHttpRequest';
-var token = (_document$querySelect = document.querySelector('meta[name="csrf-token"]')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.getAttribute('content');
-if (token) {
-  (axios__WEBPACK_IMPORTED_MODULE_0___default().defaults).headers.common['X-CSRF-TOKEN'] = token;
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((axios__WEBPACK_IMPORTED_MODULE_0___default()));
+
+// Configuración base de axios
+(axios__WEBPACK_IMPORTED_MODULE_0___default().defaults).withCredentials = true; // Para enviar cookies
+(axios__WEBPACK_IMPORTED_MODULE_0___default().defaults).baseURL = 'http://localhost:8000';
+axios__WEBPACK_IMPORTED_MODULE_0___default().get('/generate-token').then(function (response) {
+  localStorage.setItem('auth_token', response.data.token);
+})["catch"](function (error) {
+  console.error('Error al obtener el token:', error);
+});
+var api = axios__WEBPACK_IMPORTED_MODULE_0___default().create({
+  baseURL: 'http://localhost:8000',
+  withCredentials: true
+});
+api.interceptors.request.use(function (config) {
+  var token = localStorage.getItem('auth_token');
+  if (token) {
+    config.headers.Authorization = "Bearer ".concat(token);
+  }
+  return config;
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (api);
 
 /***/ }),
 

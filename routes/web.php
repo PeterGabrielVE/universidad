@@ -96,3 +96,9 @@ Route::post('roles/index', 'RoleController@index')->name('roles');
 Route::get('/test-session', function () {
     dd(session()->all());
 });
+
+Route::get('/generate-token', function () {
+    $user = \App\Models\User::find(1); // Usa el ID de un usuario real
+    $token = $user->createToken('frontend-app')->plainTextToken;
+    return response()->json(['token' => $token]);
+});
