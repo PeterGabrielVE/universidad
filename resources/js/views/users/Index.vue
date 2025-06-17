@@ -35,7 +35,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from '@/plugins/axios';
+import axios from "../../plugins/axios";
+
 
 const users = ref([]);
 const search = ref('');

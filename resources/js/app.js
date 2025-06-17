@@ -4,6 +4,7 @@ import axios from 'axios';
 import toastr from 'toastr';
 import Swal from 'sweetalert2';
 import CreateRoleModal from './components/CreateRoleModal.vue';
+import UsersIndex from './views/users/Index.vue';
 
 // Configura Toastr
 window.toastr = toastr;
@@ -92,6 +93,7 @@ const app = createApp({
 
 // Registra el componente
 app.component('create-role-modal', CreateRoleModal);
+app.component('users-index', UsersIndex);
 
 // Monta la aplicación
 app.mount('#app');

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Estudiante;
 use App\User;
-use App\Rol;
+use App\Models\Role;
 Use Alert;
 
 class UserController extends Controller
@@ -19,7 +19,7 @@ class UserController extends Controller
     public function index()
     {
         $usuarios = User::latest()->paginate(5);
-        $roles = Rol::get()->pluck('name','id');
+        $roles = Role::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }

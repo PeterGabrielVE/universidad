@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "sweetalert2": "^11.19.1",
-        "toastr": "^2.1.4"
+        "toastr": "^2.1.4",
+        "vue-router": "^4.5.1"
     }
 }

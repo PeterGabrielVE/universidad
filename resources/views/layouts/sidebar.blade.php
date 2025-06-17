@@ -30,10 +30,10 @@
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-uft py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ route('usuario/administrativo') }}">Director de Postgrado</a>
-                        <a class="collapse-item" href="{{ route('usuario/directivo') }}">Coordinador</a>
-                        <a class="collapse-item" href="{{ route('usuario/asistente') }}">Asistentes de Postgrado</a>
-                        <a class="collapse-item" href="{{ route('estudiantes.index') }}">Estudiantes</a>
+                        <a class="collapse-item text-white btn-uft-li" href="{{ route('user.index') }}">Todos</a>
+                        <a class="collapse-item text-white btn-uft-li" href="{{ route('usuario/directivo') }}">Coordinador</a>
+                        <a class="collapse-item text-white btn-uft-li" href="{{ route('usuario/asistente') }}">Asistentes de Postgrado</a>
+                        <a class="collapse-item text-white btn-uft-li" href="{{ route('estudiantes.index') }}">Estudiantes</a>
                     </div>
                 </div>
             </li>
