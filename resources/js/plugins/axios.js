@@ -1,9 +1,10 @@
 import axios from 'axios';
 
 // Configuración base de axios
-axios.defaults.withCredentials = true; // Para enviar cookies
+axios.defaults.withCredentials = true;
+ // Para enviar cookies
 axios.defaults.baseURL = 'http://localhost:8000';
-
+await axios.get('/sanctum/csrf-cookie');
 axios.get('/generate-token')
     .then(response => {
         localStorage.setItem('auth_token', response.data.token);
