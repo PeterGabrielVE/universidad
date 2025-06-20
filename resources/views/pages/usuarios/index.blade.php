@@ -16,7 +16,7 @@
 
             <!-- Begin Page Content -->
             <div class="px-4 py-4 w-full container-fluid">
-                <div id="app" class="w-full">
+                <div id="app" class="w-full max-w-none">
                     <users-index></users-index>
                 </div>
             </div>

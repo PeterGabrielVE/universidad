@@ -1,76 +1,78 @@
 <template>
-  <div class="bg-white rounded shadow-md p-6 w-full">
-    <h1 class="text-3xl font-semibold mb-6 text-gray-800">Usuarios</h1>
+  <div class="container-fluid px-4 py-4 w-full">
+    <!-- Título principal -->
+    <h1 class="h3 mb-4 text-gray-800">Usuarios</h1>
 
-    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
-      <input
-        v-model="search"
-        @input="fetchUsers"
-        type="text"
-        placeholder="Buscar por nombre o email..."
-        class="border border-gray-300 rounded-md px-4 py-2 w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <button
-        @click="goToCreate"
-        class="bg-blue-600 hover:bg-blue-700 transition text-white font-medium px-5 py-2 rounded-md shadow"
-      >
-        Crear Usuario
+    <!-- Encabezado con título y botón -->
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+      <h6 class="m-0 font-weight-bold text-uft">Listado de Usuarios</h6>
+      <button @click="openModal()" class="btn btn-uft">
+        <i class="fas fa-plus pr-2"></i>Crear Nuevo Usuarios
       </button>
     </div>
 
-    <div class="overflow-x-auto">
-      <table class="min-w-full text-left border border-gray-300 rounded">
-        <thead class="bg-gray-100">
-          <tr>
-            <th class="px-4 py-2 border">Nombre</th>
-            <th class="px-4 py-2 border">Email</th>
-            <th class="px-4 py-2 border">Rol</th>
-            <th class="px-4 py-2 border">Estado</th>
-            <th class="px-4 py-2 border text-center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="user in users"
-            :key="user.id"
-            class="hover:bg-gray-50 transition"
-          >
-            <td class="px-4 py-2 border">{{ user.name }}</td>
-            <td class="px-4 py-2 border">{{ user.email }}</td>
-            <td class="px-4 py-2 border">{{ user.role }}</td>
-            <td class="px-4 py-2 border">
-              <span
-                :class="{
-                  'text-green-600 font-semibold': user.status === 'activo',
-                  'text-red-600 font-semibold': user.status !== 'activo',
-                }"
-              >
-                {{ user.status }}
-              </span>
-            </td>
-            <td class="px-4 py-2 border text-center">
-              <button
-                @click="goToEdit(user.id)"
-                class="text-blue-600 hover:underline mr-2"
-              >
-                Editar
-              </button>
-              <button
-                @click="deleteUser(user.id)"
-                class="text-red-600 hover:underline"
-              >
-                Eliminar
-              </button>
-            </td>
-          </tr>
+    <!-- Cuerpo con spinner y tabla -->
+    <div class="card-body">
+      <div v-if="loading" class="text-center py-4">
+        <div class="spinner-border text-uft" role="status"></div>
+      </div>
 
-          <tr v-if="users.length === 0">
-            <td colspan="5" class="text-center py-4 text-gray-500">
-              No se encontraron usuarios.
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <template v-else>
+        <div class="table-responsive">
+          <table class="table table-bordered w-100" cellspacing="0">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-4 py-2 border">Nombre</th>
+                <th class="px-4 py-2 border">Email</th>
+                <th class="px-4 py-2 border">Rol</th>
+                <th class="px-4 py-2 border">Estado</th>
+                <th class="px-4 py-2 border text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="user in users"
+                :key="user.id"
+                class="hover:bg-gray-50 transition"
+              >
+                <td class="px-4 py-2 border">{{ user.name }}</td>
+                <td class="px-4 py-2 border">{{ user.email }}</td>
+                <td class="px-4 py-2 border">{{ user.role }}</td>
+                <td class="px-4 py-2 border">
+                  <span
+                    :class="{
+                      'text-success font-weight-bold': user.status === 'activo',
+                      'text-danger font-weight-bold': user.status !== 'activo',
+                    }"
+                  >
+                    {{ user.status }}
+                  </span>
+                </td>
+                <td class="px-4 py-2 border text-center">
+                  <button
+                    @click="goToEdit(user.id)"
+                    class="text-primary btn btn-sm btn-link"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    @click="deleteUser(user.id)"
+                    class="text-danger btn btn-sm btn-link"
+                  >
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+
+              <tr v-if="users.length === 0">
+                <td colspan="5" class="text-center py-4 text-muted">
+                  No se encontraron usuarios.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -85,12 +87,12 @@ const search = ref("");
 const router = useRouter();
 
 const fetchUsers = async () => {
-    const token = localStorage.getItem('auth_token');
   try {
     const res = await api.get("/api/v1/users", {
       params: { search: search.value },
     });
     users.value = res.data;
+
   } catch (error) {
     console.error("Error fetching users:", error);
     // Redirigir a login si no está autenticado
