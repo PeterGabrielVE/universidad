@@ -4,11 +4,13 @@
     <h1 class="h3 mb-4 text-gray-800">Usuarios</h1>
 
     <!-- Encabezado con título y botón -->
-    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+    <div
+      class="card-header py-3 d-flex justify-content-between align-items-center"
+    >
       <h6 class="m-0 font-weight-bold text-uft">Listado de Usuarios</h6>
-      <button @click="openModal()" class="btn btn-uft">
-        <i class="fas fa-plus pr-2"></i>Crear Nuevo Usuarios
-      </button>
+      <a href="/users/create" class="btn btn-uft">
+        <i class="fas fa-plus pr-2"></i>Crear Nuevo Usuario
+      </a>
     </div>
 
     <!-- Cuerpo con spinner y tabla -->
@@ -49,12 +51,12 @@
                   </span>
                 </td>
                 <td class="px-4 py-2 border text-center">
-                  <button
-                    @click="goToEdit(user.id)"
+                  <a
+                    :href="`/users/${user.id}/edit`"
                     class="text-primary btn btn-sm btn-link"
                   >
                     Editar
-                  </button>
+                  </a>
                   <button
                     @click="deleteUser(user.id)"
                     class="text-danger btn btn-sm btn-link"
@@ -92,7 +94,6 @@ const fetchUsers = async () => {
       params: { search: search.value },
     });
     users.value = res.data;
-
   } catch (error) {
     console.error("Error fetching users:", error);
     // Redirigir a login si no está autenticado
@@ -109,9 +110,6 @@ const deleteUser = async (id) => {
     fetchUsers();
   }
 };
-
-const goToCreate = () => router.push({ name: "users.create" });
-const goToEdit = (id) => router.push({ name: "users.edit", params: { id } });
 
 onMounted(fetchUsers);
 </script>

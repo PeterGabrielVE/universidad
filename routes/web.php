@@ -102,3 +102,5 @@ Route::get('/generate-token', function () {
     $token = $user->createToken('frontend-app')->plainTextToken;
     return response()->json(['token' => $token]);
 });
+
+Route::get('users/create', 'UserController@create')->name('users.create');
