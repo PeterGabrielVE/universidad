@@ -12,14 +12,13 @@ class User extends Authenticatable
 {
     use Notifiable;
     use HasRoles;
-    protected $guard_name = 'api';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name','last_name','email', 'password','rol_id','sede_id','doctorado_id', 'api_token'
+        'name','last_name','identification_card','phone','email', 'password','rol_id','sede_id','country_id','doctorado_id', 'api_token'
     ];
 
     /**

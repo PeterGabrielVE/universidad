@@ -21,7 +21,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">{{ Auth::user()->first_name ?? null }} {{ Auth::user()->last_name ?? null }}</h1>
+                    <h1 class="h3 mb-2 text-gray-800">{{ Auth::user()->name ?? null }} {{ Auth::user()->last_name ?? null }}</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -46,7 +46,7 @@
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                                     {!! Form::label('lbl_nombres', 'Nombres:', ['class'=>'col-form-label s-12']) !!}
-                                                    {!! Form::text('first_name', $user->first_name ?? null, ['class'=>'form-control form-control-user', 'id'=>'first_name','placeholder'=>'Nombres']) !!}
+                                                    {!! Form::text('first_name', $user->name ?? null, ['class'=>'form-control form-control-user', 'id'=>'first_name','placeholder'=>'Nombres']) !!}
                                                     {!! Form::hidden('user_id', $user->id ?? null, ['class'=>'form-control form-control-user']) !!}
 
                                                 </div>

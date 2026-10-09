@@ -95,7 +95,7 @@
                                                 @include('pages.estudiantes.documents')
                                             </div>
                                             <div class="form-group row m-2" id="ciencia" style="display:none;">
-                                                @include('pages.estudiantes.all_documents')
+                                                @includeWhen(isset($estudiante), 'pages.estudiantes.all_documents')
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-lg-3"></div>

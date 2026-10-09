@@ -6,7 +6,7 @@
         <!-- Sidebar -->
         @include('layouts.sidebar')
         <!-- End of Sidebar -->
-        @include('pages.usuarios.create')
+        @include('pages.usuarios.partials.create_modal')
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
@@ -60,7 +60,7 @@
                                     <tbody>
                                         @foreach ($estudiantes as $estudiante)
                                         <tr>
-                                            <td>{{ $estudiante->user->first_name ?? '' }} {{ $estudiante->user->last_name ?? '' }}</td>
+                                            <td>{{ $estudiante->user->name ?? '' }} {{ $estudiante->user->last_name ?? '' }}</td>
                                             <td>{{ $estudiante->user->identification_card ?? '' }}</td>
                                             <td>{{ $estudiante->user->prefijo->Prefijo ?? '' }}-{{ $estudiante->user->phone ?? '' }}</td>
                                             <td>{{ $estudiante->user->email ?? '' }}</td>

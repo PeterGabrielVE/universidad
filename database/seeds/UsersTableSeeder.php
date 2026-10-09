@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class UsersTableSeeder extends Seeder
 {
@@ -11,13 +10,16 @@ class UsersTableSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
+        $admin = User::where('email', 'admin@gmail.com')->first() ?? new User();
+        $admin->forceFill([
             'name' => 'Admin',
             'last_name' => 'Admin',
             'email' => 'admin@gmail.com',
             'identification_card' => '11111',
             'password' => bcrypt('12345678'),
             'rol_id' => 1,
-        ]);
+        ])->save();
+
+        $admin->syncRoles(['Director']);
     }
 }

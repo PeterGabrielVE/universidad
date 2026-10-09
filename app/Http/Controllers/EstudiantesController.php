@@ -59,7 +59,9 @@ class EstudiantesController extends Controller
         $prefijo = Pais::get()->pluck('Prefijo','id')->prepend('Seleccione una opción','');
         $doctorados = Doctorado::get()->pluck('name','id')->prepend('Seleccione una opción','');
         $sedes = Sede::get()->pluck('name','id')->prepend('Seleccione una opción','');
-        return view('pages.estudiantes.create',compact('lapso','paises','prefijo','sedes','doctorados'));
+        // UserController::store ya crea el expediente al dar de alta a un estudiante
+        $estudiante = Estudiante::where('user_id', Auth::id())->first();
+        return view('pages.estudiantes.create',compact('lapso','paises','prefijo','sedes','doctorados','estudiante'));
     }
 
 

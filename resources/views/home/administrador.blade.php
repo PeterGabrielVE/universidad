@@ -1,5 +1,51 @@
 @extends('layouts.app')
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+@endpush
+
+@php
+    $stats = [
+        ['label' => 'Estudiantes', 'value' => $count_estudiante, 'icon' => 'fa-user-graduate', 'tone' => 'red'],
+        ['label' => 'Usuarios', 'value' => $count_usuarios, 'icon' => 'fa-users', 'tone' => 'blue'],
+        ['label' => 'Coordinadores', 'value' => $count_coord, 'icon' => 'fa-user-tie', 'tone' => 'green'],
+        ['label' => 'Asistentes', 'value' => $count_asis, 'icon' => 'fa-user-friends', 'tone' => 'amber'],
+    ];
+
+    // 'route' => null marca módulos que aún no tienen pantalla propia.
+    $sections = [
+        'Usuarios y accesos' => [
+            ['title' => 'Usuarios', 'desc' => 'Cuentas y perfiles', 'icon' => 'fa-users-cog', 'tone' => 'blue', 'route' => 'user.index'],
+            ['title' => 'Roles', 'desc' => 'Perfiles de acceso', 'icon' => 'fa-user-shield', 'tone' => 'green', 'route' => 'roles.index'],
+            ['title' => 'Permisos', 'desc' => 'Control de acciones', 'icon' => 'fa-key', 'tone' => 'amber', 'route' => null],
+            ['title' => 'Administrativo', 'desc' => 'Personal administrativo', 'icon' => 'fa-briefcase', 'tone' => 'red', 'route' => null],
+        ],
+        'Comunidad educativa' => [
+            ['title' => 'Estudiantes', 'desc' => 'Expedientes y datos', 'icon' => 'fa-user-graduate', 'tone' => 'red', 'route' => 'estudiantes.index'],
+            ['title' => 'Docentes', 'desc' => 'Planta docente', 'icon' => 'fa-chalkboard-teacher', 'tone' => 'blue', 'route' => null],
+            ['title' => 'PPFF', 'desc' => 'Padres de familia', 'icon' => 'fa-user-friends', 'tone' => 'green', 'route' => null],
+            ['title' => 'Inscripción', 'desc' => 'Matrícula de alumnos', 'icon' => 'fa-clipboard-list', 'tone' => 'amber', 'route' => null],
+        ],
+        'Gestión académica' => [
+            ['title' => 'Gestión', 'desc' => 'Periodos académicos', 'icon' => 'fa-calendar-alt', 'tone' => 'red', 'route' => 'lapso.index'],
+            ['title' => 'Niveles', 'desc' => 'Niveles educativos', 'icon' => 'fa-signal', 'tone' => 'blue', 'route' => null],
+            ['title' => 'Grados', 'desc' => 'Grados por nivel', 'icon' => 'fa-layer-group', 'tone' => 'green', 'route' => null],
+            ['title' => 'Paralelos', 'desc' => 'Secciones por grado', 'icon' => 'fa-sitemap', 'tone' => 'amber', 'route' => null],
+            ['title' => 'Materias', 'desc' => 'Plan de estudios', 'icon' => 'fa-book-open', 'tone' => 'red', 'route' => null],
+            ['title' => 'Asignación', 'desc' => 'Docentes y materias', 'icon' => 'fa-tasks', 'tone' => 'blue', 'route' => null],
+            ['title' => 'Turnos', 'desc' => 'Horarios de jornada', 'icon' => 'fa-clock', 'tone' => 'green', 'route' => null],
+            ['title' => 'Calificaciones', 'desc' => 'Registro de notas', 'icon' => 'fa-star', 'tone' => 'amber', 'route' => null],
+            ['title' => 'Kardex', 'desc' => 'Historial académico', 'icon' => 'fa-id-card', 'tone' => 'red', 'route' => null],
+        ],
+        'Administración' => [
+            ['title' => 'Pagos', 'desc' => 'Pensiones y cobros', 'icon' => 'fa-file-invoice-dollar', 'tone' => 'green', 'route' => null],
+            ['title' => 'Reportes', 'desc' => 'Informes y exportes', 'icon' => 'fa-chart-bar', 'tone' => 'blue', 'route' => 'reports'],
+            ['title' => 'Instituciones', 'desc' => 'Sedes y unidades', 'icon' => 'fa-university', 'tone' => 'amber', 'route' => null],
+            ['title' => 'Configuración', 'desc' => 'Ajustes del sistema', 'icon' => 'fa-cogs', 'tone' => 'red', 'route' => null],
+        ],
+    ];
+@endphp
+
 @section('content')
     <div id="wrapper">
 
@@ -18,345 +64,73 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header"
-                                        style="background-color: rgba(51, 105, 232, 0.1)">
-                                        <center><i class = "fa fa-home" style="color:#3369e8"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Login
-                                            <div class="pull-right badge" id="WrControls"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header"
-                                        style="background-color:rgba(22, 160, 133, 0.1) ">
-                                        <center><i class = "fa fa-users" style="color:#16A085"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Roles
-                                            <div class="pull-right badge" id="WrControls"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header"
-                                        style="background-color:rgba(187, 120, 36, 0.1) ">
-                                        <center><i class = "fa fa-users" style="color:#BB7824"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Usuarios
-                                            <div class="pull-right badge" id="WrControls"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header"
-                                        style="background-color: rgba(22, 160, 133, 0.1)">
-                                        <center><i class = "fa fa-cubes" style="color:#16A085"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Configuración
-                                            <div class="pull-right badge" id="WrControls"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header"
-                                        style="background-color:  rgba(213, 15, 37, 0.1)">
-                                        <center><i class="fa fa-cubes" style="color:#d50f25"> </i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Administrativo
-                                            <div class="pull-right badge" id="WrForms"></div>
-                                        </h4>
-                                    </div>
+                <div class="container-fluid dash">
 
-                                </a>
-                            </div>
+                    <div class="dash-hero">
+                        <div>
+                            <p class="dash-hero__date">{{ now()->locale('es')->isoFormat('dddd, D [de] MMMM [de] YYYY') }}</p>
+                            <h1 class="dash-hero__title">Hola, {{ Auth::user()->name }}</h1>
+                            <p class="dash-hero__subtitle">Este es el resumen de tu institución.</p>
                         </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header"
-                                        style="background-color:  rgba(51, 105, 232, 0.1)">
-                                        <center><i class="fa fa-table" style="color:#3369e8"> </i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Docentes
-                                            <div class="pull-right badge" id="WrGridSystem"></div>
-                                        </h4>
-                                    </div>
-
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color:  rgba(250, 188, 9, 0.1)">
-                                        <center><i class="fa fa-info-circle" style="color:#fabc09"> </i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Estudiantes
-                                            <div class="pull-right badge" id="WrInformation"></div>
-                                        </h4>
-                                    </div>
-
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(121, 90, 71, 0.1)">
-                                        <center><i class="fa fa-bars" style="color:#795a47"> </i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>PPFF
-                                            <div class="pull-right badge" id="WrNavigation"></div>
-                                        </h4>
-                                    </div>
-
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Grados
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Paralelos
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Asignación
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Materia
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Inscripción
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Pagos
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Kardex
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Calificación
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Gestión
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Niveles
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Turno
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Permisos
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Reportes
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-4">
-                            <div class="wrimagecard wrimagecard-topimage">
-                                <a href="#">
-                                    <div class="wrimagecard-topimage_header" style="background-color: rgba(130, 93, 9, 0.1)">
-                                        <center><i class="fa fa-magic" style="color:#825d09"></i></center>
-                                    </div>
-                                    <div class="wrimagecard-topimage_title">
-                                        <h4>Instituciones
-                                            <div class="pull-right badge" id="WrThemesIcons"></div>
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-
+                        <i class="fas fa-graduation-cap dash-hero__art" aria-hidden="true"></i>
                     </div>
 
+                    <div class="row dash-stats">
+                        @foreach ($stats as $stat)
+                            <div class="col-xl-3 col-sm-6 mb-4">
+                                <div class="dash-stat">
+                                    <span class="dash-icon dash-icon--{{ $stat['tone'] }}">
+                                        <i class="fas {{ $stat['icon'] }}"></i>
+                                    </span>
+                                    <div>
+                                        <div class="dash-stat__value">{{ number_format($stat['value']) }}</div>
+                                        <div class="dash-stat__label">{{ $stat['label'] }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    @foreach ($sections as $sectionTitle => $modules)
+                        <h2 class="dash-section">{{ $sectionTitle }}</h2>
+                        <div class="row">
+                            @foreach ($modules as $module)
+                                <div class="col-xl-3 col-lg-4 col-sm-6 mb-4">
+                                    @if ($module['route'])
+                                        <a href="{{ route($module['route']) }}" class="dash-module">
+                                    @else
+                                        <div class="dash-module is-disabled" title="Módulo en desarrollo">
+                                    @endif
+                                        <span class="dash-icon dash-icon--{{ $module['tone'] }}">
+                                            <i class="fas {{ $module['icon'] }}"></i>
+                                        </span>
+                                        <div class="dash-module__body">
+                                            <div class="dash-module__title">{{ $module['title'] }}</div>
+                                            <div class="dash-module__desc">{{ $module['desc'] }}</div>
+                                        </div>
+                                        @if ($module['route'])
+                                            <i class="fas fa-arrow-right dash-module__arrow"></i>
+                                        @else
+                                            <span class="dash-module__soon">Próximamente</span>
+                                        @endif
+                                    @if ($module['route'])
+                                        </a>
+                                    @else
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    @endforeach
 
                 </div>
+                <!-- /.container-fluid -->
+
             </div>
+            <!-- End of Main Content -->
 
         </div>
-
-
-    </div>
-    <!-- /.container-fluid -->
-
-    </div>
-    <!-- End of Main Content -->
-    </div>
-    <!-- End of Content Wrapper -->
+        <!-- End of Content Wrapper -->
 
     </div>
     <!-- End of Page Wrapper -->

@@ -9,7 +9,7 @@ class Estudiante extends Model
     protected $table = 'students';
 
     protected $fillable = [
-       'user_id','status','created_at','updated_at'
+       'user_id','lapse_id','country_id','equivalency','status','created_at','updated_at'
     ];
 
 

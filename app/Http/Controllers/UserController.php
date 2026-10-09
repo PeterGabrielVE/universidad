@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Estudiante;
 use App\User;
 use App\Models\Role;
+use Illuminate\Support\Facades\DB;
 Use Alert;
 
 class UserController extends Controller
@@ -28,7 +29,7 @@ class UserController extends Controller
     {
         $usuarios = User::where('rol_id','1')->latest()->paginate(5);
         $rol = '1';
-        $roles = Rol::get()->pluck('name','id');
+        $roles = Role::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -37,7 +38,7 @@ class UserController extends Controller
     {
         $usuarios = User::where('rol_id','2')->latest()->paginate(5);
         $rol = '2';
-        $roles = Rol::get()->pluck('name','id');
+        $roles = Role::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -46,7 +47,7 @@ class UserController extends Controller
     {
         $usuarios = User::where('rol_id',3)->latest()->paginate(5);
         $rol = '3';
-        $roles = Rol::get()->pluck('name','id');
+        $roles = Role::get()->pluck('name','id');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -70,10 +71,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
        try {
+       DB::beginTransaction();
        $request['password'] = bcrypt($request->password);
        $user = User::create($request->all());
 
-       $data = User::latest('id')->first();
         switch ($request->rol_id) {
             case 1:
                 $user->assignRole('Director');
@@ -87,8 +88,9 @@ class UserController extends Controller
             case 4:
                 $user->assignRole('Estudiante');
 
+                // El resto del expediente (lapso, país, etc.) lo completa el estudiante en estudiantes.create
                 $student =  new Estudiante();
-                $student->user_id = $data->id;
+                $student->user_id = $user->id;
                 $student->created_at = Carbon::now();
                 $student->updated_at =Carbon::now();
                 $student->save();
@@ -98,10 +100,13 @@ class UserController extends Controller
                 $user->assignRole('Administrador');
                 break;
         }
+        DB::commit();
         Alert::success('Usuario', '¡Creado exitosamente!');
         return redirect()->back();
         } catch (\Exception $e){
-            Alert::error('Usuario', '¡Error durante a creación!');
+            DB::rollBack();
+            report($e);
+            Alert::error('Usuario', '¡Error durante la creación!');
             return redirect()->back();
         }
     }
@@ -127,7 +132,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $roles = Rol::get()->pluck('name','id');
+        $roles = Role::get()->pluck('name','id');
         return view('pages.usuarios.edit',compact('user','roles'));
     }
 
@@ -151,7 +156,7 @@ class UserController extends Controller
 
         $usuarios = User::where('rol_id',$request->rol_id)->latest()->paginate(5);
         $rol = '1';
-        $roles = Rol::get()->pluck('name','id');
+        $roles = Role::get()->pluck('name','id');
         Alert::success('Usuario', '¡Actualizado exitosamente!');
         return view('pages.usuarios.index',compact('usuarios','rol','roles'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
