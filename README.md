@@ -1,44 +1,87 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p> 
+# Gabook — Sistema de Gestión Académica
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Plataforma web para la administración académica de una institución educativa:
+estudiantes, lapsos, inscripciones, calificaciones, usuarios y reportes, con
+control de acceso por roles (Director, Coordinador, Asistente, Estudiante y
+Administrador).
 
-## About Laravel
+> **Nota de confidencialidad:** este sistema fue desarrollado para una
+> institución educativa real. Por acuerdos de confidencialidad no se mencionan
+> su nombre ni su información. Todos los datos que aparecen en este repositorio,
+> en las capturas y en la demo (estudiantes, usuarios, calificaciones) son
+> ficticios y se generaron solo con fines demostrativos.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![Panel principal](docs/screenshots/dashboard.png)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Capturas
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Inicio de sesión | Versión móvil |
+|---|---|
+| ![Inicio de sesión](docs/screenshots/login.png) | ![Inicio de sesión en móvil](docs/screenshots/login-movil.png) |
 
-## Running with Docker
+| Estudiantes | Lapsos académicos |
+|---|---|
+| ![Listado de estudiantes](docs/screenshots/estudiantes.png) | ![Lapsos académicos](docs/screenshots/lapsos.png) |
 
-This project supports running Laravel using Docker. Make sure you have Docker and Docker Compose installed.
+| Roles | Validación de credenciales |
+|---|---|
+| ![Roles](docs/screenshots/roles.png) | ![Error de inicio de sesión](docs/screenshots/login-error.png) |
 
-### 1. Start the containers
+## Tecnologías
+
+- **Backend:** Laravel 10, PHP 8.1, Laravel Sanctum, Spatie Laravel Permission
+- **Frontend:** Vue 3, Blade, Bootstrap, Laravel Mix
+- **Base de datos:** MySQL 8
+- **Infraestructura:** Docker y Docker Compose
+
+## Funcionalidades
+
+- Panel principal con indicadores de la institución
+- Gestión de usuarios y roles con permisos
+- Expedientes de estudiantes e historial académico
+- Lapsos académicos, inscripción por materias y registro de notas
+- Reportes de estudiantes
+
+## Mi aporte
+
+- Migración progresiva de vistas Blade a Vue 3, con una API protegida por Sanctum
+- Arquitectura por capas (Services, Repositories, Use Cases) en el módulo de roles
+- Corrección del esquema de base de datos y del flujo de alta de estudiantes
+- Rediseño de la interfaz: panel principal e inicio de sesión
+- Entorno dockerizado y datos de prueba que se pueden recargar
+
+## Estado
+
+Proyecto en evolución. Los módulos de usuarios, roles, estudiantes, lapsos y
+reportes están operativos. Grados, materias, pagos y otros módulos están en
+desarrollo y aparecen como "Próximamente" en el panel.
+
+## Ejecutar en local
+
+Requisitos: Docker y Docker Compose.
 
 ```bash
-docker-compose up -d --build
-
-docker-compose exec app composer install
-
 cp .env.example .env
-docker-compose exec app php artisan key:generate
+docker compose up -d --build
+docker compose exec app php artisan migrate --seed
+docker compose exec app php artisan db:seed --class='\DemoDataSeeder'
+docker compose exec app npm run dev
+```
 
-docker-compose exec app php artisan migrate
+Abrir http://localhost:8000
 
-docker-compose exec app bash
+| Rol | Correo | Contraseña |
+|---|---|---|
+| Director (administrador) | `admin@gmail.com` | `12345678` |
+| Coordinador | `luis.fernandez@gabook.test` | `password` |
+| Estudiante | `maria.gonzalez@gabook.test` | `password` |
 
-Para ver los logs y errores:
-docker-compose logs -f app
-docker-compose logs -f db
+`DemoDataSeeder` se puede ejecutar varias veces: recrea los usuarios
+`@gabook.test` con sus inscripciones y calificaciones.
+
+Para ver los logs:
+
+```bash
+docker compose logs -f app
+docker compose logs -f db
+```
