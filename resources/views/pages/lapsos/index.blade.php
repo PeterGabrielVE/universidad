@@ -24,7 +24,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Lapsos Acádemicos</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Lapsos académicos</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -47,43 +47,40 @@
                                     <thead>
                                         <tr>
                                             <th>Lapso</th>
-                                            <th>Fecha Inicio</th>
-                                            <th>Fecha Final</th>
+                                            <th>Programa</th>
+                                            <th>Fecha inicio</th>
+                                            <th>Fecha final</th>
+                                            <th>Estado</th>
                                             <th>Opciones</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Lapso</th>
-                                            <th>Fecha Inicio</th>
-                                            <th>Fecha Final</th>
-                                            <th>Opciones</th>
-                                        </tr>
-                                    </tfoot>
                                     <tbody>
-                                        @foreach ($lapsos as $lapso)
+                                        @forelse ($lapsos as $lapso)
                                         <tr>
                                             <td>{{ $lapso->name }}</td>
+                                            <td>{{ $lapso->program?->name ?? 'Sin programa (anterior a la Fase 3)' }}</td>
                                             <td>{{ $lapso->start_lapse }}</td>
                                             <td>{{ $lapso->end_lapse }}</td>
+                                            <td>{{ $lapso->status->label() }}</td>
                                             <td>
-                                                @if($lapso->status=='1')
-                                                <form action="{{ route('lapso.destroy',$lapso->id) }}" method="POST">
-
-
-
-                                                    <a class="btn btn-uft" onclick="editLapso({{ $lapso->id }})"><i class="fas fa-edit"></i></a>
-
+                                                {{-- Cerrado: inmutable. Solo se elimina un lapso que nunca se abrió. --}}
+                                                @if ($lapso->status !== \App\Modules\Academic\Domain\LapseStatus::Cerrado)
+                                                <a class="btn btn-uft" onclick="editLapso({{ $lapso->id }})" title="Editar"><i class="fas fa-edit"></i></a>
+                                                @endif
+                                                @if ($lapso->status === \App\Modules\Academic\Domain\LapseStatus::Planificacion)
+                                                <form action="{{ route('lapso.destroy',$lapso->id) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-
-                                                    <button type="submit" class="btn btn-uft"><i class="fas fa-trash"></i></button>
+                                                    <button type="submit" class="btn btn-uft" title="Eliminar"><i class="fas fa-trash"></i></button>
                                                 </form>
                                                 @endif
                                             </td>
                                         </tr>
-                                        @endforeach
-
+                                        @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">No hay lapsos en tu alcance.</td>
+                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                                 {!! $lapsos->links() !!}
@@ -120,7 +117,8 @@
               $('#edit_start_lapse').val(data.start_lapse);
               $('#edit_end_lapse').val(data.end_lapse);
               $('#_id').val(data.id);
-              $('#edit_status').val(data.status);
+              $('#edit_status').val(data.status).data('original', data.status);
+              $('#edit_errors').addClass('d-none').empty();
 
             }
           });

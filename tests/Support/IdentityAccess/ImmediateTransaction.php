@@ -2,7 +2,7 @@
 
 namespace Tests\Support\IdentityAccess;
 
-use App\Modules\IdentityAccess\Application\Port\TransactionManager;
+use App\Modules\Shared\Application\Port\TransactionManager;
 
 final class ImmediateTransaction implements TransactionManager
 {

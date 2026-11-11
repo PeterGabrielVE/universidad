@@ -130,10 +130,43 @@ Derivadas de las reglas anteriores; confirmar si alguna no encaja con el negocio
 - **Director:** además de reportes y estadísticas, puede ver el listado de usuarios,
   los expedientes de estudiantes y las notas (lectura amplia), pero no editarlos.
 
-## 12. Puntos abiertos
+## 12. Decisiones de implementación (Fase 3a)
 
-1. **Facultad y programa:** ¿son la misma entidad (cada doctorado es una "facultad")
-   o una facultad agrupa varios programas? Afecta a dónde vive `min_passing_grade`.
-   Bloquea la Fase 3.
-2. **Cédula única:** hoy solo el correo es único. ¿Debe impedirse registrar dos
-   cuentas con la misma cédula (p. ej. un aspirante que se registra dos veces)?
+- **Cierre con notas pendientes:** un lapso no se cierra mientras tenga inscripciones
+  activas sin nota; el sistema indica cuántas faltan. Las preinscritas y congeladas no
+  se evalúan ni bloquean el cierre.
+- **Ciclo del lapso:** `planificacion → abierto → cerrado`, sin retrocesos. Un lapso
+  nuevo empieza en planificación o abierto, nunca cerrado.
+- **Borrado:** solo se elimina un lapso en planificación; uno que se abrió tiene
+  historia académica.
+- **Lapsos anteriores a la Fase 3** (sin programa): solo los gestiona el Administrador
+  y al cerrarlos se usa la nota base 48.
+- **Nota mínima de los programas existentes:** 48 (la base confirmada); cada programa
+  puede cambiarla. Los datos demo usan 75 en Gerencia para mostrar la diferencia.
+
+## 13. Estructura académica e identidad
+
+Confirmado el 11-11-2026.
+
+- **Facultad → programas (1:N).** Una facultad agrupa varios programas (doctorados,
+  maestrías…). La tabla histórica `doctorados` es la tabla de programas.
+- **`min_passing_grade` vive en el programa:** las exigencias varían por nivel
+  (p. ej. 75 en un doctorado frente a una maestría de la misma facultad).
+- **El Coordinador se asigna al programa** (o a sus cohortes), no a la facultad. El
+  control de una facultad completa sería un Decano, rol que hoy no se necesita.
+- **La cédula es única** a nivel de base de datos: es el ancla de la identidad y evita
+  que alguien con historial (reprobado, con deudas) se registre de nuevo con otro correo.
+- **Pérdida de acceso al correo:** Control de Estudios actualiza el correo de la cuenta
+  existente tras validar la cédula; nunca se crea un perfil paralelo.
+- **Migración:** si existen cédulas repetidas, la migración se detiene y
+  `php artisan users:duplicate-identification-cards` las lista. Fusionarlas o
+  eliminarlas es una decisión de Control de Estudios; la migración no borra datos.
+
+## 14. Puntos abiertos
+
+1. **Comodín `doctorado_id = 3` ("ambos programas") frente a facultades con N
+   programas.** El próximo programa que se cree recibiría el id 3 y chocaría con el
+   comodín. Propuesta: sustituirlo por una relación usuario ↔ programas (un estudiante
+   o coordinador puede pertenecer a varios), migrando cada 3 a {1, 2}. Hasta decidirlo
+   no se habilita la creación de programas desde la aplicación. Bloquea la gestión de
+   facultades y programas (Fase 3b).

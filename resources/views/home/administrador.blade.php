@@ -26,7 +26,7 @@
         ],
         'Control de estudios' => [
             ['title' => 'Estudiantes', 'desc' => 'Expedientes y datos', 'icon' => 'fa-user-graduate', 'tone' => 'red', 'route' => 'estudiantes.index', 'permission' => 'students.view'],
-            ['title' => 'Lapsos y cohortes', 'desc' => 'Periodos académicos', 'icon' => 'fa-calendar-alt', 'tone' => 'green', 'route' => 'lapso.index', 'permission' => 'lapses.manage'],
+            ['title' => 'Lapsos y cohortes', 'desc' => 'Periodos académicos', 'icon' => 'fa-calendar-alt', 'tone' => 'green', 'route' => 'lapso.index', 'permission' => ['lapses.manage', 'lapses.manage_program']],
             ['title' => 'Facultades y programas', 'desc' => 'Programas de doctorado', 'icon' => 'fa-university', 'tone' => 'amber', 'route' => null],
             ['title' => 'Pensum', 'desc' => 'Asignaturas por semestre', 'icon' => 'fa-book-open', 'tone' => 'blue', 'route' => null],
         ],
@@ -45,7 +45,7 @@
     foreach ($sections as $title => $modules) {
         $sections[$title] = array_values(array_filter(
             $modules,
-            fn ($module) => $module['route'] === null || $user->can($module['permission'])
+            fn ($module) => $module['route'] === null || $user->canAny((array) $module['permission'])
         ));
     }
 @endphp

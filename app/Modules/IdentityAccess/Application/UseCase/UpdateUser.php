@@ -6,10 +6,11 @@ use App\Modules\IdentityAccess\Application\Dto\UserData;
 use App\Modules\IdentityAccess\Application\Port\PasswordHasher;
 use App\Modules\IdentityAccess\Application\Port\RoleRepository;
 use App\Modules\IdentityAccess\Application\Port\StudentRecords;
-use App\Modules\IdentityAccess\Application\Port\TransactionManager;
+use App\Modules\Shared\Application\Port\TransactionManager;
 use App\Modules\IdentityAccess\Application\Port\UserRepository;
 use App\Modules\IdentityAccess\Domain\Email;
 use App\Modules\IdentityAccess\Domain\Exception\EmailAlreadyInUse;
+use App\Modules\IdentityAccess\Domain\Exception\IdentificationCardAlreadyInUse;
 use App\Modules\IdentityAccess\Domain\Exception\RoleNotFound;
 use App\Modules\IdentityAccess\Domain\Exception\UserNotFound;
 use App\Modules\IdentityAccess\Domain\UserAccount;
@@ -35,6 +36,10 @@ final class UpdateUser
 
         if ($this->users->emailInUse($email, $id)) {
             throw new EmailAlreadyInUse($email);
+        }
+
+        if ($data->identificationCard !== null && $this->users->identificationCardInUse($data->identificationCard, $id)) {
+            throw new IdentificationCardAlreadyInUse($data->identificationCard);
         }
 
         if ($this->roles->findByName($data->role) === null) {

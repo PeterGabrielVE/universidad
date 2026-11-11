@@ -32,6 +32,17 @@ final class InMemoryUserRepository implements UserRepository
         return false;
     }
 
+    public function identificationCardInUse(int $identificationCard, ?int $exceptUserId = null): bool
+    {
+        foreach ($this->accounts as $id => $account) {
+            if ($id !== $exceptUserId && $account->identificationCard() === $identificationCard) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function save(UserAccount $account, ?string $passwordHash = null): UserAccount
     {
         $id = $account->id() ?? $this->nextId++;

@@ -62,7 +62,7 @@
             <hr class="sidebar-divider">
             @endcan
 
-            @can('lapses.manage')
+            @canany(['lapses.manage', 'lapses.manage_program'])
             <li class="nav-item">
                 <a class="nav-link collapsed text-uft" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
@@ -77,7 +77,7 @@
                 </div>
             </li>
             <hr class="sidebar-divider">
-            @endcan
+            @endcanany
 
             @if ($ownRecordId !== null)
             <li class="nav-item">

@@ -8,8 +8,8 @@ en él (ver IMPLEMENTATION_PLAN.md). Hoy conviven dos estilos:
 
 | Zona | Estilo | Módulos |
 |---|---|---|
-| `app/Modules/*` | Hexagonal: dominio puro, casos de uso, puertos y adaptadores | IdentityAccess (Fase 2) |
-| `app/Http/Controllers`, `app/*.php` | MVC heredado: lógica en controladores y modelos Eloquent | Estudiantes, lapsos, entregas, reportes (Fases 3–5) |
+| `app/Modules/*` | Hexagonal: dominio puro, casos de uso, puertos y adaptadores | Shared, IdentityAccess (Fase 2), Academic (Fase 3a: lapsos) |
+| `app/Http/Controllers`, `app/*.php` | MVC heredado: lógica en controladores y modelos Eloquent | Expediente, inscripción, entregas, reportes (Fases 3b–5) |
 
 ## Capas y regla de dependencias
 
@@ -118,7 +118,56 @@ log porque son errores esperados.
 | Estados como *backed enums* sobre `string` | MySQL ENUM exige `ALTER TABLE` para cada valor nuevo |
 | `password` con cast `hashed` | No vuelve a hashear un hash (el mutador anterior sí lo hacía) |
 
+## Módulo Shared
+
+`app/Modules/Shared`: piezas comunes a todos los módulos.
+
+- `Domain\DomainException` (→ 422), `NotFoundException` (→ 404), `AccessDeniedException` (→ 403).
+- `Application\Port\TransactionManager` + `Infrastructure\DatabaseTransactionManager`.
+
+## Módulo Academic (Fase 3a)
+
+```
+app/Modules/Academic/
+├── Domain/
+│   ├── Lapse.php              Entidad: periodo, estado, programa; cerrado = inmutable
+│   ├── LapsePeriod.php        VO: fechas válidas y nombre "Lapso Julio 2026-Diciembre 2026"
+│   ├── LapseStatus.php        Enum: planificacion → abierto → cerrado
+│   ├── EnrollmentStatus.php   Enum: pre_inscrito | activo | congelado | cerrado
+│   ├── EnrollmentResult.php   Enum: aprobado | reprobado (se guarda al cerrar)
+│   ├── Grade.php              VO: nota 0–100
+│   ├── PassingGrade.php       VO: nota mínima del programa (48 por defecto)
+│   └── Exception/
+├── Application/
+│   ├── Port/                  LapseRepository, ProgramRepository, EnrollmentRepository
+│   ├── Dto/                   ProgramData, ActiveEnrollment
+│   └── UseCase/               ManageLapses (alta, edición, baja), CloseLapse
+└── Infrastructure/            Adaptadores Eloquent, LapseDirectory (lectura), AcademicServiceProvider
+```
+
+Academic depende de `IdentityAccess\Domain\ProgramScope` para el alcance por
+programa: es el único punto de contacto entre módulos y está en el dominio (sin
+Laravel), así que la dependencia apunta hacia el núcleo.
+
+### Flujo: cierre de un lapso
+
+```
+POST /updateLapso/{id}  status=cerrado
+  → permission:lapses.manage | lapses.manage_program
+  → LapseRequest (forma)
+  → ManageLapses::update
+       LapseRepository::find + ProgramScope::covers   → LapseOutOfScope (403)
+       Lapse::reschedule (fechas)                       → LapseIsClosed (422)
+  → CloseLapse::close
+       Lapse::close()                                   → solo desde "abierto"
+       EnrollmentRepository::activeInLapse(id)          → solo ese lapso, solo activas
+       ¿alguna sin nota?                                → LapseHasUngradedEnrollments (422)
+       PassingGrade del programa → aprobado/reprobado
+       TransactionManager: cierra cada inscripción + guarda el lapso
+```
+
 ## Pendiente de migrar a módulos
 
-`EstudiantesController` (≈1.200 líneas: expediente, entregas, calificaciones, PDFs) y
-`LapsoController` se extraen en las Fases 3–5 (Academic, DoctoralSubmissions, Reporting).
+`EstudiantesController` (≈1.200 líneas: expediente, entregas, calificaciones, PDFs) se
+extrae en las Fases 3b–5 (Academic, DoctoralSubmissions, Reporting). `LapsoController`
+ya delega en el módulo Academic.

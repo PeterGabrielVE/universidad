@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Modules\Shared\Domain\AccessDeniedException;
 use App\Modules\Shared\Domain\DomainException;
 use App\Modules\Shared\Domain\NotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -33,6 +34,15 @@ class Handler extends ExceptionHandler
             }
 
             abort(404, $e->getMessage());
+        });
+
+        // Recurso fuera del alcance del usuario (p. ej. otro programa) → 403.
+        $this->renderable(function (AccessDeniedException $e, Request $request) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => $e->getMessage()], 403);
+            }
+
+            abort(403, $e->getMessage());
         });
 
         // Regla de negocio incumplida → 422 (API) o vuelta al formulario con el error en su campo.

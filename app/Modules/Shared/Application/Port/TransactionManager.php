@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\IdentityAccess\Application\Port;
+namespace App\Modules\Shared\Application\Port;
 
 interface TransactionManager
 {

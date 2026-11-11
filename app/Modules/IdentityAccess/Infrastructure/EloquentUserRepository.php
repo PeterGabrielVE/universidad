@@ -27,6 +27,14 @@ final class EloquentUserRepository implements UserRepository
             ->exists();
     }
 
+    public function identificationCardInUse(int $identificationCard, ?int $exceptUserId = null): bool
+    {
+        return User::query()
+            ->where('identification_card', $identificationCard)
+            ->when($exceptUserId !== null, fn ($q) => $q->whereKeyNot($exceptUserId))
+            ->exists();
+    }
+
     public function save(UserAccount $account, ?string $passwordHash = null): UserAccount
     {
         $user = $account->id() === null ? new User() : User::findOrFail($account->id());

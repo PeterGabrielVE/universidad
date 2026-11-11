@@ -43,8 +43,8 @@ class AccessPolicyTest extends TestCase
 
     public function test_coordinator_sees_grades_but_not_finances_or_users(): void
     {
-        $this->assertGrants(RoleName::Coordinador, [Permission::StudentsView, Permission::GradesView]);
-        $this->assertDenies(RoleName::Coordinador, [Permission::UsersManage, Permission::ReportsView]);
+        $this->assertGrants(RoleName::Coordinador, [Permission::StudentsView, Permission::GradesView, Permission::LapsesManageProgram]);
+        $this->assertDenies(RoleName::Coordinador, [Permission::UsersManage, Permission::ReportsView, Permission::LapsesManage]);
     }
 
     public function test_only_teachers_and_administrators_record_grades(): void

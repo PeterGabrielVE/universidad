@@ -2,202 +2,114 @@
 
 namespace App\Http\Controllers;
 
-use App\Lapso;
-use App\Lapso_estudiante;
-use Carbon\Carbon;
+use Alert;
+use App\Http\Requests\LapseRequest;
+use App\Modules\Academic\Application\UseCase\ManageLapses;
+use App\Modules\Academic\Domain\Lapse;
+use App\Modules\Academic\Domain\LapseStatus;
+use App\Modules\Academic\Infrastructure\LapseDirectory;
+use App\Modules\IdentityAccess\Domain\ProgramScope;
+use App\Modules\IdentityAccess\Infrastructure\UserDirectory;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
+/**
+ * Lapsos y cohortes. El Administrador gestiona todos; el Coordinador, los de su
+ * programa. Las reglas están en ManageLapses / CloseLapse (módulo Academic).
+ */
 class LapsoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $lapsos = Lapso::latest()->paginate(5);
-
-        return view('pages.lapsos.index',compact('lapsos'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+    public function __construct(
+        private readonly ManageLapses $lapses,
+        private readonly UserDirectory $users,
+    ) {
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function index(Request $request, LapseDirectory $directory): View
     {
-        //
+        $scope = $this->scope($request);
+
+        return view('pages.lapsos.index', [
+            'lapsos' => $directory->paginate($scope),
+            'programs' => $directory->programsFor($scope),
+            'statuses' => LapseStatus::cases(),
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function create(): RedirectResponse
     {
-        $data = $request->all();
-        $fecha1 =  strtotime($request->start_lapse);
-        $mes1 = date("m", $fecha1);
-        $mes1 = $this->obtenerMes($mes1);
-        $anno1 = date("Y", $fecha1);
-
-        $fecha2 =  strtotime($request->end_lapse);
-        $mes2 = date("m", $fecha2);
-        $mes2 = $this->obtenerMes($mes2);
-        $anno2 = date("Y", $fecha2);
-
-        $name = 'Lapso '.$mes1.' '.$anno1.'-'.$mes2.' '.$anno2;
-
-        $name = array('name'=>$name);
-        $data = array_replace($data,$name);
-
-        $start = array('start_lapse'=>$this->setDateInDB($request->start_lapse));
-        $data = array_replace($data,$start);
-
-        $end = array('end_lapse'=>$this->setDateInDB($request->end_lapse));
-        $data = array_replace($data,$end);
-
-        $lapso = Lapso::create($data);
-
-        $lapsos = Lapso::latest()->paginate(5);
-
-        return view('pages.lapsos.index',compact('lapsos'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        return redirect()->route('lapso.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function store(LapseRequest $request): RedirectResponse
     {
-        //
+        $lapse = $this->lapses->create(
+            $request->integer('program_id'),
+            $request->string('start_lapse')->value(),
+            $request->string('end_lapse')->value(),
+            $request->status(),
+            $this->scope($request),
+        );
+        Alert::success('Lapso', "«{$lapse->name()}» creado.");
+
+        return redirect()->route('lapso.index');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function show(): RedirectResponse
     {
-        $data = Lapso::find($id);
-        return response()->json($data);
+        return redirect()->route('lapso.index');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    /** JSON para el modal de edición. */
+    public function edit(Request $request, int $id): JsonResponse
     {
-        $data = $request->all();
-        $lapso = Lapso::find($id);
-        $lapso->update($data);
-        $lapso->save();
+        return response()->json($this->toArray($this->lapses->get($id, $this->scope($request))));
+    }
 
-        if($request->status == '0'){
-            $lapse = Lapso_Estudiante::where('note','>', '49')->update(['status'=>'Aprobado']);
-            $lapse = Lapso_Estudiante::where('note','<', '50')->update(['status'=>'Reprobado']);
+    public function update(LapseRequest $request, int $id): JsonResponse|RedirectResponse
+    {
+        $lapse = $this->lapses->update(
+            $id,
+            $request->string('start_lapse')->value(),
+            $request->string('end_lapse')->value(),
+            $request->status(),
+            $this->scope($request),
+        );
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'data' => $this->toArray($lapse)]);
         }
-        return back();
+
+        Alert::success('Lapso', "«{$lapse->name()}» actualizado.");
+
+        return redirect()->route('lapso.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Request $request, int $id): RedirectResponse
     {
-      $Lapso = Lapso::find($id);
-      $Lapso->delete();
-      return back();
+        $this->lapses->delete($id, $this->scope($request));
+        Alert::success('Lapso', 'Eliminado.');
+
+        return redirect()->route('lapso.index');
     }
 
-    public function setDateInDB($date_val){
-        //$date_val = str_replace("'", "", $get_date_val);
-
-        if ( ( $date_val === '0000/00/00' ) || ( $date_val === '0000/00/00 00:00:00' ) ){
-            $date_val_0 = date("Y-m-d H:i:s", strtotime("1970-10-02 02:02:02"));
-            //$date_val = '';
-            return $date_val_0;
-        } else if ( ( $date_val === '0000-00-00' ) || ( $date_val === '0000-00-00 00:00:00' ) ){
-            $date_val_0 = date("Y-m-d H:i:s", strtotime("1970-10-02 02:02:02"));
-            //$date_val = '';
-            return $date_val_0;
-        } else if ( strlen($date_val) < 1 ){
-            $date_val_0 = date("Y-m-d H:i:s", strtotime("1970-10-02 02:02:02"));
-            //$date_val = '';
-            return $date_val_0;
-        } else {
-            $date_val_1 = str_replace("'", "", $date_val);
-            $date_val_0 = date("Y-m-d H:i:s", strtotime($date_val_1));
-            return $date_val_0;
-        }
+    private function scope(Request $request): ProgramScope
+    {
+        return $this->users->programScopeOf($request->user());
     }
 
-    public function obtenerMes($mes){
-
-        switch ($mes) {
-            case 01:
-                return "Enero";
-                break;
-            case 02:
-                return "Febrero";
-                break;
-            case 03:
-                return "Marzo";
-                break;
-            case 04:
-                return "Abril";
-                break;
-            case 05:
-                return "Mayo";
-                break;
-             case 06:
-                return "Junio";
-                break;
-            case 07:
-                return "Julio";
-                break;
-            case '08':
-                return "Agosto";
-                break;
-             case '09':
-                return "Septiembre";
-                break;
-            case '10':
-                return "Octubre";
-                break;
-            case '11':
-                return "Noviembre";
-                break;
-             case '12':
-                return "Diciembre";
-                break;
-            default:
-                break;
-        }
+    /** @return array{id: int, program_id: ?int, name: string, start_lapse: string, end_lapse: string, status: string} */
+    private function toArray(Lapse $lapse): array
+    {
+        return [
+            'id' => $lapse->id(),
+            'program_id' => $lapse->programId(),
+            'name' => $lapse->name(),
+            'start_lapse' => $lapse->period()->start->format('Y-m-d'),
+            'end_lapse' => $lapse->period()->end->format('Y-m-d'),
+            'status' => $lapse->status()->value,
+        ];
     }
-
-    public function getPensum(){
-
-        $asignaturas = DB::table('courses')->orderBy('semester_id','ASC')->get();
-        return view('pages.lapsos.pensum',compact('asignaturas'));
-    }
-
 }

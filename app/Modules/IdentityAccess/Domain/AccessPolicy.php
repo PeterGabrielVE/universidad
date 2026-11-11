@@ -28,6 +28,7 @@ final class AccessPolicy
             // Académico-administrativo limitado a su programa (ver ProgramScope).
             RoleName::Coordinador => [
                 Permission::DashboardView,
+                Permission::LapsesManageProgram,
                 Permission::StudentsView,
                 Permission::StudentsEnroll,
                 Permission::GradesView,

@@ -53,7 +53,8 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('roles/index', 'RoleController@index')->name('roles');
     });
 
-    Route::middleware(P::middleware(P::LapsesManage))->group(function () {
+    // Lapsos: el alcance por programa (Coordinador) lo aplica ManageLapses.
+    Route::middleware(P::middleware(P::LapsesManage, P::LapsesManageProgram))->group(function () {
         Route::resource('lapso', 'LapsoController');
         Route::get('editLapso/{id}', 'LapsoController@edit')->name('editLapso');
         Route::post('updateLapso/{id}', 'LapsoController@update')->name('updateLapso');

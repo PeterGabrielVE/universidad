@@ -12,7 +12,10 @@ enum Permission: string
     case UsersView = 'users.view';
     case UsersManage = 'users.manage';
     case RolesManage = 'roles.manage';
+    /** Lapsos de cualquier programa. */
     case LapsesManage = 'lapses.manage';
+    /** Lapsos/cohortes solo del programa propio (ProgramScope). */
+    case LapsesManageProgram = 'lapses.manage_program';
     case ReportsView = 'reports.view';
     case StudentsView = 'students.view';
     case StudentsManage = 'students.manage';

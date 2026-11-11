@@ -2,14 +2,24 @@
 
 namespace App;
 
+use App\Modules\Academic\Domain\EnrollmentResult;
+use App\Modules\Academic\Domain\EnrollmentStatus;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Inscripción de un estudiante en una asignatura de un lapso.
+ */
 class Lapso_Estudiante extends Model
 {
     protected $table = 'lapses_students';
 
     protected $fillable = [
-       'student_id','lapse_id','course_id','note','status'
+       'student_id', 'lapse_id', 'course_id', 'note', 'status',
+    ];
+
+    protected $casts = [
+        'status' => EnrollmentStatus::class,
+        'result' => EnrollmentResult::class,
     ];
 
     public function asignatura()

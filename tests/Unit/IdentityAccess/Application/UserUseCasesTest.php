@@ -9,6 +9,7 @@ use App\Modules\IdentityAccess\Application\UseCase\RegisterApplicant;
 use App\Modules\IdentityAccess\Application\UseCase\UpdateUser;
 use App\Modules\IdentityAccess\Domain\AccountStatus;
 use App\Modules\IdentityAccess\Domain\Exception\EmailAlreadyInUse;
+use App\Modules\IdentityAccess\Domain\Exception\IdentificationCardAlreadyInUse;
 use App\Modules\IdentityAccess\Domain\Exception\PasswordRequired;
 use App\Modules\IdentityAccess\Domain\Exception\RoleNotFound;
 use App\Modules\IdentityAccess\Domain\Exception\UserNotFound;
@@ -156,17 +157,38 @@ class UserUseCasesTest extends TestCase
         $this->assertSame([], $this->studentRecords->ensuredFor);
     }
 
+    public function test_duplicate_identification_card_is_rejected(): void
+    {
+        $this->createUser->execute($this->data(email: 'ana@gabook.test', card: 20111222));
+
+        $this->expectException(IdentificationCardAlreadyInUse::class);
+        $this->createUser->execute($this->data(email: 'otra@gabook.test', card: 20111222));
+    }
+
+    public function test_update_cannot_take_another_persons_identification_card(): void
+    {
+        $ana = $this->createUser->execute($this->data(email: 'ana@gabook.test', card: 20111222));
+        $this->createUser->execute($this->data(email: 'luis@gabook.test', card: 30111222));
+
+        $this->updateUser->execute($ana->id(), $this->data(email: 'ana@gabook.test', card: 20111222, name: 'Ana María'));
+
+        $this->expectException(IdentificationCardAlreadyInUse::class);
+        $this->updateUser->execute($ana->id(), $this->data(email: 'ana@gabook.test', card: 30111222));
+    }
+
+    /** Por defecto la cédula se deriva del correo: misma persona → misma cédula. */
     private function data(
         string $name = 'Ana',
         string $email = 'ana@gabook.test',
         string $role = 'Asistente',
         AccountStatus $status = AccountStatus::Activo,
         ?string $password = 'secreto123',
+        ?int $card = null,
     ): UserData {
         return new UserData(
             name: $name,
             lastName: 'Pérez',
-            identificationCard: 20111222,
+            identificationCard: $card ?? 1_000_000 + crc32(strtolower(trim($email))) % 90_000_000,
             email: $email,
             phone: null,
             role: $role,

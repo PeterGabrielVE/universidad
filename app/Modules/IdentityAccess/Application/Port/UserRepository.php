@@ -11,6 +11,8 @@ interface UserRepository
 
     public function emailInUse(Email $email, ?int $exceptUserId = null): bool;
 
+    public function identificationCardInUse(int $identificationCard, ?int $exceptUserId = null): bool;
+
     /**
      * Inserta o actualiza la cuenta y su rol. $passwordHash null conserva la
      * contraseña actual. Devuelve la cuenta con su id.
