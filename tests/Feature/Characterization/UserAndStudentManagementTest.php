@@ -122,10 +122,16 @@ class UserAndStudentManagementTest extends TestCase
         $this->assertNotNull($student->fresh());
     }
 
+    /**
+     * Fase 3d: la ficha muestra el lapso de ingreso del estudiante. Antes mostraba
+     * siempre el último lapso creado, fuera o no el suyo.
+     */
     public function test_staff_opens_a_student_record(): void
     {
-        Lapso::factory()->create(['name' => 'Lapso Julio 2026-Diciembre 2026']);
+        $lapse = Lapso::factory()->create(['name' => 'Lapso Julio 2026-Diciembre 2026']);
+        Lapso::factory()->create(['name' => 'Lapso Más Reciente']);
         $student = $this->createStudent(['identification_card' => 24681357]);
+        $student->forceFill(['lapse_id' => $lapse->id])->save();
 
         $this->get("/estudiantes/{$student->id}")
             ->assertOk()
@@ -139,7 +145,8 @@ class UserAndStudentManagementTest extends TestCase
         $student = $this->createStudent();
 
         $this->get("/estudiantes/{$student->id}")->assertOk();
-        $this->get("/estudiantes/{$student->id}/edit")->assertOk();
+        // La edición se hace en la misma ficha (Fase 3d).
+        $this->get("/estudiantes/{$student->id}/edit")->assertRedirect(route('estudiantes.show', $student->id));
     }
 
     public function test_destroy_removes_student_and_user(): void

@@ -119,14 +119,6 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::delete('estudiantes/{estudiante}', 'EstudiantesController@destroy')
         ->middleware([P::middleware(P::StudentsDelete), 'student.access:scope'])->name('estudiantes.destroy');
 
-    // Inscripción.
-    Route::middleware(P::middleware(P::StudentsEnroll))->group(function () {
-        Route::post('buscar.estudiante', 'EstudiantesController@buscarEstudiante')->name('buscar.estudiante');
-        Route::get('getEstudiante/{id}', 'EstudiantesController@getEstudiante')
-            ->middleware('student.access:scope')->name('getEstudiante');
-        Route::get('crearEstudiante/{cedula}', 'EstudiantesController@createEstudiante')->name('estudiante.crear');
-    });
-
     // Calificaciones: ver (Director, Coordinador) o registrar (Docente).
     Route::get('calificacion/estudiante/{id}', 'EstudiantesController@calificacion')
         ->middleware([P::middleware(P::GradesView, P::GradesRecord), 'student.access:scope'])
@@ -141,7 +133,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     // Expediente y entregas: el estudiante accede al suyo; el personal según permiso y programa.
     Route::middleware('student.access')->group(function () {
-        Route::resource('estudiantes', 'EstudiantesController')->only(['create', 'store', 'show', 'edit', 'update']);
+        Route::resource('estudiantes', 'EstudiantesController')->only(['create', 'show', 'edit', 'update']);
         Route::get('estudiantes/{estudiante}/kardex', 'KardexController@show')->name('estudiantes.kardex');
 
         Route::get('documentEstudiante/{id}', 'EstudiantesController@document')->name('estudiante.document');

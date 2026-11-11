@@ -43,7 +43,7 @@ class RouteProtectionTest extends TestCase
     public static function formerlyPublicGetRoutes(): array
     {
         return [
-            'perfil de estudiante (inscripción)' => ['/getEstudiante/1'],
+            'kardex' => ['/estudiantes/1/kardex'],
             'formulario de documentos' => ['/documentEstudiante/1'],
             'presentación' => ['/presentations/1'],
             'reportes' => ['/reports'],

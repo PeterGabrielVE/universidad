@@ -228,6 +228,25 @@ Confirmado el 11-11-2026.
 - **Inscripciones anteriores a la Fase 3c** (sin sección) se conservan y aparecen en el
   kardex; no se pueden corregir por auditoría.
 
-## 18. Puntos abiertos
+## 18. Expediente del estudiante (Fase 3d)
 
-Ninguno bloqueante a 11-11-2026.
+**Decisión pendiente de confirmar**, derivada de §5 y §13 (la cédula es el ancla de
+identidad; Control de Estudios actualiza el correo y asigna programa y cohorte):
+
+| Dato | Quién lo edita | Dónde |
+|---|---|---|
+| Teléfono, país | El propio estudiante o el personal con `students.manage` | Ficha del expediente |
+| Sede, equivalencia, lapso de ingreso | Personal con `students.manage` (Administrador, Asistente) | Ficha del expediente |
+| Nombre, apellido, cédula, correo, programas, estado de la cuenta | Administrador (`users.manage`) | Gestión de usuarios |
+
+- Si el estudiante envía otros campos, se ignoran.
+- El lapso de ingreso debe pertenecer a uno de los programas del estudiante.
+- **Todo Estudiante tiene expediente:** se crea al dar de alta o promover la cuenta, y
+  como respaldo al entrar. El antiguo formulario de "completar expediente" (que además
+  subía documentos) se retiró; la carga de entregas es de la Fase 4.
+- El prefijo telefónico separado se retiró: leía una columna inexistente. El prefijo
+  internacional se escribe en el propio teléfono (p. ej. +58 414 1234567).
+
+## 19. Puntos abiertos
+
+1. Confirmar la tabla del §18 (qué datos edita el propio estudiante).

@@ -1,130 +1,77 @@
-@extends('layouts.app')
+@extends('layouts.panel')
 
-@section('content')
-<div id="wrapper">
+{{-- Expediente del estudiante (#14, FUNCTIONAL_SPECIFICATIONS.md §19).
+     Identidad y programas: solo lectura aquí (se editan en la gestión de usuarios).
+     Contacto: el propio estudiante o el personal con students.manage.
+     Sede, equivalencia y lapso de ingreso: solo el personal. --}}
+@php($user = $student->user)
 
-        <!-- Sidebar -->
-        @include('layouts.sidebar')
-        <!-- End of Sidebar -->
+@section('title')
+    {{ $user?->name }} {{ $user?->last_name }}
+@endsection
 
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+@section('actions')
+    <a href="{{ route('estudiantes.kardex', $student->id) }}" class="btn btn-uft"><i class="fas fa-id-card pr-2"></i>Kardex</a>
+    @if ($canEditIdentity && $user)
+        <a href="{{ route('user.edit', $user->id) }}" class="btn btn-outline-secondary"><i class="fas fa-user-cog pr-2"></i>Identidad y programas</a>
+    @endif
+@endsection
 
-            <!-- Main Content -->
-            <div id="content">
-
-                <!-- Topbar -->
-                 @include('layouts.navbar')
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">{{ Auth::user()->name ?? null }} {{ Auth::user()->last_name ?? null }}</h1>
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <div class="row">
-                                <div class="col-lg-12 margin-tb">
-                                    <div class="pull-left">
-                                        <h6 class="m-0 font-weight-bold text-uft">Mis Datos</h6>
-                                    </div>
-                                    <div class="pull-right">
-                                        <a href="{{ url()->previous() }}" class="btn btn-uft" role="button"><i class="fas fa-arrow-left pr-2"></i>Atras </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                 <div class="col-lg-12">
-                                    <div>
-                                        {!! Form::open(['route'=>["estudiantes.update",$estudiante->id],'method'=>'PUT', 'class'=>'user']) !!}
-                                            <div class="form-group row">
-                                                <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    {!! Form::label('lbl_nombres', 'Nombres:', ['class'=>'col-form-label s-12']) !!}
-                                                    {!! Form::text('first_name', $user->name ?? null, ['class'=>'form-control form-control-user', 'id'=>'first_name','placeholder'=>'Nombres']) !!}
-                                                    {!! Form::hidden('user_id', $user->id ?? null, ['class'=>'form-control form-control-user']) !!}
-
-                                                </div>
-                                                <div class="col-sm-6">
-                                                     {!! Form::label('lbl_apellidos', 'Apellido:', ['class'=>'col-form-label s-12']) !!}
-                                                     {!! Form::text('last_name', $user->last_name ?? null, ['class'=>'form-control form-control-user', 'id'=>'last_name','placeholder'=>'Apellidos']) !!}
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    {!! Form::label('lbl_cedula', 'Cedula:', ['class'=>'col-form-label s-12']) !!}
-                                                    {!! Form::number('identification_card', $user->identification_card ?? null, ['class'=>'form-control form-control-user', 'id'=>'identification_card','placeholder'=>'Cedula']) !!}
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    {!! Form::label('lbl_email', 'Email:', ['class'=>'col-form-label s-12']) !!}
-                                                    {!! Form::email('email', $user->email ?? null, ['class'=>'form-control form-control-user', 'id'=>'email','placeholder'=>'Correo Electronico']) !!}
-
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="col-sm-1 mb-3 ml-4 p-0">
-                                                    {!! Form::label('lbl_codigo', 'Codigo:', ['class'=>'col-form-label s-12']) !!}
-                                                    {!! Form::select('cod_phone', $prefijo,$user->cod_phone ?? '', ['class'=>'form-control', 'id'=>'cod_phone']) !!}
-                                                </div>
-                                                <div class="col-sm-4 mb-3 mb-sm-0">
-                                                    {!! Form::label('lbl_telefono', 'Telefono:', ['class'=>'col-form-label s-12']) !!}
-                                                    {!! Form::text('phone', $user->phone ?? null, ['class'=>'form-control ', 'id'=>'phone','placeholder'=>'Télefono']) !!}
-                                                 </div>
-                                                 <div class="col-sm-6">
-                                                    {!! Form::label('lbl_lapso', 'Lapso:', ['class'=>'col-form-label s-12']) !!}
-                                                      <input type="text" class="form-control form-control-user"
-                                                          id="lapse_name" placeholder="Lapso de Ingreso" value="{{ $lapso?->name }}" readonly="true">
-                                                      <input type="hidden" class="form-control form-control-user"
-                                                          id="lapse_id" name="lapse_id" placeholder="Lapso de Ingreso" value="{{ $lapso?->id }}">
-                                                      <input type="hidden" class="form-control form-control-user"
-                                                        id="status" name="status" value="1">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="col-sm-4 mb-3 mb-sm-0">
-                                                    {!! Form::label('lbl_pais', 'Pais:', ['class'=>'col-form-label s-12']) !!}
-                                                    {!! Form::select('country_id', $paises,$user->country_id ?? null, ['class'=>'form-control', 'id'=>'country_id']) !!}
-                                                </div>
-                                                <div class="col-sm-4 mb-3 mb-sm-0">
-                                                    {!! Form::label('lbl_sede', 'Sede:', ['class'=>'col-form-label s-12']) !!}
-                                                    {!! Form::select('sede_id', $sedes,$user->sede_id ?? null, ['class'=>'form-control', 'id'=>'sede_id']) !!}
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    {!! Form::label('lbl_Doctorado', 'Doctorado:', ['class'=>'col-form-label s-12']) !!}
-                                                   {!! Form::select('doctorado_id', $doctorados, $user->programs->first()?->id, ['class'=>'form-control', 'id'=>'doctorado']) !!}
-                                               </div>
-                                            </div>
-                                            <div class="form-group row mt-4">
-                                                <div class="col-lg-3"></div>
-                                                <div class="col-lg-3">
-                                                    <button type="submit" class="btn btn-uft btn-block" style="width: 400px;"><i class="icon-save mr-2"></i>Editar</button>
-                                                </div>
-                                                <div class="col-lg-3"></div>
-                                            </div>
-
-                                       {!! Form::close() !!}
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- /.container-fluid -->
-
-            </div>
-            <!-- End of Main Content -->
-
+@section('panel')
+    <div class="card shadow mb-4">
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-uft">Identidad</h6></div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Cédula</dt><dd class="col-sm-9">{{ $user?->identification_card }}</dd>
+                <dt class="col-sm-3">Correo</dt><dd class="col-sm-9">{{ $user?->email }}</dd>
+                <dt class="col-sm-3">Programas</dt><dd class="col-sm-9">{{ $user?->programs->pluck('name')->join(', ') ?: 'Sin programa' }}</dd>
+                <dt class="col-sm-3">Lapso de ingreso</dt><dd class="col-sm-9">{{ $admissionLapse?->name ?? '—' }}</dd>
+                <dt class="col-sm-3">Sede</dt><dd class="col-sm-9">{{ $campus?->name ?? '—' }}</dd>
+                <dt class="col-sm-3">Equivalencia</dt><dd class="col-sm-9">{{ $student->equivalency ?: '—' }}</dd>
+            </dl>
+            @if ($isOwner)
+                <p class="small text-muted mt-3 mb-0">
+                    Para corregir tu nombre, cédula, correo o programa, solicítalo a Control de Estudios.
+                </p>
+            @endif
         </div>
-        <!-- End of Content Wrapper -->
-
     </div>
-    <!-- End of Page Wrapper -->
+
+    @if ($canEditContact)
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-uft">{{ $canManage ? 'Contacto y datos administrativos' : 'Mis datos de contacto' }}</h6>
+            </div>
+            <div class="card-body">
+                {!! Form::open(['route' => ['estudiantes.update', $student->id], 'method' => 'PUT']) !!}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            {!! Form::label('phone', 'Teléfono') !!}
+                            {!! Form::text('phone', old('phone', $user?->phone), ['class' => 'form-control', 'maxlength' => 30, 'placeholder' => '+58 414 1234567', 'autocomplete' => 'tel']) !!}
+                        </div>
+                        <div class="form-group col-md-6">
+                            {!! Form::label('country_id', 'País') !!}
+                            {!! Form::select('country_id', $countries, old('country_id', $user?->country_id), ['class' => 'form-control', 'placeholder' => 'Seleccione']) !!}
+                        </div>
+
+                        @if ($canManage)
+                            <div class="form-group col-md-4">
+                                {!! Form::label('sede_id', 'Sede') !!}
+                                {!! Form::select('sede_id', $campuses, old('sede_id', $user?->sede_id), ['class' => 'form-control', 'placeholder' => 'Sin sede']) !!}
+                            </div>
+                            <div class="form-group col-md-4">
+                                {!! Form::label('admission_lapse_id', 'Lapso de ingreso') !!}
+                                {!! Form::select('admission_lapse_id', $lapses, old('admission_lapse_id', $student->lapse_id), ['class' => 'form-control', 'placeholder' => 'Sin lapso']) !!}
+                            </div>
+                            <div class="form-group col-md-4">
+                                {!! Form::label('equivalency', 'Ingresó por equivalencia') !!}
+                                {!! Form::select('equivalency', ['0' => 'No', '1' => 'Sí'], old('equivalency', $student->equivalency === 'Sí' ? '1' : '0'), ['class' => 'form-control']) !!}
+                            </div>
+                        @endif
+                    </div>
+                    <button type="submit" class="btn btn-uft"><i class="fas fa-save mr-2"></i>Guardar</button>
+                {!! Form::close() !!}
+            </div>
+        </div>
+    @endif
 @endsection

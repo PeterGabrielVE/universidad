@@ -1,6 +1,6 @@
 # Estado del proyecto
 
-Última actualización: 11-11-2026 · Fases completadas: **0 (seguridad)**, **1 (base de pruebas)**, **2 (IdentityAccess)**, **3a (estructura académica y lapsos)**, **3b (programas, pensum y usuario ↔ programas)** y **3c (secciones, inscripción, actas y kardex)**
+Última actualización: 11-11-2026 · Fases completadas: **0 (seguridad)**, **1 (base de pruebas)**, **2 (IdentityAccess)**, **3a (estructura académica y lapsos)**, **3b (programas, pensum y usuario ↔ programas)** y **3c (secciones, inscripción, actas y kardex)** y **3d (expediente del estudiante)**
 
 ## Avance real
 
@@ -10,10 +10,10 @@ que pasan. El avance no se mide por archivos creados.
 | Métrica | Valor |
 |---|---|
 | Funcionalidades del inventario | 28 |
-| Verificadas con pruebas | **19 de 28 (68 %)**: #1, #2, #4–#13, #16–#20, #27, #28 |
+| Verificadas con pruebas | **21 de 28 (75 %)**: #1, #2, #4–#20, #27, #28 |
 | Funcionalidades nuevas (fuera del inventario original) | Fase 2: estado de cuenta, inicio de Aspirante y Docente, alcance por programa. Fase 3a: facultades, nota mínima por programa, lapsos por programa gestionados por el Coordinador, cédula única. Fase 3b: usuario ↔ programas (N:M), gestión de facultades y programas, pensum N:M. Fase 3c: secciones con docente titular, cierre forzoso de actas, corrección auditada |
 | Hallazgos críticos de seguridad cerrados y con prueba | 8 de 8 |
-| Pruebas | **213 pasan** (606 aserciones): 85 unitarias, 128 de Feature |
+| Pruebas | **228 pasan** (662 aserciones): 91 unitarias, 137 de Feature |
 
 Pendiente de **validación manual en el navegador**: las pantallas Vue de usuarios
 (#6, #7). Su API y las vistas Blade que las montan están cubiertas por pruebas; el
@@ -36,8 +36,8 @@ render de Vue no (no hay pruebas de frontend).
 | 11 | Roles CRUD | ✅ Verificada (un solo camino; roles del sistema protegidos) | 2 |
 | 12 | Permisos | ✅ Verificada como matriz en código (`AccessPolicy`); sin pantalla de edición, ver decisión en ARCHITECTURE.md | 2 |
 | 13 | Estudiantes: listar, ver, eliminar | ✅ Verificada (con alcance por programa) | 3 |
-| 14 | Estudiantes: editar | Con errores (columnas `first_name`, `cod_phone` inexistentes) | 3d |
-| 15 | Estudiantes: completar expediente | Con errores (`$doc` indefinido, firma incorrecta) | 3d |
+| 14 | Estudiantes: editar | ✅ Verificada: el estudiante edita su contacto; el personal, también los datos administrativos | 3d |
+| 15 | Estudiantes: completar expediente | ✅ Verificada: el expediente se garantiza al crear o promover la cuenta | 3d |
 | 16 | Lapsos: CRUD | ✅ Verificada (por programa, estados `planificacion/abierto/cerrado`, fechas validadas) | 3a |
 | 17 | Cierre de lapso | ✅ Verificada (corregido: solo inscripciones activas de ese lapso, nota mínima del programa, inmutable) | 3a |
 | 18 | Inscripción por materias | ✅ Verificada: por sección, preinscripción y confirmación | 3c |
@@ -56,6 +56,16 @@ Módulos en alcance aún sin requisitos detallados: Admisiones (carga de requisi
 Aspirante), Finanzas y Aranceles, Constancias y Actas.
 
 ## Registro de fases
+
+### Fase 3d: expediente del estudiante (completada)
+
+- **Edición (#14):** antes escribía columnas inexistentes y fallaba siempre, y además permitía al estudiante cambiar su cédula, correo y programa. Ahora el estudiante edita solo teléfono y país; el personal con `students.manage`, además sede, equivalencia y lapso de ingreso (de uno de sus programas). Identidad y programas, en la gestión de usuarios. Decisión pendiente de confirmar: FUNCTIONAL_SPECIFICATIONS.md §18.
+- **Alta (#15):** el formulario roto (`$doc` indefinido, firma incorrecta) se retiró; el expediente se garantiza al crear o promover la cuenta y, como respaldo, al entrar.
+- La ficha muestra el lapso de ingreso real del estudiante (antes, siempre el último lapso creado).
+- Retiradas las rutas `getEstudiante`, `crearEstudiante` y `buscar.estudiante` (siempre daban 500: vista inexistente; la inscripción la cubren las secciones de la 3c) y las vistas `estudiantes/create` y `estudiantes/edit`.
+- Módulo Academic: `StudentRecord`, `ContactPhone`, `ManageStudentRecords`.
+
+**Verificado además:** flujo real por HTTP (la estudiante actualiza su teléfono; un campo de identidad enviado se ignora; el administrador ve el cambio).
 
 ### Fase 3c: secciones, inscripción, actas y kardex (completada)
 

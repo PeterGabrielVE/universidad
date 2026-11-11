@@ -128,7 +128,7 @@ log porque son errores esperados.
 - `Domain\DomainException` (→ 422), `NotFoundException` (→ 404), `AccessDeniedException` (→ 403).
 - `Application\Port\TransactionManager` + `Infrastructure\DatabaseTransactionManager`.
 
-## Módulo Academic (Fases 3a–3c)
+## Módulo Academic (Fases 3a–3d)
 
 ```
 app/Modules/Academic/
@@ -143,14 +143,16 @@ app/Modules/Academic/
 │   ├── Section.php            Entidad: sección con docente titular y acta (abierta/cerrada)
 │   ├── GradeSheetStatus.php   Enum: abierta | cerrada
 │   ├── Justification.php      VO: justificación obligatoria de una corrección
+│   ├── StudentRecord.php      Entidad: expediente (contacto vs. datos administrativos)
+│   ├── ContactPhone.php       VO: teléfono de contacto
 │   └── Exception/
 ├── Application/
 │   ├── Port/                  LapseRepository, ProgramRepository, FacultyRepository,
 │   │                          PensumRepository, EnrollmentRepository, SectionRepository,
-│   │                          GradeAuditLog, AcademicPeople
+│   │                          GradeAuditLog, AcademicPeople, StudentRecordRepository
 │   ├── Dto/                   ProgramData, ProgramInput, FacultyData, ActiveEnrollment
 │   └── UseCase/               ManageLapses, CloseLapse, ManagePrograms, ManageFaculties, ManagePensum,
-│                              ManageSections, ManageEnrollments, GradeSheets
+│                              ManageSections, ManageEnrollments, GradeSheets, ManageStudentRecords
 └── Infrastructure/            Adaptadores Eloquent, LapseDirectory y ProgramDirectory (lectura),
                                AcademicServiceProvider
 ```

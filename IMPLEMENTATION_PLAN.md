@@ -11,8 +11,8 @@ PROJECT_STATUS.md actualizado y riesgos revisados.
 | 3a | Academic: facultades → programas, `min_passing_grade`, lapsos por programa, estados, cierre correcto; cédula única | ✅ Completada |
 | 3b | Academic: usuario ↔ programas, gestión de facultades y programas, pensum N:M | ✅ Completada |
 | 3c | Academic: secciones con docente titular, inscripción, acta de notas, cierre forzoso, corrección auditada, kardex | ✅ Completada |
-| 3d | Expediente del estudiante: corregir edición (#14) y alta (#15) | Siguiente |
-| 4 | DoctoralSubmissions: tablas de entregas, asignación de jurados, carga y reemplazo, estados de entrega, nota ponderada 0–100 | Pendiente |
+| 3d | Expediente del estudiante: edición (#14) y alta (#15) | ✅ Completada |
+| 4 | DoctoralSubmissions: tablas de entregas, asignación de jurados, carga y reemplazo, estados de entrega, nota ponderada 0–100 | Siguiente |
 | 5 | Reporting: constancias, récord académico, actas y PDFs corregidos | Pendiente |
 | 6 | Modernización de dependencias con justificación individual | Pendiente |
 | 7 | Documentación final: README y revisión | Pendiente |
@@ -22,13 +22,20 @@ se planificarán cuando tengan requisitos detallados: no se implementan sobre su
 
 La arquitectura y los módulos están documentados en ARCHITECTURE.md.
 
-## Fase 3d: expediente del estudiante
+## Fase 4: DoctoralSubmissions (entregas doctorales)
 
-1. **Edición (#14):** hoy escribe columnas inexistentes (`first_name`, `cod_phone`,
-   `lapses_students.doctorado_id`) y falla siempre. Separar lo que edita el estudiante
-   (datos de contacto) de lo que asigna Control de Estudios (programa, cohorte).
-2. **Alta (#15):** `$doc` indefinido y llamada con firma incorrecta; depende de las tablas
-   de entregas de la Fase 4, así que se separa el alta del expediente de la carga de
-   documentos.
+Reglas ya confirmadas: §4 (Post1 25 %, Post2 25 %, Presentación 50 %), §8 (escala
+0–100), §9 (PDF/DOC/DOCX hasta 25 MB), §10 (estados borrador → en_revision →
+aprobado/reprobado), §6–§7 (el Administrador reasigna jurados; el Docente califica las
+entregas asignadas; el Coordinador las ve en su programa).
 
-Pregunta para negocio: ¿qué datos del expediente puede editar el propio estudiante?
+1. Tablas de entregas (hoy el código usa `posts_1`, `posts_2`, `presentations`, que no
+   existen) y almacenamiento privado ya preparado en la Fase 0.
+2. Asignación de jurados (Docentes) a cada entrega o estudiante.
+3. Ciclo de la entrega y calificación 0–100 por el jurado asignado.
+4. Nota final ponderada contra la nota mínima del programa.
+5. Retirar los ~20 métodos heredados de `EstudiantesController` sobre entregas (#21–#23, #26).
+
+Preguntas para negocio antes de empezar: ¿cuántos jurados califican cada entrega y
+cómo se combinan sus notas? ¿Las entregas pertenecen al estudiante en un programa
+(doble titulación = entregas separadas por programa)?

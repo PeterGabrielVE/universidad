@@ -24,6 +24,9 @@ use App\Doctorado;
 use App\Sede;
 use App\Models\User;
 use App\Modules\IdentityAccess\Infrastructure\UserDirectory;
+use App\Http\Requests\StudentRecordRequest;
+use App\Modules\Academic\Application\UseCase\ManageStudentRecords;
+use App\Modules\IdentityAccess\Application\Port\StudentRecords;
 
 class EstudiantesController extends Controller
 {
@@ -53,116 +56,79 @@ class EstudiantesController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
-    public function show($id)
-    {
-        $estudiante = Estudiante::find($id);
-        $lapso = Lapso::latest('id')->first();
-        $paises = Pais::get()->pluck('name','id');
-        $prefijo = Pais::get()->pluck('Prefijo','id');
-        $user = User::find($estudiante->user_id);
-        $doctorados = Doctorado::get()->pluck('name','id');
-        $sedes = Sede::get()->pluck('name','id')->prepend('Seleccione una opción','');
-        return view('pages.estudiantes.show',compact('estudiante','lapso','paises','prefijo','sedes','user','doctorados'));
-
-    }
-
-      /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $lapso = Lapso::get()->pluck('name','id')->prepend('Seleccione una opción','');
-        $paises = Pais::get()->pluck('name','id')->prepend('Seleccione una opción','');
-        $prefijo = Pais::get()->pluck('Prefijo','id')->prepend('Seleccione una opción','');
-        $doctorados = Doctorado::get()->pluck('name','id')->prepend('Seleccione una opción','');
-        $sedes = Sede::get()->pluck('name','id')->prepend('Seleccione una opción','');
-        // UserController::store ya crea el expediente al dar de alta a un estudiante
-        $estudiante = Estudiante::where('user_id', Auth::id())->first();
-        return view('pages.estudiantes.create',compact('lapso','paises','prefijo','sedes','doctorados','estudiante'));
-    }
-
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Ficha del expediente (#14). El estudiante ve y edita sus datos de contacto;
+     * el personal con students.manage, también los administrativos.
      */
-    public function store(Request $req)
+    public function show(Request $request, int $estudiante)
     {
-    	//dd($req->all());
-        $user = User::find(Auth::id());
-        $user->name = $req->first_name;
-        $user->last_name = $req->last_name;
-        $user->sede_id = $req->sede_id;
-        $this->syncStudentProgram($user, $req->doctorado_id);
-        $user->identification_card = $req->identification_card;
-        $user->save();
+        $student = Estudiante::with(['user.programs', 'user.roles'])->findOrFail($estudiante);
+        $user = $request->user();
+        $isOwner = (int) $student->user_id === (int) $user->id;
+        $canManage = ! $isOwner && $user->can(\App\Modules\IdentityAccess\Domain\Permission::StudentsManage->value);
+        $programIds = $student->user?->programs->pluck('id')->all() ?? [];
 
-        $student = new Estudiante();
-        $student->user_id = Auth::id();
-        $student->status = $req->status;
-        $student->created_at = Carbon::now();
-        $student->updated_at =Carbon::now();
-        $student->save();
+        return view('pages.estudiantes.show', [
+            'student' => $student,
+            'isOwner' => $isOwner,
+            'canEditContact' => $isOwner || $canManage,
+            'canManage' => $canManage,
+            'canEditIdentity' => $user->can(\App\Modules\IdentityAccess\Domain\Permission::UsersManage->value),
+            'countries' => Pais::orderBy('name')->pluck('name', 'id')->all(),
+            'campuses' => Sede::orderBy('name')->pluck('name', 'id')->all(),
+            'lapses' => Lapso::query()
+                ->where(fn ($q) => $q->whereIn('program_id', $programIds)->orWhereNull('program_id'))
+                ->latest('start_lapse')->pluck('name', 'id')->all(),
+            'admissionLapse' => $student->lapse_id ? Lapso::find($student->lapse_id) : null,
+            'campus' => $student->user?->sede_id ? Sede::find($student->user->sede_id) : null,
+            'country' => $student->user?->country_id ? Pais::find($student->user->country_id) : null,
+        ]);
+    }
 
-        $stud = Estudiante::latest('id')->first();
+    /** La edición se hace en la misma ficha. */
+    public function edit(int $estudiante)
+    {
+        return redirect()->route('estudiantes.show', $estudiante);
+    }
 
-        if($req->doctorado_id == 1){
-            $this->documents_store($req->d_post1_extenso,$req->d_post1_carta,$stud->id);
-        }else{
-            $file1 = $req->c_post1_extenso;
-            $file2 = $req->c_post1_carta;
-            $file3 = $req->c_post2_extenso;
-            $file4 = $req->c_post2_carta;
+    public function update(StudentRecordRequest $request, int $estudiante, ManageStudentRecords $records, UserDirectory $users)
+    {
+        $user = $request->user();
+        $student = Estudiante::findOrFail($estudiante);
 
-            $file5 = $req->c_extenso;
-            $file6 = $req->c_carta_aceptacion;
-            $file7 = $req->c_poster;
-            $file8 = $req->c_certificado;
-            $this->documents_store_ciencia($file1,$file2,$file3,$file4,$file5,$file6,$file7,$file8,$stud->id,$doc);
+        if ((int) $student->user_id === (int) $user->id) {
+            // El estudiante solo cambia su contacto: cualquier otro campo enviado se ignora.
+            $records->updateOwnContact($estudiante, $user->id, $request->phone(), $request->countryId());
+        } else {
+            $records->updateByStaff(
+                $estudiante,
+                $request->phone(),
+                $request->countryId(),
+                $request->campusId(),
+                $request->boolean('equivalency'),
+                $request->admissionLapseId(),
+                $users->programScopeOf($user),
+            );
         }
 
+        Alert::success('Expediente', 'Datos actualizados.');
 
-        return redirect()->route('estudiantes.show',$stud->id)
-                        ->with('success','Estudiante guardado exitosamente.');
+        return redirect()->route('estudiantes.show', $estudiante);
     }
 
-    public function buscarEstudiante(Request $request){
-
-        $query = $request->consulta;
-        $estudiante = Estudiante::where('identification_card',$query)->first();
-        $lapso = Lapso::latest('id')->first();
-        $carga = Lapso_Estudiante::where('student_id',$estudiante->id)->where('lapse_id',$lapso->id)->get();
-        $historia = Lapso_Estudiante::where('student_id',$estudiante->id)->get();
-
-        return view('pages.inscripcion.index',compact('estudiante','carga','historia','lapso'));
-    }
-
-        public function getEstudiante($id){
-
-        $estudiante = Estudiante::find($id);
-        $lapso = Lapso::latest('id')->first();
-        $carga = Lapso_Estudiante::where('student_id',$estudiante->id)->where('lapse_id',$lapso->id)->get();
-        $historia = Lapso_Estudiante::where('student_id',$estudiante->id)->get();
-
-        return view('pages.inscripcion.index',compact('estudiante','carga','historia','lapso'));
-    }
-
-    public function edit($id)
+    /**
+     * Antes era el formulario de "completar expediente" (#15). Toda cuenta con rol
+     * Estudiante ya tiene expediente (CreateUser/UpdateUser y HomeController lo
+     * garantizan), así que se lleva a su ficha.
+     */
+    public function create(Request $request, StudentRecords $studentRecords)
     {
-        $estudiante = Estudiante::find($id);
-        $lapso = Lapso::latest('id')->first();
-        $paises = Pais::get()->pluck('name','id');
-        $prefijo = Pais::get()->pluck('Prefijo','id');
-        $user = User::find($estudiante->user_id);
-        $doctorados = Doctorado::get()->pluck('name','id');
-        return view('pages.estudiantes.edit',compact('estudiante','lapso','paises','prefijo','user','doctorados'));
+        $studentRecords->ensureFor($request->user()->id);
+        $student = Estudiante::where('user_id', $request->user()->id)->firstOrFail();
 
+        return redirect()->route('estudiantes.show', $student->id);
     }
-
     public function document($id)
     {
         $estudiante = Estudiante::find($id);
@@ -175,47 +141,6 @@ class EstudiantesController extends Controller
         $estudiante = Estudiante::find($id);
         return view('pages.estudiantes.document_post_2',compact('estudiante'));
 
-    }
-
-    public function update(Request $req, $id)
-    {
-        try{
-        // El usuario se obtiene del expediente de la ruta, nunca de un campo del formulario.
-        $estudiante = Estudiante::findOrFail($id);
-        $user = User::findOrFail($estudiante->user_id);
-        $user->first_name = $req->first_name;
-        $user->last_name = $req->last_name;
-        $user->sede_id = $req->sede_id;
-        $this->syncStudentProgram($user, $req->doctorado_id);
-        $user->country_id = $req->country_id;
-        $user->cod_phone = $req->cod_phone;
-        $user->phone = $req->phone;
-        $user->identification_card = $req->identification_card;
-        $user->save();
-
-        $data = $req->except('user_id');
-        $estudiante->update($data);
-        $estudiante->save();
-
-        $search_lapse = Lapso_Estudiante::where('student_id',$id)
-                                        ->where('lapse_id',$req->lapse_id)
-                                        ->where('doctorado_id',$req->doctorado_id)
-                                        ->first();
-
-        if($search_lapse == null){
-            $lapso = new Lapso_Estudiante();
-            $lapso->student_id = $id;
-            $lapso->lapse_id = $req->lapse_id;
-            $lapso->doctorado_id = $req->doctorado_id;
-            $lapso->save();
-        }
-        Alert::success('Estudiante', '¡Actualizado exitosamente!');
-        return back();
-
-        } catch (\Exception $e){
-            Alert::error('Estudiante', '¡Error durante la actualización!');
-            return redirect()->back();
-        }
     }
 
      public function destroy($id)
@@ -233,16 +158,6 @@ class EstudiantesController extends Controller
         }
     }
 
-
-    public function createEstudiante($ced)
-    {
-        $lapso = Lapso::get()->pluck('name','id');
-        $paises = Pais::get()->pluck('name','id');
-        $prefijo = Pais::get()->pluck('Prefijo','id');
-        $doctorados = Doctorado::get()->pluck('name','id');
-        $sedes = Sede::get()->pluck('name','id');
-        return view('pages.estudiantes.create',compact('lapso','paises','prefijo','ced','doctorados','sedes'));
-    }
 
     public function documentStore(Request $request, $id)
     {
