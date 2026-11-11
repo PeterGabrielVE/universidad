@@ -80,11 +80,11 @@
                                                 <div class="col-sm-6">
                                                   {!! Form::label('lbl_lapso', 'Lapso:', ['class'=>'col-form-label s-12']) !!}
                                                     <input type="text" class="form-control form-control-user"
-                                                        id="lapse_name" placeholder="Lapso de Ingreso" value="{{ $lapso->name }}" readonly="true">
+                                                        id="lapse_name" placeholder="Lapso de Ingreso" value="{{ $lapso?->name }}" readonly="true">
                                                     <input type="hidden" class="form-control form-control-user"
                                                         id="lapse_id"
                                                         name="lapse_id"
-                                                        placeholder="Lapso de Ingreso" value="{{ $lapso->id }}">
+                                                        placeholder="Lapso de Ingreso" value="{{ $lapso?->id }}">
                                                     <input type="hidden" class="form-control form-control-user"
                                                         id="status"
                                                         name="status"

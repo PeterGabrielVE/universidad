@@ -12,6 +12,12 @@ Use Alert;
 
 class UserController extends Controller
 {
+    /** Campos que el formulario de usuarios puede asignar (evita asignación masiva). */
+    private const EDITABLE_FIELDS = [
+        'name', 'last_name', 'identification_card', 'phone', 'email',
+        'rol_id', 'sede_id', 'country_id', 'doctorado_id',
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -72,8 +78,9 @@ class UserController extends Controller
     {
        try {
        DB::beginTransaction();
-       $request['password'] = bcrypt($request->password);
-       $user = User::create($request->all());
+       $data = $request->only(self::EDITABLE_FIELDS);
+       $data['password'] = bcrypt($request->password);
+       $user = User::create($data);
 
         switch ($request->rol_id) {
             case 1:
@@ -146,13 +153,21 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         try {
-        if(isset($request->password)){
-            $request['password'] = bcrypt($request->password);
+        $data = $request->only(self::EDITABLE_FIELDS);
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
         }
-        $data = $request->all();
-        $user = User::find($id);
-        $user->update($data);
-        $user->save();
+        $user = User::findOrFail($id);
+
+        DB::transaction(function () use ($user, $data) {
+            $user->update($data);
+
+            // users.rol_id y el rol de Spatie deben coincidir: las rutas autorizan con Spatie.
+            if (array_key_exists('rol_id', $data)) {
+                $roleName = Role::whereKey($data['rol_id'])->value('name');
+                $user->syncRoles($roleName !== null ? [$roleName] : []);
+            }
+        });
 
         $usuarios = User::where('rol_id',$request->rol_id)->latest()->paginate(5);
         $rol = '1';

@@ -1,27 +1,17 @@
 import axios from 'axios';
 
-// Configuración base de axios
-axios.defaults.withCredentials = true;
- // Para enviar cookies
-axios.defaults.baseURL = 'http://localhost:8000';
-await axios.get('/sanctum/csrf-cookie');
-axios.get('/generate-token')
-    .then(response => {
-        localStorage.setItem('auth_token', response.data.token);
-    })
-    .catch(error => {
-        console.error('Error al obtener el token:', error);
-    });
+/**
+ * Cliente para la API interna. Las pantallas Vue viven dentro de páginas Blade
+ * con sesión iniciada, así que Sanctum autentica con la cookie de sesión
+ * (modo SPA) y axios envía el token CSRF desde la cookie XSRF-TOKEN.
+ * Las URLs son relativas: funciona en cualquier host y puerto.
+ */
 const api = axios.create({
-  baseURL:'http://localhost:8000',
   withCredentials: true,
-});
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('auth_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest',
+    Accept: 'application/json',
+  },
 });
 
 export default api;

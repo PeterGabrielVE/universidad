@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use \PDF;
 Use Alert;
@@ -23,6 +27,15 @@ use App\User;
 
 class EstudiantesController extends Controller
 {
+    private const DOCUMENTS_DISK = 'local';
+    private const DOCUMENTS_DIR = 'documents';
+
+    /**
+     * Tipos aceptados para tesis, cartas, pósters y certificados. Pendiente de
+     * confirmar con negocio (ver PROJECT_STATUS.md); los ejecutables quedan fuera.
+     */
+    private const DOCUMENT_RULES = ['file', 'mimes:pdf,doc,docx,jpg,jpeg,png', 'max:10240'];
+
     public function index()
     {
         $rol = 4;
@@ -161,7 +174,9 @@ class EstudiantesController extends Controller
     public function update(Request $req, $id)
     {
         try{
-        $user = User::find($req->user_id);
+        // El usuario se obtiene del expediente de la ruta, nunca de un campo del formulario.
+        $estudiante = Estudiante::findOrFail($id);
+        $user = User::findOrFail($estudiante->user_id);
         $user->first_name = $req->first_name;
         $user->last_name = $req->last_name;
         $user->sede_id = $req->sede_id;
@@ -172,8 +187,7 @@ class EstudiantesController extends Controller
         $user->identification_card = $req->identification_card;
         $user->save();
 
-        $data = $req->all();
-        $estudiante = Estudiante::find($id);
+        $data = $req->except('user_id');
         $estudiante->update($data);
         $estudiante->save();
 
@@ -226,22 +240,17 @@ class EstudiantesController extends Controller
 
     public function documentStore(Request $request, $id)
     {
+        $this->validateDocuments($request, ['post1_extenso', 'post1_carta']);
         try{
         $file1 = $request->post1_extenso;
         $file2 = $request->post1_carta;
         $date = Carbon::now();
-        $email = Auth::user()->email;
 
         if($file1 !=null && $file2 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
 
             $post1 = new Post1();
@@ -266,22 +275,17 @@ class EstudiantesController extends Controller
 
     public function documentStorePost2(Request $request, $id)
     {
+        $this->validateDocuments($request, ['post2_extenso', 'post2_carta']);
         try{
         $file1 = $request->post2_extenso;
         $file2 = $request->post2_carta;
         $date = Carbon::now();
-        $email = Auth::user()->email;
 
         if($file1 !=null && $file2 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
 
             $post1 = new Post2();
@@ -317,6 +321,7 @@ class EstudiantesController extends Controller
 
     public function presentationStore(Request $request, $id)
     {
+        $this->validateDocuments($request, ['extenso', 'carta_aceptacion', 'poster', 'certificado']);
         try{
 
         $file1 = $request->extenso;
@@ -324,26 +329,16 @@ class EstudiantesController extends Controller
         $file3 = $request->poster;
         $file4 = $request->certificado;
         $date = Carbon::now();
-        $email = Auth::user()->email;
 
         if($file1 !=null && $file2 !=null && $file3 !=null && $file4 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
-            $extension3 = $file3->getClientOriginalExtension();
-            $fileName3 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension3;
-            $file3->move($path, $fileName3);
+            $fileName3 = $this->storeDocument($file3);
 
-            $extension4 = $file4->getClientOriginalExtension();
-            $fileName4 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension4;
-            $file4->move($path, $fileName4);
+            $fileName4 = $this->storeDocument($file4);
 
 
             $pre = new Presentation();
@@ -379,18 +374,12 @@ class EstudiantesController extends Controller
     public function documents_store($file1,$file2, $id)
     {
         $date = Carbon::now();
-        $email = Auth::user()->email;
 
         if($file1 !=null && $file2 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
 
             $post1 = new Post1();
@@ -408,9 +397,9 @@ class EstudiantesController extends Controller
 
     public function documents_store_ciencia(Request $req, $id)
     {
+        $this->validateDocuments($req, ['c_post1_extenso', 'c_post1_carta', 'c_post2_extenso', 'c_post2_carta', 'c_extenso', 'c_carta_aceptacion', 'c_poster', 'c_certificado']);
         try{
         $date = Carbon::now();
-        $email = Auth::user()->email;
         $file1 = $req->c_post1_extenso;
         $file2 = $req->c_post1_carta;
         $file3 = $req->c_post2_extenso;
@@ -424,14 +413,9 @@ class EstudiantesController extends Controller
         if($file1 !=null && $file2 !=null && $file3 !=null && $file4 !=null
         && $file5 !=null && $file6 !=null && $file7 !=null && $file8 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
             $post1 = new Post1();
             $post1->student_id = $id;
@@ -442,14 +426,9 @@ class EstudiantesController extends Controller
             $post1->updated_at = $date;
             $post1->save();
 
-            $path = public_path().'/document/';
-            $extension3 = $file3->getClientOriginalExtension();
-            $fileName3 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension3;
-            $file3->move($path, $fileName3);
+            $fileName3 = $this->storeDocument($file3);
 
-            $extension4 = $file4->getClientOriginalExtension();
-            $fileName4 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension4;
-            $file4->move($path, $fileName4);
+            $fileName4 = $this->storeDocument($file4);
 
 
             $post1 = new Post2();
@@ -461,22 +440,13 @@ class EstudiantesController extends Controller
             $post1->updated_at = $date;
             $post1->save();
 
-            $path = public_path().'/document/';
-            $extension5 = $file5->getClientOriginalExtension();
-            $fileName5 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension5;
-            $file5->move($path, $fileName5);
+            $fileName5 = $this->storeDocument($file5);
 
-            $extension6 = $file6->getClientOriginalExtension();
-            $fileName6 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension6;
-            $file6->move($path, $fileName6);
+            $fileName6 = $this->storeDocument($file6);
 
-            $extension7 = $file7->getClientOriginalExtension();
-            $fileName7 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension7;
-            $file7->move($path, $fileName7);
+            $fileName7 = $this->storeDocument($file7);
 
-            $extension8 = $file8->getClientOriginalExtension();
-            $fileName8 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension8;
-            $file8->move($path, $fileName8);
+            $fileName8 = $this->storeDocument($file8);
 
             $pre = new Presentation();
             $pre->student_id = $id;
@@ -595,16 +565,39 @@ class EstudiantesController extends Controller
 
     }
 
-    public function downloadDocument($file)
+    public function downloadDocument(string $file)
     {
-         $path = public_path().'/document';
-        if($file == ''){
-            Session::flash('message-error','No posee documento');
-            return back();
-        }else{
-            $doc = $path.'/'.$file;
-            return response()->download($doc);
+        $path = self::DOCUMENTS_DIR . '/' . $file;
+
+        if ($file !== basename($file) || ! Storage::disk(self::DOCUMENTS_DISK)->exists($path)) {
+            abort(404);
         }
+
+        return Storage::disk(self::DOCUMENTS_DISK)->download($path);
+    }
+
+    /**
+     * Valida los archivos del formulario antes de procesarlos, para que el usuario
+     * vea el error de validación en vez del mensaje genérico del catch.
+     */
+    private function validateDocuments(Request $request, array $fields): void
+    {
+        $request->validate(array_fill_keys($fields, array_merge(['nullable'], self::DOCUMENT_RULES)));
+    }
+
+    /**
+     * Guarda un documento en el disco privado (storage/app/documents), fuera de
+     * public/: Apache nunca lo sirve ni lo ejecuta. La extensión se deduce del
+     * contenido, no del nombre enviado por el cliente.
+     */
+    private function storeDocument(UploadedFile $file): string
+    {
+        Validator::make(['document' => $file], ['document' => self::DOCUMENT_RULES])->validate();
+
+        $name = Str::uuid()->toString() . '.' . $file->extension();
+        $file->storeAs(self::DOCUMENTS_DIR, $name, self::DOCUMENTS_DISK);
+
+        return $name;
     }
 
     public function downloadSedePdf($id)
@@ -776,22 +769,17 @@ class EstudiantesController extends Controller
 
     public function documentPost1Store(Request $request, $id)
     {
+        $this->validateDocuments($request, ['post1_extenso', 'post1_carta']);
         try{
         $file1 = $request->post1_extenso;
         $file2 = $request->post1_carta;
         $date = Carbon::now();
-        $email = Auth::user()->email;
 
         if($file1 !=null && $file2 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
 
             $post1 = new Post1();
@@ -831,22 +819,17 @@ class EstudiantesController extends Controller
 
     public function documentoStorePost2(Request $request, $id)
     {
+        $this->validateDocuments($request, ['post2_extenso', 'post2_carta']);
         try{
         $file1 = $request->post2_extenso;
         $file2 = $request->post2_carta;
         $date = Carbon::now();
-        $email = Auth::user()->email;
 
         if($file1 !=null && $file2 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
 
             $post1 = new Post2();
@@ -871,6 +854,7 @@ class EstudiantesController extends Controller
 
     public function presentationGerenciaStore(Request $request, $id)
     {
+        $this->validateDocuments($request, ['extenso', 'carta_aceptacion', 'poster', 'certificado']);
         try{
 
         $file1 = $request->extenso;
@@ -878,26 +862,16 @@ class EstudiantesController extends Controller
         $file3 = $request->poster;
         $file4 = $request->certificado;
         $date = Carbon::now();
-        $email = Auth::user()->email;
 
         if($file1 !=null && $file2 !=null && $file3 !=null && $file4 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
-            $extension3 = $file3->getClientOriginalExtension();
-            $fileName3 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension3;
-            $file3->move($path, $fileName3);
+            $fileName3 = $this->storeDocument($file3);
 
-            $extension4 = $file4->getClientOriginalExtension();
-            $fileName4 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension4;
-            $file4->move($path, $fileName4);
+            $fileName4 = $this->storeDocument($file4);
 
 
             $pre = new Presentation();
@@ -931,22 +905,17 @@ class EstudiantesController extends Controller
 
     public function documentPost1Update(Request $request, $id, $doc)
     {
+       $this->validateDocuments($request, ['post1_extenso', 'post1_carta']);
        try{
         $file1 = $request->post1_extenso;
         $file2 = $request->post1_carta;
         $date = Carbon::now();
-        $email = Auth::user()->email;
 
         if($file1 !=null && $file2 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
 
             $estudiante = Estudiante::find($id);
@@ -981,22 +950,17 @@ class EstudiantesController extends Controller
 
     public function documentPost2Update(Request $request, $id, $doc)
     {
+       $this->validateDocuments($request, ['post2_extenso', 'post2_carta']);
        try{
         $file1 = $request->post2_extenso;
         $file2 = $request->post2_carta;
         $date = Carbon::now();
-        $email = Auth::user()->email;
 
         if($file1 !=null && $file2 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
 
             $estudiante = Estudiante::find($id);
@@ -1031,22 +995,17 @@ class EstudiantesController extends Controller
 
     public function documentPresUpdate(Request $request, $id, $doc)
     {
+       $this->validateDocuments($request, ['post2_extenso', 'post2_carta']);
        try{
         $file1 = $request->post2_extenso;
         $file2 = $request->post2_carta;
         $date = Carbon::now();
-        $email = Auth::user()->email;
 
         if($file1 !=null && $file2 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
 
             $estudiante = Estudiante::find($id);
@@ -1073,6 +1032,7 @@ class EstudiantesController extends Controller
 
     public function presentationGerenciaUpdate(Request $request, $id, $doc)
     {
+        $this->validateDocuments($request, ['extenso', 'carta_aceptacion', 'poster', 'certificado']);
         try{
 
         $file1 = $request->extenso;
@@ -1080,26 +1040,16 @@ class EstudiantesController extends Controller
         $file3 = $request->poster;
         $file4 = $request->certificado;
         $date = Carbon::now();
-        $email = Auth::user()->email;
 
         if($file1 !=null && $file2 !=null && $file3 !=null && $file4 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
-            $extension3 = $file3->getClientOriginalExtension();
-            $fileName3 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension3;
-            $file3->move($path, $fileName3);
+            $fileName3 = $this->storeDocument($file3);
 
-            $extension4 = $file4->getClientOriginalExtension();
-            $fileName4 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension4;
-            $file4->move($path, $fileName4);
+            $fileName4 = $this->storeDocument($file4);
 
             $pre = Presentation::where('student_id',$id)
             ->where('doctorado_id',$doc)
@@ -1126,9 +1076,9 @@ class EstudiantesController extends Controller
 
     public function documents_update_ciencia(Request $req, $id)
     {
+        $this->validateDocuments($req, ['c_post1_extenso', 'c_post1_carta', 'c_post2_extenso', 'c_post2_carta', 'c_extenso', 'c_carta_aceptacion', 'c_poster', 'c_certificado']);
         try{
         $date = Carbon::now();
-        $email = Auth::user()->email;
         $file1 = $req->c_post1_extenso;
         $file2 = $req->c_post1_carta;
         $file3 = $req->c_post2_extenso;
@@ -1142,14 +1092,9 @@ class EstudiantesController extends Controller
         if($file1 !=null && $file2 !=null && $file3 !=null && $file4 !=null
         && $file5 !=null && $file6 !=null && $file7 !=null && $file8 !=null){
 
-            $path = public_path().'/document/';
-            $extension = $file1->getClientOriginalExtension();
-            $fileName = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension;
-            $file1->move($path, $fileName);
+            $fileName = $this->storeDocument($file1);
 
-            $extension2 = $file2->getClientOriginalExtension();
-            $fileName2 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension2;
-            $file2->move($path, $fileName2);
+            $fileName2 = $this->storeDocument($file2);
 
             $post1 = Post1::where('student_id',$id)
             ->where('doctorado_id',Auth::user()->doctorado_id)
@@ -1160,14 +1105,9 @@ class EstudiantesController extends Controller
             $post1->updated_at = $date;
             $post1->save();
 
-            $path = public_path().'/document/';
-            $extension3 = $file3->getClientOriginalExtension();
-            $fileName3 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension3;
-            $file3->move($path, $fileName3);
+            $fileName3 = $this->storeDocument($file3);
 
-            $extension4 = $file4->getClientOriginalExtension();
-            $fileName4 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension4;
-            $file4->move($path, $fileName4);
+            $fileName4 = $this->storeDocument($file4);
 
 
             $post2 = Post2::where('student_id',$id)
@@ -1179,22 +1119,13 @@ class EstudiantesController extends Controller
             $post1->updated_at = $date;
             $post1->save();
 
-            $path = public_path().'/document/';
-            $extension5 = $file5->getClientOriginalExtension();
-            $fileName5 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension5;
-            $file5->move($path, $fileName5);
+            $fileName5 = $this->storeDocument($file5);
 
-            $extension6 = $file6->getClientOriginalExtension();
-            $fileName6 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension6;
-            $file6->move($path, $fileName6);
+            $fileName6 = $this->storeDocument($file6);
 
-            $extension7 = $file7->getClientOriginalExtension();
-            $fileName7 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension7;
-            $file7->move($path, $fileName7);
+            $fileName7 = $this->storeDocument($file7);
 
-            $extension8 = $file8->getClientOriginalExtension();
-            $fileName8 = uniqid().'_user_'.$email.'_'.date('Y-m-d').'.'.$extension8;
-            $file8->move($path, $fileName8);
+            $fileName8 = $this->storeDocument($file8);
 
             $pre = Presentation::where('student_id',$id)
             ->where('doctorado_id',Auth::user()->doctorado_id)

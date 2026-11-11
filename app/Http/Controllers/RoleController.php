@@ -63,10 +63,11 @@ class RoleController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            // El detalle va al log, nunca al cliente.
+            report($e);
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar el rol',
-                'error' => $e->getMessage() // Solo para desarrollo, en producción quitar
             ], 500);
         }
     }
@@ -82,10 +83,10 @@ class RoleController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            report($e);
             return response()->json([
                 'success' => false,
                 'message' => 'Error al eliminar el rol',
-                'error' => $e->getMessage() // Remover en producción
             ], 500);
         }
     }

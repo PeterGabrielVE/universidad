@@ -81,12 +81,10 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
 import api from "../../plugins/axios";
 
 const users = ref([]);
 const search = ref("");
-const router = useRouter();
 
 const fetchUsers = async () => {
   try {
@@ -96,10 +94,9 @@ const fetchUsers = async () => {
     users.value = res.data;
   } catch (error) {
     console.error("Error fetching users:", error);
-    // Redirigir a login si no está autenticado
+    // Sesión expirada: volver al inicio de sesión.
     if (error.response?.status === 401) {
-      //router.push('/login');
-      console.log("Redirigiendo a login...");
+      window.location.href = "/login";
     }
   }
 };
