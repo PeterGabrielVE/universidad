@@ -30,9 +30,19 @@ Cada prueba usa `RefreshDatabase`: migra una vez y revierte cada prueba en una t
 
 | Carpeta | Contenido |
 |---|---|
-| `tests/Unit` | Pruebas sin framework (dominio y casos de uso, a partir de la Fase 2) |
-| `tests/Feature/Security` | Autenticación, autorización por rol, acceso a expedientes ajenos, subidas, API |
-| `tests/Concerns/CreatesUsers.php` | Crea usuarios con `rol_id` y rol de Spatie coherentes, y estudiantes con expediente |
+| `tests/Unit/<Módulo>/Domain` | Reglas de dominio en PHP puro (matriz RBAC, alcance por programa, correo, estados) |
+| `tests/Unit/<Módulo>/Application` | Casos de uso con adaptadores en memoria: sin Laravel ni base de datos |
+| `tests/Support/<Módulo>` | Dobles de prueba de los puertos (`InMemoryUserRepository`, `SpyStudentRecords`…) |
+| `tests/Feature/Security` | Autenticación, autorización por permiso, alcance, subidas, API |
+| `tests/Feature/Characterization` | Comportamiento existente que los refactors deben conservar |
+| `tests/Feature/IdentityAccess` | Registro de Aspirantes y ciclo de vida de la cuenta |
+| `tests/Concerns/CreatesUsers.php` | Usuarios con rol de Spatie y estudiantes con expediente (sobre las factories) |
+
+Las pruebas unitarias se ejecutan solas y en milisegundos:
+
+```bash
+docker compose exec app php vendor/bin/phpunit --testsuite Unit
+```
 
 ## Convenciones
 

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Characterization;
 
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\CreatesUsers;
 use Tests\TestCase;

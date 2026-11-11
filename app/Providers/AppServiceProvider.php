@@ -2,29 +2,16 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-use App\Repositories\Interfaces\RoleRepositoryInterface;
-use App\Repositories\Eloquent\RoleRepository;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
+    public function register(): void
     {
-        $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
     }
 
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
+    public function boot(): void
     {
         Schema::defaultStringLength(191);
     }

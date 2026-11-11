@@ -3,82 +3,56 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Http\Presenters\UserAccountPresenter;
+use App\Http\Requests\UserRequest;
+use App\Modules\IdentityAccess\Application\Port\UserRepository;
+use App\Modules\IdentityAccess\Application\UseCase\CreateUser;
+use App\Modules\IdentityAccess\Application\UseCase\DeleteUser;
+use App\Modules\IdentityAccess\Application\UseCase\UpdateUser;
+use App\Modules\IdentityAccess\Domain\Exception\UserNotFound;
+use App\Modules\IdentityAccess\Infrastructure\UserDirectory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
+    /** Filtros: ?role=Coordinador&search=texto */
+    public function index(Request $request, UserDirectory $directory): JsonResponse
     {
-        $query = User::query();
-
-        if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('email', 'like', '%' . $request->search . '%');
-        }
-
-        return response()->json($query->get());
-    }
-
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'role' => 'required|string',
-            'status' => 'required|in:activo,inactivo',
+        $validated = $request->validate([
+            'role' => ['nullable', 'string', 'max:125'],
+            'search' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'status' => $data['status'],
-        ]);
-
-        $user->assignRole($data['role']);
-
-        return response()->json($user, 201);
+        return response()->json($directory->search($validated['role'] ?? null, $validated['search'] ?? null));
     }
 
-    public function show($id)
+    public function store(UserRequest $request, CreateUser $createUser): JsonResponse
     {
-        $user = User::findOrFail($id);
-        $user->role = $user->roles->first()?->name ?? null;
-        return response()->json($user);
+        $account = $createUser->execute($request->toUserData());
+
+        return response()->json(UserAccountPresenter::toArray($account), 201);
     }
 
-    public function update(Request $request, $id)
+    public function show(int $user, UserRepository $users): JsonResponse
     {
-        $user = User::findOrFail($id);
+        $account = $users->find($user) ?? throw new UserNotFound($user);
 
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'role' => 'required|string',
-            'status' => 'required|in:activo,inactivo',
-        ]);
-
-        $user->update($data);
-
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-            $user->save();
-        }
-
-        $user->syncRoles([$data['role']]);
-
-        return response()->json($user);
+        return response()->json(UserAccountPresenter::toArray($account));
     }
 
-    public function destroy($id)
+    public function update(UserRequest $request, int $user, UpdateUser $updateUser): JsonResponse
     {
-        $user = User::findOrFail($id);
-        $user->delete();
-        return response()->json(['message' => 'Usuario eliminado.']);
+        $account = $updateUser->execute($user, $request->toUserData());
+
+        return response()->json(UserAccountPresenter::toArray($account));
+    }
+
+    public function destroy(int $user, DeleteUser $deleteUser): Response
+    {
+        $deleteUser->execute($user);
+
+        return response()->noContent();
     }
 }

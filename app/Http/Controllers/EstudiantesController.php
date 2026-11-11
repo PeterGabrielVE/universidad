@@ -22,8 +22,8 @@ use App\Post2;
 use App\Presentation;
 use App\Doctorado;
 use App\Sede;
-use App\Models\Role;
-use App\User;
+use App\Models\User;
+use App\Modules\IdentityAccess\Infrastructure\UserDirectory;
 
 class EstudiantesController extends Controller
 {
@@ -31,20 +31,26 @@ class EstudiantesController extends Controller
     private const DOCUMENTS_DIR = 'documents';
 
     /**
-     * Tipos aceptados para tesis, cartas, pósters y certificados. Pendiente de
-     * confirmar con negocio (ver PROJECT_STATUS.md); los ejecutables quedan fuera.
+     * Entregas académicas (FUNCTIONAL_SPECIFICATIONS.md §9): PDF, DOC o DOCX hasta
+     * 25 MB, para que los jurados puedan revisarlas. Pósters y certificados del
+     * formulario de presentación siguen esta misma regla.
      */
-    private const DOCUMENT_RULES = ['file', 'mimes:pdf,doc,docx,jpg,jpeg,png', 'max:10240'];
+    private const DOCUMENT_RULES = ['file', 'mimes:pdf,doc,docx', 'max:25600'];
 
-    public function index()
+    public function index(UserDirectory $directory)
     {
-        $rol = 4;
         $title = "Estudiante";
-    	$estudiantes = Estudiante::latest()->paginate(5);
-        $roles = Role::get()->pluck('name','id');
-        return view('pages.estudiantes.index',compact('estudiantes','roles','rol','title'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        $programIds = $directory->programScopeOf(Auth::user())->programIds();
 
+        // El Coordinador solo ve los estudiantes de su programa (ProgramScope).
+        $estudiantes = Estudiante::query()
+            ->when($programIds !== null, fn ($q) => $q->whereHas('user', fn ($u) => $u->whereIn('doctorado_id', $programIds)))
+            ->latest()
+            ->paginate(5);
+        $programs = Doctorado::orderBy('id')->pluck('name', 'id')->all();
+
+        return view('pages.estudiantes.index',compact('estudiantes','programs','title'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     public function show($id)

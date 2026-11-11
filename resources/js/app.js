@@ -74,7 +74,8 @@ const app = createApp({
         toastr.success('Rol eliminado');
         this.loadRoles();
       } catch (error) {
-        toastr.error('Error al eliminar rol');
+        // 422: regla de negocio (p. ej. rol del sistema protegido) con mensaje para el usuario.
+        toastr.error(error.response?.data?.message ?? 'Error al eliminar rol');
         console.error(error);
       }
     },

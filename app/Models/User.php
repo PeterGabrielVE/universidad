@@ -2,55 +2,81 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Doctorado;
+use App\Estudiante;
+use App\Modules\IdentityAccess\Domain\AccountStatus;
+use App\Pais;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * Único modelo de usuario (autenticación web, Sanctum y Spatie). Sustituye a
+ * App\User, que coexistía sobre la misma tabla con otro $fillable.
+ *
+ * Los roles viven solo en Spatie; la columna users.rol_id quedó obsoleta.
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
-    /**
-     * Los atributos que se pueden asignar masivamente.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
+        'last_name',
+        'identification_card',
+        'phone',
         'email',
         'password',
         'status',
+        'sede_id',
+        'country_id',
+        'doctorado_id',
     ];
 
-    /**
-     * Atributos que deben ocultarse al serializar.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
+        'api_token',
     ];
 
-    /**
-     * Casts para convertir automáticamente tipos de datos.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        // "hashed" no vuelve a hashear un valor que ya es un hash.
+        'password' => 'hashed',
+        'status' => AccountStatus::class,
     ];
 
-    /**
-     * Mutador para hashear la contraseña automáticamente.
-     */
-    public function setPasswordAttribute($value)
+    protected $attributes = [
+        'status' => 'activo',
+    ];
+
+    public function doctorado(): BelongsTo
     {
-        if ($value && $value !== $this->attributes['password']) {
-            $this->attributes['password'] = bcrypt($value);
-        }
+        return $this->belongsTo(Doctorado::class, 'doctorado_id');
+    }
+
+    public function paises(): BelongsTo
+    {
+        return $this->belongsTo(Pais::class, 'country_id');
+    }
+
+    public function pais(): BelongsTo
+    {
+        return $this->belongsTo(Pais::class, 'country_id');
+    }
+
+    /** Prefijo telefónico del país (columna cod_phone; ver PROJECT_STATUS.md, inventario #14). */
+    public function prefijo(): BelongsTo
+    {
+        return $this->belongsTo(Pais::class, 'cod_phone');
+    }
+
+    public function studentRecord(): HasOne
+    {
+        return $this->hasOne(Estudiante::class, 'user_id');
     }
 }

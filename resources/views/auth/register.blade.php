@@ -28,6 +28,22 @@
             </div>
 
             <div class="login-field">
+                <input id="last_name" type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name') }}" placeholder=" " required autocomplete="family-name">
+                <label for="last_name">{{ __('auth.last_name') }}</label>
+                @error('last_name')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="login-field">
+                <input id="identification_card" type="number" min="1" inputmode="numeric" class="form-control @error('identification_card') is-invalid @enderror" name="identification_card" value="{{ old('identification_card') }}" placeholder=" " required>
+                <label for="identification_card">{{ __('auth.identification_card') }}</label>
+                @error('identification_card')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="login-field">
                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" placeholder=" " required autocomplete="email">
                 <label for="email">{{ __('E-Mail Address') }}</label>
                 @error('email')

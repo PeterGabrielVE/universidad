@@ -117,6 +117,23 @@ el proyecto usa MySQL, y un ENUM nativo exigiría `ALTER TABLE` para cada valor 
 Correspondencia con los datos actuales: lapso `'1'` → `abierto`, `'0'` → `cerrado`;
 inscripción `Inscrito` → `activo`, `Aprobado`/`Reprobado` → `cerrado` con su resultado.
 
-## 11. Puntos abiertos
+## 11. Decisiones de implementación (Fase 2)
 
-Ninguno bloqueante a 11-11-2026.
+Derivadas de las reglas anteriores; confirmar si alguna no encaja con el negocio.
+
+- **Roles del sistema protegidos:** los 7 roles de §7 no se pueden renombrar ni
+  eliminar, porque sostienen la matriz de permisos. Se pueden crear roles adicionales,
+  que no tienen permisos.
+- **Correo único sin distinguir mayúsculas:** `Ana@x.com` y `ana@x.com` son la misma cuenta.
+- **Usuario sin rol:** ve una página de inicio que le indica contactar a Control de
+  Estudios; no accede a ningún módulo.
+- **Director:** además de reportes y estadísticas, puede ver el listado de usuarios,
+  los expedientes de estudiantes y las notas (lectura amplia), pero no editarlos.
+
+## 12. Puntos abiertos
+
+1. **Facultad y programa:** ¿son la misma entidad (cada doctorado es una "facultad")
+   o una facultad agrupa varios programas? Afecta a dónde vive `min_passing_grade`.
+   Bloquea la Fase 3.
+2. **Cédula única:** hoy solo el correo es único. ¿Debe impedirse registrar dos
+   cuentas con la misma cédula (p. ej. un aspirante que se registra dos veces)?

@@ -1,125 +1,119 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import axios from "axios";
+import { ref } from "vue";
+import api from "../../plugins/axios";
 
-// Datos del formulario
-const form = ref({
-  name: "",
-  email: "",
-  password: "",
-  role_id: "",
+// Las opciones vienen de UserController::create (Blade), no de llamadas extra.
+const props = defineProps({
+  roles: { type: Array, default: () => [] },
+  programs: { type: Object, default: () => ({}) },
+  statuses: { type: Array, default: () => ["activo"] },
 });
 
-// Lista de roles
-const roles = ref([]); 
+const emptyForm = () => ({
+  name: "",
+  last_name: "",
+  identification_card: "",
+  email: "",
+  phone: "",
+  password: "",
+  role: "",
+  doctorado_id: "",
+  status: "activo",
+});
+
+const form = ref(emptyForm());
+const errors = ref({});
 const loading = ref(false);
-const errors = ref({}); 
+const saved = ref("");
 
-// Cargar roles
-const fetchRoles = async () => {
-  try {
-    const { data } = await axios.get("/api/roles");
-    roles.value = data;
-  } catch (error) {
-    console.error("Error cargando roles", error);
-  }
-};
-
-// Enviar formulario
 const submitForm = async () => {
   loading.value = true;
   errors.value = {};
+  saved.value = "";
   try {
-    await axios.post("/api/users", form.value);
-    alert("Usuario creado con éxito");
-    form.value = { name: "", email: "", password: "", role_id: "" };
+    const payload = { ...form.value, doctorado_id: form.value.doctorado_id || null };
+    const { data } = await api.post("/api/v1/users", payload);
+    saved.value = `Usuario ${data.name} ${data.last_name} creado.`;
+    form.value = emptyForm();
   } catch (error) {
     if (error.response?.status === 422) {
-      errors.value = error.response.data.errors;
+      errors.value = error.response.data.errors ?? {};
     } else {
-      console.error("Error creando usuario", error);
+      errors.value = { general: ["No se pudo crear el usuario."] };
     }
   } finally {
     loading.value = false;
   }
 };
 
-onMounted(() => {
-  fetchRoles();
-});
+const fieldError = (field) => errors.value[field]?.[0];
 </script>
+
 <template>
-  <div class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md">
-    <h2 class="text-xl font-bold mb-4">Registrar Usuario</h2>
+  <form @submit.prevent="submitForm">
+    <div v-if="saved" class="alert alert-success">{{ saved }} <a href="/user">Volver al listado</a></div>
+    <div v-if="fieldError('general')" class="alert alert-danger">{{ fieldError('general') }}</div>
 
-    <form @submit.prevent="submitForm" class="space-y-4">
-      <!-- Nombre -->
-      <div>
-        <label class="block font-medium">Nombre</label>
-        <input
-          v-model="form.name"
-          type="text"
-          class="w-full border p-2 rounded"
-          placeholder="Nombre completo"
-        />
-        <span v-if="errors.name" class="text-red-500 text-sm">
-          {{ errors.name[0] }}
-        </span>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="name">Nombre</label>
+        <input id="name" v-model="form.name" class="form-control" :class="{ 'is-invalid': fieldError('name') }" required />
+        <div class="invalid-feedback">{{ fieldError('name') }}</div>
       </div>
-
-      <!-- Email -->
-      <div>
-        <label class="block font-medium">Email</label>
-        <input
-          v-model="form.email"
-          type="email"
-          class="w-full border p-2 rounded"
-          placeholder="ejemplo@correo.com"
-        />
-        <span v-if="errors.email" class="text-red-500 text-sm">
-          {{ errors.email[0] }}
-        </span>
+      <div class="form-group col-md-6">
+        <label for="last_name">Apellido</label>
+        <input id="last_name" v-model="form.last_name" class="form-control" :class="{ 'is-invalid': fieldError('last_name') }" required />
+        <div class="invalid-feedback">{{ fieldError('last_name') }}</div>
       </div>
-
-      <!-- Password -->
-      <div>
-        <label class="block font-medium">Contraseña</label>
-        <input
-          v-model="form.password"
-          type="password"
-          class="w-full border p-2 rounded"
-          placeholder="********"
-        />
-        <span v-if="errors.password" class="text-red-500 text-sm">
-          {{ errors.password[0] }}
-        </span>
+      <div class="form-group col-md-6">
+        <label for="identification_card">Cédula</label>
+        <input id="identification_card" v-model="form.identification_card" type="number" min="1" class="form-control" :class="{ 'is-invalid': fieldError('identification_card') }" required />
+        <div class="invalid-feedback">{{ fieldError('identification_card') }}</div>
       </div>
-
-      <!-- Rol -->
-      <div>
-        <label class="block font-medium">Rol</label>
-        <select v-model="form.role_id" class="w-full border p-2 rounded">
+      <div class="form-group col-md-6">
+        <label for="email">Correo electrónico</label>
+        <input id="email" v-model="form.email" type="email" class="form-control" :class="{ 'is-invalid': fieldError('email') }" required />
+        <div class="invalid-feedback">{{ fieldError('email') }}</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="phone">Teléfono</label>
+        <input id="phone" v-model="form.phone" class="form-control" :class="{ 'is-invalid': fieldError('phone') }" />
+        <div class="invalid-feedback">{{ fieldError('phone') }}</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="password">Contraseña</label>
+        <input id="password" v-model="form.password" type="password" minlength="8" autocomplete="new-password" class="form-control" :class="{ 'is-invalid': fieldError('password') }" required />
+        <div class="invalid-feedback">{{ fieldError('password') }}</div>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="role">Rol</label>
+        <select id="role" v-model="form.role" class="form-control" :class="{ 'is-invalid': fieldError('role') }" required>
           <option disabled value="">Seleccione un rol</option>
-          <option v-for="role in roles" :key="role.id" :value="role.id">
-            {{ role.name }}
-          </option>
+          <option v-for="role in props.roles" :key="role" :value="role">{{ role }}</option>
         </select>
-        <span v-if="errors.role_id" class="text-red-500 text-sm">
-          {{ errors.role_id[0] }}
-        </span>
+        <div class="invalid-feedback">{{ fieldError('role') }}</div>
       </div>
+      <div class="form-group col-md-4">
+        <label for="doctorado_id">Programa</label>
+        <select id="doctorado_id" v-model="form.doctorado_id" class="form-control" :class="{ 'is-invalid': fieldError('doctorado_id') }">
+          <option value="">Sin programa</option>
+          <option v-for="(name, id) in props.programs" :key="id" :value="id">{{ name }}</option>
+        </select>
+        <div class="invalid-feedback">{{ fieldError('doctorado_id') }}</div>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="status">Estado</label>
+        <select id="status" v-model="form.status" class="form-control">
+          <option v-for="status in props.statuses" :key="status" :value="status">{{ status }}</option>
+        </select>
+      </div>
+    </div>
 
-      <!-- Botón -->
-      <div class="flex justify-end">
-        <button
-          type="submit"
-          :disabled="loading"
-          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          <span v-if="loading">Guardando...</span>
-          <span v-else>Registrar</span>
-        </button>
-      </div>
-    </form>
-  </div>
+    <div class="d-flex justify-content-end">
+      <a href="/user" class="btn btn-secondary mr-2">Cancelar</a>
+      <button type="submit" :disabled="loading" class="btn btn-uft">
+        {{ loading ? "Guardando…" : "Crear usuario" }}
+      </button>
+    </div>
+  </form>
 </template>

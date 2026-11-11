@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Security;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\CreatesUsers;
 use Tests\TestCase;

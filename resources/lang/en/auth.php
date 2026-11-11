@@ -18,4 +18,7 @@ return [
     'failed' => 'Estas credenciales no coinciden con nuestros registros.',
     'throttle' => 'Demasiados intentos de inicio de sesión. Vuelva a intentarlo en: segundos segundos.',
 
+    'name' => 'First name',
+    'last_name' => 'Last name',
+    'identification_card' => 'ID number',
 ];

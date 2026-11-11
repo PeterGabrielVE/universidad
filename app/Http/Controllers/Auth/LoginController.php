@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\EnsureAccountIsActive;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -36,5 +40,22 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * Las cuentas inactivas o suspendidas no inician sesión
+     * (FUNCTIONAL_SPECIFICATIONS.md §10).
+     */
+    protected function authenticated(Request $request, User $user): void
+    {
+        if ($user->status->canLogIn()) {
+            return;
+        }
+
+        $this->guard()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        throw ValidationException::withMessages(['email' => EnsureAccountIsActive::MESSAGE]);
     }
 }

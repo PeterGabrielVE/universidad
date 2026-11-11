@@ -12,38 +12,42 @@
         ['label' => 'Asistentes', 'value' => $count_asis, 'icon' => 'fa-user-friends', 'tone' => 'amber'],
     ];
 
-    // 'route' => null marca módulos que aún no tienen pantalla propia.
+    // 'route' => null marca módulos en alcance (FUNCTIONAL_SPECIFICATIONS.md §1) aún sin pantalla.
+    // Los módulos con pantalla solo se muestran a quien tiene su permiso.
     $sections = [
         'Usuarios y accesos' => [
-            ['title' => 'Usuarios', 'desc' => 'Cuentas y perfiles', 'icon' => 'fa-users-cog', 'tone' => 'blue', 'route' => 'user.index'],
-            ['title' => 'Roles', 'desc' => 'Perfiles de acceso', 'icon' => 'fa-user-shield', 'tone' => 'green', 'route' => 'roles.index'],
-            ['title' => 'Permisos', 'desc' => 'Control de acciones', 'icon' => 'fa-key', 'tone' => 'amber', 'route' => null],
-            ['title' => 'Administrativo', 'desc' => 'Personal administrativo', 'icon' => 'fa-briefcase', 'tone' => 'red', 'route' => null],
+            ['title' => 'Usuarios', 'desc' => 'Cuentas, roles y estado', 'icon' => 'fa-users-cog', 'tone' => 'blue', 'route' => 'user.index', 'permission' => 'users.view'],
+            ['title' => 'Roles', 'desc' => 'Perfiles de acceso', 'icon' => 'fa-user-shield', 'tone' => 'green', 'route' => 'roles.index', 'permission' => 'roles.manage'],
+            ['title' => 'Docentes y jurados', 'desc' => 'Asignación a entregas', 'icon' => 'fa-chalkboard-teacher', 'tone' => 'amber', 'route' => null],
         ],
-        'Comunidad educativa' => [
-            ['title' => 'Estudiantes', 'desc' => 'Expedientes y datos', 'icon' => 'fa-user-graduate', 'tone' => 'red', 'route' => 'estudiantes.index'],
-            ['title' => 'Docentes', 'desc' => 'Planta docente', 'icon' => 'fa-chalkboard-teacher', 'tone' => 'blue', 'route' => null],
-            ['title' => 'PPFF', 'desc' => 'Padres de familia', 'icon' => 'fa-user-friends', 'tone' => 'green', 'route' => null],
-            ['title' => 'Inscripción', 'desc' => 'Matrícula de alumnos', 'icon' => 'fa-clipboard-list', 'tone' => 'amber', 'route' => null],
+        'Admisiones e inscripciones' => [
+            ['title' => 'Aspirantes', 'desc' => 'Requisitos de ingreso', 'icon' => 'fa-user-plus', 'tone' => 'red', 'route' => null],
+            ['title' => 'Inscripción', 'desc' => 'Matriculación por lapso', 'icon' => 'fa-clipboard-list', 'tone' => 'blue', 'route' => null],
         ],
-        'Gestión académica' => [
-            ['title' => 'Gestión', 'desc' => 'Periodos académicos', 'icon' => 'fa-calendar-alt', 'tone' => 'red', 'route' => 'lapso.index'],
-            ['title' => 'Niveles', 'desc' => 'Niveles educativos', 'icon' => 'fa-signal', 'tone' => 'blue', 'route' => null],
-            ['title' => 'Grados', 'desc' => 'Grados por nivel', 'icon' => 'fa-layer-group', 'tone' => 'green', 'route' => null],
-            ['title' => 'Paralelos', 'desc' => 'Secciones por grado', 'icon' => 'fa-sitemap', 'tone' => 'amber', 'route' => null],
-            ['title' => 'Materias', 'desc' => 'Plan de estudios', 'icon' => 'fa-book-open', 'tone' => 'red', 'route' => null],
-            ['title' => 'Asignación', 'desc' => 'Docentes y materias', 'icon' => 'fa-tasks', 'tone' => 'blue', 'route' => null],
-            ['title' => 'Turnos', 'desc' => 'Horarios de jornada', 'icon' => 'fa-clock', 'tone' => 'green', 'route' => null],
-            ['title' => 'Calificaciones', 'desc' => 'Registro de notas', 'icon' => 'fa-star', 'tone' => 'amber', 'route' => null],
-            ['title' => 'Kardex', 'desc' => 'Historial académico', 'icon' => 'fa-id-card', 'tone' => 'red', 'route' => null],
+        'Control de estudios' => [
+            ['title' => 'Estudiantes', 'desc' => 'Expedientes y datos', 'icon' => 'fa-user-graduate', 'tone' => 'red', 'route' => 'estudiantes.index', 'permission' => 'students.view'],
+            ['title' => 'Lapsos y cohortes', 'desc' => 'Periodos académicos', 'icon' => 'fa-calendar-alt', 'tone' => 'green', 'route' => 'lapso.index', 'permission' => 'lapses.manage'],
+            ['title' => 'Facultades y programas', 'desc' => 'Programas de doctorado', 'icon' => 'fa-university', 'tone' => 'amber', 'route' => null],
+            ['title' => 'Pensum', 'desc' => 'Asignaturas por semestre', 'icon' => 'fa-book-open', 'tone' => 'blue', 'route' => null],
         ],
-        'Administración' => [
-            ['title' => 'Pagos', 'desc' => 'Pensiones y cobros', 'icon' => 'fa-file-invoice-dollar', 'tone' => 'green', 'route' => null],
-            ['title' => 'Reportes', 'desc' => 'Informes y exportes', 'icon' => 'fa-chart-bar', 'tone' => 'blue', 'route' => 'reports'],
-            ['title' => 'Instituciones', 'desc' => 'Sedes y unidades', 'icon' => 'fa-university', 'tone' => 'amber', 'route' => null],
-            ['title' => 'Configuración', 'desc' => 'Ajustes del sistema', 'icon' => 'fa-cogs', 'tone' => 'red', 'route' => null],
+        'Entregas y calificaciones' => [
+            ['title' => 'Entregas', 'desc' => 'Avances, tesis y defensa', 'icon' => 'fa-file-upload', 'tone' => 'red', 'route' => null],
+            ['title' => 'Calificaciones', 'desc' => 'Notas y récord académico', 'icon' => 'fa-star', 'tone' => 'amber', 'route' => null],
+        ],
+        'Finanzas y reportes' => [
+            ['title' => 'Pagos y aranceles', 'desc' => 'Matrícula y derechos de grado', 'icon' => 'fa-file-invoice-dollar', 'tone' => 'green', 'route' => null],
+            ['title' => 'Reportes', 'desc' => 'Informes y exportes', 'icon' => 'fa-chart-bar', 'tone' => 'blue', 'route' => 'reports', 'permission' => 'reports.view'],
+            ['title' => 'Constancias y actas', 'desc' => 'Documentos oficiales', 'icon' => 'fa-file-signature', 'tone' => 'red', 'route' => null],
         ],
     ];
+
+    $user = auth()->user();
+    foreach ($sections as $title => $modules) {
+        $sections[$title] = array_values(array_filter(
+            $modules,
+            fn ($module) => $module['route'] === null || $user->can($module['permission'])
+        ));
+    }
 @endphp
 
 @section('content')

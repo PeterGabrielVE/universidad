@@ -35,6 +35,9 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
         zip \
         gd
 
+# 3b. Límites de subida para entregas académicas (25 MB por archivo)
+COPY docker/php/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+
 # 4. Habilitar mod_rewrite de Apache
 RUN a2enmod rewrite
 

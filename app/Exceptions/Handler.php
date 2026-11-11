@@ -2,54 +2,51 @@
 
 namespace App\Exceptions;
 
+use App\Modules\Shared\Domain\DomainException;
+use App\Modules\Shared\Domain\NotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
+use Illuminate\Http\Request;
 
 class Handler extends ExceptionHandler
 {
     /**
-     * A list of the exception types that are not reported.
+     * Las excepciones de dominio son errores de negocio esperados: no se registran.
      *
-     * @var array
+     * @var array<int, class-string>
      */
     protected $dontReport = [
-        //
+        DomainException::class,
     ];
 
-    /**
-     * A list of the inputs that are never flashed for validation exceptions.
-     *
-     * @var array
-     */
+    /** @var array<int, string> */
     protected $dontFlash = [
         'password',
         'password_confirmation',
     ];
 
-    /**
-     * Report or log an exception.
-     *
-     * @param  \Throwable  $exception
-     * @return void
-     *
-     * @throws \Throwable
-     */
-    public function report(Throwable $exception)
+    public function register(): void
     {
-        parent::report($exception);
-    }
+        // Recurso inexistente → 404.
+        $this->renderable(function (NotFoundException $e, Request $request) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => $e->getMessage()], 404);
+            }
 
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Throwable
-     */
-    public function render($request, Throwable $exception)
-    {
-        return parent::render($request, $exception);
+            abort(404, $e->getMessage());
+        });
+
+        // Regla de negocio incumplida → 422 (API) o vuelta al formulario con el error en su campo.
+        $this->renderable(function (DomainException $e, Request $request) {
+            $field = $e->field() ?? 'general';
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'errors' => [$field => [$e->getMessage()]],
+                ], 422);
+            }
+
+            return back()->withInput($request->except($this->dontFlash))->withErrors([$field => $e->getMessage()]);
+        });
     }
 }

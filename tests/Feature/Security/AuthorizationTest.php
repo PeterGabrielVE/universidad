@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Security;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\CreatesUsers;
 use Tests\TestCase;
@@ -42,17 +42,74 @@ class AuthorizationTest extends TestCase
 
     public function test_admin_can_open_user_management(): void
     {
-        $admin = $this->createUser('Director');
+        $admin = $this->createUser('Administrador');
 
         $this->actingAs($admin)->get('/user')->assertOk();
+        $this->actingAs($admin)->get('/user/create')->assertOk();
         $this->actingAs($admin)->get('/lapso')->assertOk();
+    }
+
+    /** FUNCTIONAL_SPECIFICATIONS.md §7: el Director supervisa pero no opera el día a día. */
+    public function test_director_supervises_without_operating(): void
+    {
+        $director = $this->createUser('Director');
+        $target = $this->createUser('Asistente');
+
+        $this->actingAs($director)->get('/user')->assertOk();
+        $this->actingAs($director)->get('/reports')->assertOk();
+        $this->actingAs($director)->get('/user/create')->assertForbidden();
+        $this->actingAs($director)->get("/user/{$target->id}/edit")->assertForbidden();
+        $this->actingAs($director)->get('/lapso')->assertForbidden();
+        $this->actingAs($director)->get('/roles')->assertForbidden();
+    }
+
+    /** El Asistente es operativo: no altera notas, no cierra lapsos ni gestiona usuarios. */
+    public function test_assistant_cannot_grade_or_manage_lapses(): void
+    {
+        $assistant = $this->createUser('Asistente');
+        $student = $this->createStudent();
+
+        $this->actingAs($assistant)->get('/estudiantes')->assertOk();
+        $this->actingAs($assistant)->get("/calificacion/estudiante/{$student->id}")->assertForbidden();
+        $this->actingAs($assistant)->post("/store/calificacion/{$student->id}")->assertForbidden();
+        $this->actingAs($assistant)->get('/lapso')->assertForbidden();
+        $this->actingAs($assistant)->get('/user')->assertForbidden();
+    }
+
+    public function test_coordinator_only_reaches_students_of_own_program(): void
+    {
+        $coordinator = $this->createUser('Coordinador', ['doctorado_id' => 2]);
+        $mine = $this->createStudent(['last_name' => 'DeCiencias', 'doctorado_id' => 2]);
+        $both = $this->createStudent(['last_name' => 'DeAmbos', 'doctorado_id' => 3]);
+        $other = $this->createStudent(['last_name' => 'DeGerencia', 'doctorado_id' => 1]);
+
+        $this->actingAs($coordinator)->get('/estudiantes')
+            ->assertOk()
+            ->assertSee('DeCiencias')
+            ->assertSee('DeAmbos')
+            ->assertDontSee('DeGerencia');
+
+        $this->actingAs($coordinator)->get("/estudiantes/{$mine->id}")->assertOk();
+        $this->actingAs($coordinator)->get("/estudiantes/{$both->id}")->assertOk();
+        $this->actingAs($coordinator)->get("/estudiantes/{$other->id}")->assertForbidden();
+    }
+
+    public function test_coordinator_cannot_edit_student_records(): void
+    {
+        $coordinator = $this->createUser('Coordinador', ['doctorado_id' => 3]);
+        $student = $this->createStudent(['doctorado_id' => 1]);
+
+        $this->actingAs($coordinator)->put("/estudiantes/{$student->id}", ['status' => '0'])->assertForbidden();
     }
 
     public function test_user_without_role_does_not_see_the_admin_dashboard(): void
     {
         $nobody = $this->createUser();
 
-        $this->actingAs($nobody)->get('/home')->assertForbidden();
+        $this->actingAs($nobody)->get('/home')
+            ->assertOk()
+            ->assertSee('no tiene un rol asignado')
+            ->assertDontSee('resumen de tu institución');
     }
 
     public function test_student_cannot_open_another_students_record(): void
@@ -99,40 +156,70 @@ class AuthorizationTest extends TestCase
         $admin = $this->createUser('Administrador');
         $target = $this->createUser('Asistente');
 
-        $this->actingAs($admin)->put("/user/{$target->id}", [
+        $this->actingAs($admin)->put("/user/{$target->id}", $this->userPayload($target, [
             'name' => 'Nuevo',
-            'rol_id' => 3,
             'api_token' => 'token-inyectado',
-        ]);
+        ]))->assertRedirect(route('user.index'));
 
         $target->refresh();
         $this->assertSame('Nuevo', $target->name);
         $this->assertNull($target->api_token);
     }
 
-    public function test_changing_rol_id_keeps_spatie_role_in_sync(): void
+    public function test_changing_the_role_replaces_the_previous_one(): void
     {
         $admin = $this->createUser('Administrador');
         $target = $this->createUser('Asistente');
 
-        $this->actingAs($admin)->put("/user/{$target->id}", ['name' => $target->name, 'rol_id' => 2]);
+        $this->actingAs($admin)->put("/user/{$target->id}", $this->userPayload($target, ['role' => 'Coordinador']));
 
         $target->refresh();
-        $this->assertSame(2, (int) $target->rol_id);
         $this->assertTrue($target->hasRole('Coordinador'));
         $this->assertFalse($target->hasRole('Asistente'));
     }
 
+    public function test_duplicate_email_is_reported_on_the_email_field(): void
+    {
+        $admin = $this->createUser('Administrador');
+        $taken = $this->createUser('Asistente', ['email' => 'ocupado@gabook.test']);
+        $target = $this->createUser('Asistente');
+
+        $this->actingAs($admin)->from("/user/{$target->id}/edit")
+            ->put("/user/{$target->id}", $this->userPayload($target, ['email' => 'OCUPADO@gabook.test']))
+            ->assertRedirect("/user/{$target->id}/edit")
+            ->assertSessionHasErrors('email');
+
+        $this->assertNotSame($taken->email, $target->fresh()->email);
+    }
+
     public function test_role_update_errors_do_not_leak_internal_messages(): void
     {
-        $admin = $this->createUser('Director');
+        $admin = $this->createUser('Administrador');
 
-        $response = $this->actingAs($admin)->putJson('/roles/99999', [
-            'name' => 'Inexistente',
-            'guard_name' => 'web',
-        ]);
+        $response = $this->actingAs($admin)->putJson('/roles/99999', ['name' => 'Inexistente']);
 
-        $response->assertJsonMissingPath('error');
-        $this->assertStringNotContainsString('Role not found', $response->getContent());
+        $response->assertNotFound()->assertJsonMissingPath('error');
+        $this->assertStringNotContainsString('Exception', $response->getContent());
+    }
+
+    public function test_system_roles_cannot_be_deleted_through_the_api(): void
+    {
+        $admin = $this->createUser('Administrador');
+
+        $this->actingAs($admin, 'sanctum')->deleteJson('/api/roles/1')
+            ->assertStatus(422)
+            ->assertJsonPath('errors.name.0', '«Director» es un rol del sistema: no se puede renombrar ni eliminar.');
+    }
+
+    private function userPayload(User $user, array $overrides): array
+    {
+        return array_merge([
+            'name' => $user->name,
+            'last_name' => $user->last_name,
+            'identification_card' => $user->identification_card,
+            'email' => $user->email,
+            'role' => $user->roles->first()->name,
+            'status' => 'activo',
+        ], $overrides);
     }
 }

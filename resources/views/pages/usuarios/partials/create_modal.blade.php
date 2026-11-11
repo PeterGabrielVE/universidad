@@ -30,17 +30,14 @@
 							<span class="campo_span"></span>
 						</div>
 					</div>
-                    @if(($rol ?? null) == 4)
-                    {!! Form::hidden('rol_id', '4', ['id'=>'rol_id']) !!}
-                    @else
+                    {{-- Este modal solo da de alta estudiantes (lo usa pages/estudiantes/index). --}}
+                    {!! Form::hidden('role', 'Estudiante', ['id'=>'role']) !!}
 					<div class="col-md-4">
 						<div class="form-group m-0" id="modulo_group">
-							{!! Form::label('roles', 'Perfil', ['class'=>'col-form-label s-12']) !!}
-							{!! Form::select('rol_id', $roles, $rol ?? null, ['class'=>'form-control r-0 light s-12', 'id'=>'rol_id']) !!}
-							<span class="status_span"></span>
+							{!! Form::label('doctorado_id', 'Programa', ['class'=>'col-form-label s-12']) !!}
+							{!! Form::select('doctorado_id', $programs ?? [], null, ['class'=>'form-control r-0 light s-12', 'id'=>'doctorado_id', 'placeholder'=>'Seleccione']) !!}
 						</div>
 					</div>
-                    @endif
 					<div class="col-md-6">
 						<div class="form-group m-0 has-feedback" id="campo_group">
 							{!! Form::label('metaListValue', 'Correo Electronico', ['class'=>'col-form-label s-12']) !!}

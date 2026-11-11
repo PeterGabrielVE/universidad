@@ -2,52 +2,49 @@
 
 namespace App\Http\Controllers;
 
-use App\Authorization\Roles;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Doctorado;
 use App\Estudiante;
-use App\User;
+use App\Models\User;
+use App\Modules\IdentityAccess\Domain\Permission;
+use App\Modules\IdentityAccess\Domain\RoleName;
+use App\Modules\IdentityAccess\Infrastructure\UserDirectory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * Inicio según el rol: el estudiante va a su expediente, el personal con
+     * dashboard.view ve el panel institucional y el resto (Docente, Aspirante)
+     * una página de bienvenida.
      */
-    public function __construct()
+    public function index(Request $request, UserDirectory $directory): View|RedirectResponse
     {
-        $this->middleware('auth');
-    }
+        /** @var User $user */
+        $user = $request->user();
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index()
-    {
-        $user = Auth::user();
-
-        if ($user->hasRole(Roles::ESTUDIANTE)) {
-            $student = Estudiante::where('user_id', $user->id)->first();
-            if($student){
-                return redirect()->route('estudiantes.show',$student->id);
-            }else{
-                return redirect()->route('estudiantes.create');
-            }
+        if ($user->hasRole(RoleName::Estudiante->value)) {
+            return $user->studentRecord !== null
+                ? redirect()->route('estudiantes.show', $user->studentRecord->id)
+                : redirect()->route('estudiantes.create');
         }
 
-        // El panel muestra métricas institucionales: solo para el personal.
-        abort_unless($user->hasAnyRole(Roles::STAFF), 403);
+        if ($user->can(Permission::DashboardView->value)) {
+            return view('home.administrador', [
+                'count_estudiante' => Estudiante::count(),
+                'count_usuarios' => User::count(),
+                'count_coord' => $directory->countByRole(RoleName::Coordinador),
+                'count_asis' => $directory->countByRole(RoleName::Asistente),
+            ]);
+        }
 
-        $count_estudiante = Estudiante::count();
-        $count_dir = User::where('rol_id','1')->count();
-        $count_coord = User::where('rol_id','2')->count();
-        $count_asis = User::where('rol_id','3')->count();
-        $count_usuarios = User::count();
+        $role = RoleName::tryFrom((string) $user->roles->first()?->name);
 
-        return view('home.administrador', compact('count_estudiante','count_coord','count_asis','count_dir','count_usuarios'));
-
+        return view('home.basic', [
+            'role' => $role,
+            // Oferta académica para el Aspirante (FUNCTIONAL_SPECIFICATIONS.md §5).
+            'programs' => $role === RoleName::Aspirante ? Doctorado::orderBy('id')->get() : collect(),
+        ]);
     }
 }

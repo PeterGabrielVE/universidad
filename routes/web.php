@@ -1,10 +1,10 @@
 <?php
 
-use App\Authorization\Roles;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\RoleController;
 use App\Http\Middleware\SetLocale;
+use App\Modules\IdentityAccess\Domain\Permission as P;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -15,8 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 // /login, /register, logout y recuperación de contraseña los define Auth::routes().
-// Antes se declaraban también aquí con el mismo nombre, lo que impedía route:cache
-// (y Auth::routes() sobrescribía esas definiciones, así que no cambia el comportamiento).
 Route::get('/', [LoginController::class, 'showLoginForm'])->middleware(SetLocale::class);
 Route::post('/language/switch', [LanguageController::class, 'switch'])->name('language.switch');
 
@@ -26,51 +24,75 @@ Auth::routes();
 |--------------------------------------------------------------------------
 | Rutas autenticadas
 |--------------------------------------------------------------------------
-| Grupos de roles en App\Authorization\Roles. Los estudiantes solo acceden a
-| su propio expediente (middleware student.owner).
+| Se autoriza por permiso (App\Modules\IdentityAccess\Domain\Permission); qué
+| rol tiene cada permiso lo define AccessPolicy. Los expedientes de estudiante
+| pasan además por student.access: propiedad (estudiante) y alcance de programa
+| (coordinador).
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
 
     Route::get('/home', 'HomeController@index')->name('home');
 
-    // Director y Administrador: usuarios, roles, lapsos y reportes.
-    Route::middleware(Roles::middleware(Roles::ADMIN))->group(function () {
-        Route::resource('user', 'UserController');
+    // Usuarios. Las rutas de gestión van primero para que "user/create" no se
+    // interprete como "user/{user}".
+    Route::middleware(P::middleware(P::UsersManage))->group(function () {
+        Route::resource('user', 'UserController')->only(['create', 'store', 'edit', 'update']);
         Route::get('users/create', 'UserController@create')->name('users.create');
+        Route::delete('usuario/delete/{id}', 'UserController@delete')->name('user.delete');
+    });
+    Route::middleware(P::middleware(P::UsersView))->group(function () {
+        Route::resource('user', 'UserController')->only(['index', 'show']);
         Route::get('usuario/administrativo', 'UserController@indexAdministrativo')->name('usuario/administrativo');
         Route::get('usuario/directivo', 'UserController@indexDirectivo')->name('usuario/directivo');
         Route::get('usuario/asistente', 'UserController@indexAsistente')->name('usuario/asistente');
-        Route::delete('usuario/delete/{id}', 'UserController@delete')->name('user.delete');
+    });
 
+    Route::middleware(P::middleware(P::RolesManage))->group(function () {
         Route::resource('roles', RoleController::class);
         Route::post('roles/index', 'RoleController@index')->name('roles');
+    });
 
+    Route::middleware(P::middleware(P::LapsesManage))->group(function () {
         Route::resource('lapso', 'LapsoController');
         Route::get('editLapso/{id}', 'LapsoController@edit')->name('editLapso');
         Route::post('updateLapso/{id}', 'LapsoController@update')->name('updateLapso');
+    });
 
+    Route::middleware(P::middleware(P::ReportsView))->group(function () {
         Route::get('reports', 'EstudiantesController@reports')->name('reports');
         Route::get('download/sede/{id}', 'EstudiantesController@downloadSedePdf');
         Route::get('download/student/{id}', 'EstudiantesController@downloadStudentPdf');
     });
 
-    // Personal académico: listado de estudiantes, inscripción y calificaciones.
-    Route::middleware(Roles::middleware(Roles::STAFF))->group(function () {
-        Route::resource('estudiantes', 'EstudiantesController')->only(['index', 'destroy']);
+    // Estudiantes: listado (filtrado por programa en el controlador) y baja.
+    Route::get('estudiantes', 'EstudiantesController@index')
+        ->middleware(P::middleware(P::StudentsView))->name('estudiantes.index');
+    Route::delete('estudiantes/{estudiante}', 'EstudiantesController@destroy')
+        ->middleware([P::middleware(P::StudentsDelete), 'student.access:scope'])->name('estudiantes.destroy');
+
+    // Inscripción.
+    Route::middleware(P::middleware(P::StudentsEnroll))->group(function () {
         Route::post('buscar.estudiante', 'EstudiantesController@buscarEstudiante')->name('buscar.estudiante');
-        Route::get('getEstudiante/{id}', 'EstudiantesController@getEstudiante')->name('getEstudiante');
+        Route::get('getEstudiante/{id}', 'EstudiantesController@getEstudiante')
+            ->middleware('student.access:scope')->name('getEstudiante');
         Route::get('crearEstudiante/{cedula}', 'EstudiantesController@createEstudiante')->name('estudiante.crear');
-
-        Route::get('calificacion/estudiante/{id}', 'EstudiantesController@calificacion')->name('estudiantes.calificacion');
-        Route::post('store/calificacion/{id}', 'EstudiantesController@storeCalificacion')->name('calificacion.store');
-        Route::post('store/calificacion/{id}/{doc}', 'EstudiantesController@storeDocCalificacion')->name('calificacion.store.doc');
-
-        Route::get('download/document/{file}', 'EstudiantesController@downloadDocument');
     });
 
-    // Expediente y documentos: el personal accede a todos, cada estudiante al suyo.
-    Route::middleware('student.owner')->group(function () {
+    // Calificaciones: ver (Director, Coordinador) o registrar (Docente).
+    Route::get('calificacion/estudiante/{id}', 'EstudiantesController@calificacion')
+        ->middleware([P::middleware(P::GradesView, P::GradesRecord), 'student.access:scope'])
+        ->name('estudiantes.calificacion');
+    Route::middleware([P::middleware(P::GradesRecord), 'student.access:scope'])->group(function () {
+        Route::post('store/calificacion/{id}', 'EstudiantesController@storeCalificacion')->name('calificacion.store');
+        Route::post('store/calificacion/{id}/{doc}', 'EstudiantesController@storeDocCalificacion')->name('calificacion.store.doc');
+    });
+
+    Route::get('download/document/{file}', 'EstudiantesController@downloadDocument')
+        ->middleware(P::middleware(P::DocumentsDownload));
+
+    // Expediente y entregas: el estudiante accede al suyo; el personal según permiso y programa.
+    Route::middleware('student.access')->group(function () {
         Route::resource('estudiantes', 'EstudiantesController')->only(['create', 'store', 'show', 'edit', 'update']);
 
         Route::get('documentEstudiante/{id}', 'EstudiantesController@document')->name('estudiante.document');

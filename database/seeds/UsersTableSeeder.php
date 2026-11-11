@@ -1,6 +1,6 @@
 <?php
 
-use App\User;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class UsersTableSeeder extends Seeder
@@ -17,9 +17,10 @@ class UsersTableSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'identification_card' => '11111',
             'password' => bcrypt('12345678'),
-            'rol_id' => 1,
+            'status' => 'activo',
         ])->save();
 
-        $admin->syncRoles(['Director']);
+        // Administrador (Control de Estudios): el Director es de solo lectura (FUNCTIONAL_SPECIFICATIONS.md §7).
+        $admin->syncRoles(['Administrador']);
     }
 }

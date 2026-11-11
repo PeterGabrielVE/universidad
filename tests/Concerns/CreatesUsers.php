@@ -3,7 +3,7 @@
 namespace Tests\Concerns;
 
 use App\Estudiante;
-use App\User;
+use App\Models\User;
 use RolesTableSeeder;
 
 /**

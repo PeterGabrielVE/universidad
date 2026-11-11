@@ -17,7 +17,11 @@
             <!-- Begin Page Content -->
             <div class="px-4 py-4 w-full container-fluid">
                 <div id="app" class="w-full max-w-none">
-                    <users-index></users-index>
+                    <users-index
+                        title="{{ $title }}"
+                        role-filter="{{ $roleFilter ?? '' }}"
+                        :can-manage="{{ auth()->user()->can('users.manage') ? 'true' : 'false' }}"
+                    ></users-index>
                 </div>
             </div>
             <!-- /.container-fluid -->

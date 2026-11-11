@@ -10,6 +10,8 @@ return [
     'Error' => 'Error',
     'Register' => 'Registrarse',
     'name' => 'Nombre',
+    'last_name' => 'Apellido',
+    'identification_card' => 'Cédula de identidad',
     'E-Mail Address' => 'Dirección de correo electrónico',
     'Password' => 'Contraseña',
     'Confirm Password' => 'Confirmar contraseña',

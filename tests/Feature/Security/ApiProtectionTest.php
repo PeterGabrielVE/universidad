@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Security;
 
-use App\Models\Role;
-use App\User;
+use Spatie\Permission\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\CreatesUsers;
 use Tests\TestCase;
@@ -63,11 +63,22 @@ class ApiProtectionTest extends TestCase
 
     public function test_admin_can_list_roles(): void
     {
-        $admin = $this->createUser('Director');
+        $admin = $this->createUser('Administrador');
 
         $this->actingAs($admin, 'sanctum')->getJson('/api/roles')
             ->assertOk()
-            ->assertJsonFragment(['name' => 'Estudiante']);
+            ->assertJsonFragment(['name' => 'Estudiante', 'system' => true]);
+    }
+
+    /** El Director supervisa: puede leer usuarios pero no gestionar roles ni usuarios. */
+    public function test_director_reads_users_but_cannot_manage_roles_or_users(): void
+    {
+        $director = $this->createUser('Director');
+        $other = $this->createUser('Asistente');
+
+        $this->actingAs($director, 'sanctum')->getJson('/api/v1/users')->assertOk();
+        $this->actingAs($director, 'sanctum')->getJson('/api/roles')->assertForbidden();
+        $this->actingAs($director, 'sanctum')->deleteJson("/api/v1/users/{$other->id}")->assertForbidden();
     }
 
     /**
@@ -90,7 +101,7 @@ class ApiProtectionTest extends TestCase
      */
     public function test_consecutive_api_calls_are_not_throttled(): void
     {
-        $admin = $this->createUser('Director');
+        $admin = $this->createUser('Administrador');
 
         foreach (range(1, 3) as $attempt) {
             $this->actingAs($admin, 'sanctum')->getJson('/api/roles')->assertOk();

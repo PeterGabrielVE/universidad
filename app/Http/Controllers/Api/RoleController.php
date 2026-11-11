@@ -3,41 +3,38 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Role;
-use Illuminate\Http\Request;
+use App\Http\Requests\RoleRequest;
+use App\Modules\IdentityAccess\Application\UseCase\ManageRoles;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class RoleController extends Controller
 {
-    public function index()
+    public function __construct(private readonly ManageRoles $roles)
     {
-        return response()->json(Role::all());
     }
 
-    public function store(Request $request)
+    public function index(): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:roles'
-        ]);
-
-        $role = Role::create($validated);
-
-        return response()->json($role, 201);
+        return response()->json(array_map(fn ($role) => $role->toArray(), $this->roles->list()));
     }
 
-    public function update(Request $request, Role $role)
+    public function store(RoleRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name,'.$role->id
-        ]);
+        $role = $this->roles->create($request->roleName(), $request->description());
 
-        $role->update($validated);
-
-        return response()->json($role);
+        return response()->json($role->toArray(), 201);
     }
 
-    public function destroy(Role $role)
+    public function update(RoleRequest $request, int $role): JsonResponse
     {
-        $role->delete();
-        return response()->json(null, 204);
+        return response()->json($this->roles->update($role, $request->roleName(), $request->description())->toArray());
+    }
+
+    public function destroy(int $role): Response
+    {
+        $this->roles->delete($role);
+
+        return response()->noContent();
     }
 }

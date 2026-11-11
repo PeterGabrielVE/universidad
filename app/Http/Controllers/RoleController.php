@@ -2,18 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\RoleService;
 use App\Http\Requests\RoleRequest;
+use App\Modules\IdentityAccess\Application\UseCase\ManageRoles;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
+
+/**
+ * Pantalla de roles. El listado y el borrado los hace la pantalla Vue contra
+ * /api/roles; el alta y la edición entran por aquí. Ambos usan ManageRoles.
+ */
 class RoleController extends Controller
 {
-    public function __construct(private RoleService $roleService) {}
+    public function __construct(private readonly ManageRoles $roles)
+    {
+    }
 
     public function index(): View
     {
-        $roles = $this->roleService->list();
+        $roles = array_map(fn ($role) => $role->toArray(), $this->roles->list());
+
         return view('pages.roles.index', compact('roles'));
     }
 
@@ -24,70 +32,39 @@ class RoleController extends Controller
 
     public function store(RoleRequest $request): RedirectResponse
     {
-        //dd($request->all());
-        $this->roleService->create($request->validated());
+        $this->roles->create($request->roleName(), $request->description());
+
         return redirect()->route('roles.index');
     }
 
-    public function show($id): View|RedirectResponse
+    public function show(int $role): View
     {
-        $role = $this->roleService->show($id);
-
-    if (!$role) {
-        return redirect()->route('roles.index');
+        return $this->edit($role);
     }
 
-    return view('pages.roles.edit', compact('role'));
-}
-
-    public function edit($id): View|RedirectResponse
+    public function edit(int $role): View
     {
-        $role = $this->roleService->show($id);
-
-    if (!$role) {
-        return redirect()->route('roles.index');
+        return view('pages.roles.edit', ['role' => $this->roles->get($role)]);
     }
 
-    return view('pages.roles.edit', compact('role'));
+    public function update(RoleRequest $request, int $role): JsonResponse
+    {
+        $updated = $this->roles->update($role, $request->roleName(), $request->description());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Rol actualizado correctamente',
+            'data' => $updated->toArray(),
+        ]);
     }
 
-    public function update(RoleRequest $request,$id):JsonResponse
+    public function destroy(int $role): JsonResponse
     {
-        try {
-            $role = $this->roleService->update($id, $request->validated());
+        $this->roles->delete($role);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Rol actualizado correctamente',
-                'data' => $role // Opcional: devolver el rol actualizado
-            ]);
-
-        } catch (\Exception $e) {
-            // El detalle va al log, nunca al cliente.
-            report($e);
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al actualizar el rol',
-            ], 500);
-        }
-    }
-
-    public function destroy($id): JsonResponse
-    {
-        try {
-            $this->roleService->delete($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Rol eliminado correctamente'
-            ]);
-
-        } catch (\Exception $e) {
-            report($e);
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al eliminar el rol',
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Rol eliminado correctamente',
+        ]);
     }
 }

@@ -17,7 +17,11 @@
 
                             <div class="card-body">
                                 <!-- Aquí montamos Vue -->
-                                <create-user></create-user>
+                                <create-user
+                                    :roles='@json($roles)'
+                                    :programs='@json($programs)'
+                                    :statuses='@json($statuses)'
+                                ></create-user>
                             </div>
                         </div>
                     </div>

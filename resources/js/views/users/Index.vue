@@ -1,80 +1,61 @@
 <template>
   <div class="container-fluid px-4 py-4 w-full">
-    <!-- Título principal -->
-    <h1 class="h3 mb-4 text-gray-800">Usuarios</h1>
+    <h1 class="h3 mb-4 text-gray-800">{{ title }}</h1>
 
-    <!-- Encabezado con título y botón -->
-    <div
-      class="card-header py-3 d-flex justify-content-between align-items-center"
-    >
-      <h6 class="m-0 font-weight-bold text-uft">Listado de Usuarios</h6>
-      <a href="/users/create" class="btn btn-uft">
-        <i class="fas fa-plus pr-2"></i>Crear Nuevo Usuario
-      </a>
+    <div class="card-header py-3 d-flex justify-content-between align-items-center flex-wrap">
+      <h6 class="m-0 font-weight-bold text-uft">Listado de usuarios</h6>
+      <div class="d-flex align-items-center">
+        <input
+          v-model="search"
+          type="search"
+          class="form-control form-control-sm mr-2"
+          placeholder="Buscar por nombre o correo"
+          aria-label="Buscar usuarios"
+          @input="onSearch"
+        />
+        <a v-if="canManage" href="/users/create" class="btn btn-uft text-nowrap">
+          <i class="fas fa-plus pr-2"></i>Crear usuario
+        </a>
+      </div>
     </div>
 
-    <!-- Cuerpo con spinner y tabla -->
     <div class="card-body">
       <div v-if="loading" class="text-center py-4">
         <div class="spinner-border text-uft" role="status"></div>
       </div>
-
-      <template v-else>
-        <div class="table-responsive">
-          <table class="table table-bordered w-100" cellspacing="0">
-            <thead class="bg-gray-100">
-              <tr>
-                <th class="px-4 py-2 border">Nombre</th>
-                <th class="px-4 py-2 border">Email</th>
-                <th class="px-4 py-2 border">Rol</th>
-                <th class="px-4 py-2 border">Estado</th>
-                <th class="px-4 py-2 border text-center">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="user in users"
-                :key="user.id"
-                class="hover:bg-gray-50 transition"
-              >
-                <td class="px-4 py-2 border">{{ user.name }}</td>
-                <td class="px-4 py-2 border">{{ user.email }}</td>
-                <td class="px-4 py-2 border">{{ user.role }}</td>
-                <td class="px-4 py-2 border">
-                  <span
-                    :class="{
-                      'text-success font-weight-bold': user.status === 'activo',
-                      'text-danger font-weight-bold': user.status !== 'activo',
-                    }"
-                  >
-                    {{ user.status }}
-                  </span>
-                </td>
-                <td class="px-4 py-2 border text-center">
-                  <a
-                    :href="`/users/${user.id}/edit`"
-                    class="text-primary btn btn-sm btn-link"
-                  >
-                    Editar
-                  </a>
-                  <button
-                    @click="deleteUser(user.id)"
-                    class="text-danger btn btn-sm btn-link"
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-
-              <tr v-if="users.length === 0">
-                <td colspan="5" class="text-center py-4 text-muted">
-                  No se encontraron usuarios.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </template>
+      <div v-else-if="error" class="alert alert-danger">{{ error }}</div>
+      <div v-else class="table-responsive">
+        <table class="table table-bordered w-100">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th v-if="canManage" class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="user in users" :key="user.id">
+              <td>{{ user.name }} {{ user.last_name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.role || '—' }}</td>
+              <td>
+                <span :class="user.status === 'activo' ? 'text-success font-weight-bold' : 'text-danger font-weight-bold'">
+                  {{ user.status }}
+                </span>
+              </td>
+              <td v-if="canManage" class="text-center">
+                <a :href="`/user/${user.id}/edit`" class="btn btn-sm btn-link text-primary">Editar</a>
+                <button class="btn btn-sm btn-link text-danger" @click="deleteUser(user)">Eliminar</button>
+              </td>
+            </tr>
+            <tr v-if="users.length === 0">
+              <td :colspan="canManage ? 5 : 4" class="text-center py-4 text-muted">No se encontraron usuarios.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -83,28 +64,52 @@
 import { ref, onMounted } from "vue";
 import api from "../../plugins/axios";
 
+const props = defineProps({
+  title: { type: String, default: "Usuarios" },
+  // Nombre del rol para las vistas filtradas (p. ej. /usuario/directivo → "Coordinador").
+  roleFilter: { type: String, default: "" },
+  canManage: { type: Boolean, default: false },
+});
+
 const users = ref([]);
 const search = ref("");
+const loading = ref(true);
+const error = ref("");
+let searchTimer = null;
 
 const fetchUsers = async () => {
+  loading.value = true;
+  error.value = "";
   try {
-    const res = await api.get("/api/v1/users", {
-      params: { search: search.value },
+    const { data } = await api.get("/api/v1/users", {
+      params: { role: props.roleFilter || undefined, search: search.value || undefined },
     });
-    users.value = res.data;
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    // Sesión expirada: volver al inicio de sesión.
-    if (error.response?.status === 401) {
+    users.value = data;
+  } catch (e) {
+    if (e.response?.status === 401) {
       window.location.href = "/login";
+      return;
     }
+    error.value = "No se pudo cargar el listado de usuarios.";
+  } finally {
+    loading.value = false;
   }
 };
 
-const deleteUser = async (id) => {
-  if (confirm("¿Estás seguro de eliminar este usuario?")) {
-    await api.delete(`/api/v1/users/${id}`);
-    fetchUsers();
+const onSearch = () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(fetchUsers, 300);
+};
+
+const deleteUser = async (user) => {
+  if (!confirm(`¿Eliminar a ${user.name} ${user.last_name ?? ""}?`)) {
+    return;
+  }
+  try {
+    await api.delete(`/api/v1/users/${user.id}`);
+    await fetchUsers();
+  } catch (e) {
+    error.value = e.response?.data?.message ?? "No se pudo eliminar el usuario.";
   }
 };
 

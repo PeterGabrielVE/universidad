@@ -1,7 +1,7 @@
 <?php
 
 use App\Estudiante;
-use App\User;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -89,19 +89,21 @@ class DemoDataSeeder extends Seeder
     private function seedStaff(array $sedes): void
     {
         $staff = [
-            // [nombre, apellido, cédula, rol_id, rol]
-            ['Carmen', 'Rodríguez', 9876543, 1, 'Director'],
-            ['Luis', 'Fernández', 12345678, 2, 'Coordinador'],
-            ['Patricia', 'Gómez', 13456789, 2, 'Coordinador'],
-            ['Andrés', 'Morales', 15678901, 3, 'Asistente'],
-            ['Valentina', 'Rojas', 16789012, 3, 'Asistente'],
-            ['Jorge', 'Castillo', 14567890, 3, 'Asistente'],
-            ['Sofía', 'Herrera', 11234567, 5, 'Administrador'],
+            // [nombre, apellido, cédula, rol, programa (1 Gerencia, 2 Ciencias)]
+            ['Carmen', 'Rodríguez', 9876543, 'Director', null],
+            ['Luis', 'Fernández', 12345678, 'Coordinador', 2],
+            ['Patricia', 'Gómez', 13456789, 'Coordinador', 1],
+            ['Andrés', 'Morales', 15678901, 'Asistente', null],
+            ['Valentina', 'Rojas', 16789012, 'Asistente', null],
+            ['Jorge', 'Castillo', 14567890, 'Asistente', null],
+            ['Roberto', 'Salas', 10987654, 'Docente', null],
+            ['Sofía', 'Herrera', 11234567, 'Administrador', null],
         ];
 
-        foreach ($staff as $i => [$name, $lastName, $ci, $rolId, $rol]) {
-            $user = $this->makeUser($name, $lastName, $ci, $rolId, [
+        foreach ($staff as $i => [$name, $lastName, $ci, $rol, $programa]) {
+            $user = $this->makeUser($name, $lastName, $ci, [
                 'sede_id' => $sedes[$i % count($sedes)],
+                'doctorado_id' => $programa,
             ]);
             $user->assignRole($rol);
         }
@@ -121,7 +123,7 @@ class DemoDataSeeder extends Seeder
         ];
 
         foreach ($students as $i => [$name, $lastName, $pais]) {
-            $user = $this->makeUser($name, $lastName, 20000000 + $i * 731, 4, [
+            $user = $this->makeUser($name, $lastName, 20000000 + $i * 731, [
                 'sede_id' => $sedes[$i % count($sedes)],
                 'country_id' => $paises[$pais] ?? null,
                 'doctorado_id' => $doctorados[$i % count($doctorados)],
@@ -167,7 +169,7 @@ class DemoDataSeeder extends Seeder
         DB::table('lapses_students')->insert($rows->all());
     }
 
-    private function makeUser(string $name, string $lastName, int $ci, int $rolId, array $extra = []): User
+    private function makeUser(string $name, string $lastName, int $ci, array $extra = []): User
     {
         $email = $this->slug($name) . '.' . $this->slug($lastName) . self::DOMAIN;
 
@@ -178,7 +180,7 @@ class DemoDataSeeder extends Seeder
             'phone' => '0414' . str_pad((string) mt_rand(0, 9999999), 7, '0', STR_PAD_LEFT),
             'email' => $email,
             'password' => bcrypt('password'),
-            'rol_id' => $rolId,
+            'status' => 'activo',
         ], $extra));
     }
 

@@ -2,8 +2,9 @@
 
 Plataforma web para la administración académica de una institución educativa:
 estudiantes, lapsos, inscripciones, calificaciones, usuarios y reportes, con
-control de acceso por roles (Director, Coordinador, Asistente, Estudiante y
-Administrador).
+control de acceso por roles y permisos (Administrador, Director, Coordinador,
+Asistente, Docente, Estudiante y Aspirante). Ver ARCHITECTURE.md y
+FUNCTIONAL_SPECIFICATIONS.md.
 
 > **Nota de confidencialidad:** este sistema fue desarrollado para una
 > institución educativa real. Por acuerdos de confidencialidad no se mencionan
@@ -72,9 +73,14 @@ Abrir http://localhost:8000
 
 | Rol | Correo | Contraseña |
 |---|---|---|
-| Director (administrador) | `admin@gmail.com` | `12345678` |
-| Coordinador | `luis.fernandez@gabook.test` | `password` |
+| Administrador | `admin@gmail.com` | `12345678` |
+| Director (solo lectura) | `carmen.rodriguez@gabook.test` | `password` |
+| Coordinador (Ciencias de la Educación) | `luis.fernandez@gabook.test` | `password` |
+| Asistente | `andres.morales@gabook.test` | `password` |
+| Docente | `roberto.salas@gabook.test` | `password` |
 | Estudiante | `maria.gonzalez@gabook.test` | `password` |
+
+El registro público (`/register`) crea cuentas de **Aspirante**.
 
 `DemoDataSeeder` se puede ejecutar varias veces: recrea los usuarios
 `@gabook.test` con sus inscripciones y calificaciones.

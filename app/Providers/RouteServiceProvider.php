@@ -39,6 +39,14 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        // Ids numéricos: "user/create" nunca debe resolverse como "user/{user}".
+        Route::patterns([
+            'user' => '[0-9]+',
+            'role' => '[0-9]+',
+            'estudiante' => '[0-9]+',
+            'id' => '[0-9]+',
+        ]);
+
         parent::boot();
     }
 

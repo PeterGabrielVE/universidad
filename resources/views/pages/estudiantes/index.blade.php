@@ -33,7 +33,9 @@
                                     </div>
                                     <div class="pull-right">
                                         <div class="row form-inline">
+                                            @can('users.manage')
                                             <a data-toggle="modal" data-target="#create" class="btn btn-uft" role="button"><i class="fas fa-plus pr-2"></i>Crear Estudiante</a>
+                                            @endcan
                                         </div>
 
                                     </div>
@@ -70,12 +72,18 @@
                                             <td>
                                                 <form action="{{ route('estudiantes.destroy',$estudiante->id) }}" method="POST">
 
+                                                    @can('students.manage')
                                                     <a class="btn btn-uft btn-sm" href="{{ route('estudiantes.edit',$estudiante->id) }}"><i class="fas fa-edit"></i></a>
+                                                    @endcan
+                                                    @canany(['grades.view', 'grades.record'])
                                                     <a class="btn btn-uft btn-sm" href="{{ route('estudiantes.calificacion',$estudiante->id) }}"><i class="fas fa-file"></i></a>
+                                                    @endcanany
                                                     @csrf
                                                     @method('DELETE')
 
+                                                    @can('students.delete')
                                                     <button type="submit" class="btn btn-uft btn-sm"><i class="fas fa-trash"></i></button>
+                                                    @endcan
                                                 </form>
                                             </td>
                                         </tr>
