@@ -30,6 +30,7 @@ final class AccessPolicy
             RoleName::Coordinador => [
                 Permission::DashboardView,
                 Permission::LapsesManageProgram,
+                Permission::SectionsManage,
                 Permission::PensumView,
                 Permission::StudentsView,
                 Permission::StudentsEnroll,

@@ -52,6 +52,26 @@
             <hr class="sidebar-divider">
             @endcan
 
+            @canany(['sections.manage', 'students.enroll'])
+            <li class="nav-item">
+                <a class="nav-link text-uft" href="{{ route('secciones.lapses') }}">
+                    <i class="fas fa-fw fa-clipboard-list"></i>
+                    <span>Secciones e inscripción</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            @endcanany
+
+            @can('grades.record')
+            <li class="nav-item">
+                <a class="nav-link text-uft" href="{{ route('docente.secciones') }}">
+                    <i class="fas fa-fw fa-star"></i>
+                    <span>Mis secciones</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            @endcan
+
             @canany(['programs.manage', 'pensum.view'])
             <li class="nav-item">
                 <a class="nav-link text-uft" href="{{ route('programas.index') }}">
@@ -93,6 +113,11 @@
             <li class="nav-item">
                 <a class="nav-link collapsed text-uft" href="{{ route('estudiantes.show', $ownRecordId) }}">
                     <span>Mi perfil</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed text-uft" href="{{ route('estudiantes.kardex', $ownRecordId) }}">
+                    <span>Mi kardex</span>
                 </a>
             </li>
             <hr class="sidebar-divider">

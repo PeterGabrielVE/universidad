@@ -1,6 +1,6 @@
 # Estado del proyecto
 
-Última actualización: 11-11-2026 · Fases completadas: **0 (seguridad)**, **1 (base de pruebas)**, **2 (IdentityAccess)**, **3a (estructura académica y lapsos)** y **3b (programas, pensum y usuario ↔ programas)**
+Última actualización: 11-11-2026 · Fases completadas: **0 (seguridad)**, **1 (base de pruebas)**, **2 (IdentityAccess)**, **3a (estructura académica y lapsos)**, **3b (programas, pensum y usuario ↔ programas)** y **3c (secciones, inscripción, actas y kardex)**
 
 ## Avance real
 
@@ -10,10 +10,10 @@ que pasan. El avance no se mide por archivos creados.
 | Métrica | Valor |
 |---|---|
 | Funcionalidades del inventario | 28 |
-| Verificadas con pruebas | **16 de 28 (57 %)**: #1, #2, #4–#13, #16, #17, #27, #28 |
-| Funcionalidades nuevas (fuera del inventario original) | Fase 2: estado de cuenta, inicio de Aspirante y Docente, alcance por programa. Fase 3a: facultades, nota mínima por programa, lapsos por programa gestionados por el Coordinador, cédula única. Fase 3b: usuario ↔ programas (N:M), gestión de facultades y programas, pensum N:M |
+| Verificadas con pruebas | **19 de 28 (68 %)**: #1, #2, #4–#13, #16–#20, #27, #28 |
+| Funcionalidades nuevas (fuera del inventario original) | Fase 2: estado de cuenta, inicio de Aspirante y Docente, alcance por programa. Fase 3a: facultades, nota mínima por programa, lapsos por programa gestionados por el Coordinador, cédula única. Fase 3b: usuario ↔ programas (N:M), gestión de facultades y programas, pensum N:M. Fase 3c: secciones con docente titular, cierre forzoso de actas, corrección auditada |
 | Hallazgos críticos de seguridad cerrados y con prueba | 8 de 8 |
-| Pruebas | **190 pasan** (495 aserciones): 71 unitarias, 119 de Feature |
+| Pruebas | **213 pasan** (606 aserciones): 85 unitarias, 128 de Feature |
 
 Pendiente de **validación manual en el navegador**: las pantallas Vue de usuarios
 (#6, #7). Su API y las vistas Blade que las montan están cubiertas por pruebas; el
@@ -36,13 +36,13 @@ render de Vue no (no hay pruebas de frontend).
 | 11 | Roles CRUD | ✅ Verificada (un solo camino; roles del sistema protegidos) | 2 |
 | 12 | Permisos | ✅ Verificada como matriz en código (`AccessPolicy`); sin pantalla de edición, ver decisión en ARCHITECTURE.md | 2 |
 | 13 | Estudiantes: listar, ver, eliminar | ✅ Verificada (con alcance por programa) | 3 |
-| 14 | Estudiantes: editar | Con errores (columnas `first_name`, `cod_phone` inexistentes) | 3c |
-| 15 | Estudiantes: completar expediente | Con errores (`$doc` indefinido, firma incorrecta) | 3c |
+| 14 | Estudiantes: editar | Con errores (columnas `first_name`, `cod_phone` inexistentes) | 3d |
+| 15 | Estudiantes: completar expediente | Con errores (`$doc` indefinido, firma incorrecta) | 3d |
 | 16 | Lapsos: CRUD | ✅ Verificada (por programa, estados `planificacion/abierto/cerrado`, fechas validadas) | 3a |
 | 17 | Cierre de lapso | ✅ Verificada (corregido: solo inscripciones activas de ese lapso, nota mínima del programa, inmutable) | 3a |
-| 18 | Inscripción por materias | Pendiente | 3c |
-| 19 | Registro de notas por materia | Pendiente (acta del docente titular; necesario para cerrar lapsos) | 3c |
-| 20 | Kardex / récord académico | Pendiente | 3c |
+| 18 | Inscripción por materias | ✅ Verificada: por sección, preinscripción y confirmación | 3c |
+| 19 | Registro de notas por materia | ✅ Verificada: acta del docente titular, cierre del acta, cierre forzoso, corrección auditada | 3c |
+| 20 | Kardex / récord académico | ✅ Verificada (estudiante: el suyo; personal: según permiso y programa) | 3c |
 | 21 | Carga de entregas doctorales | Pendiente (faltan tablas `posts_1`, `posts_2`, `presentations`) | 4 |
 | 22 | Edición de entregas | Con errores | 4 |
 | 23 | Calificación de entregas | Con errores (sin tablas; pasará a escala 0–100) | 4 |
@@ -56,6 +56,22 @@ Módulos en alcance aún sin requisitos detallados: Admisiones (carga de requisi
 Aspirante), Finanzas y Aranceles, Constancias y Actas.
 
 ## Registro de fases
+
+### Fase 3c: secciones, inscripción, actas y kardex (completada)
+
+- **Secciones** (`sections`): Lapso → Asignatura (del pensum) → Sección → Docente titular. Varias secciones por asignatura; código único por asignatura y lapso.
+- **Inscripción por sección** (#18) en dos pasos: preinscrito → activo. Entrada para el Asistente en "Secciones e inscripción".
+- **Acta del docente** (#19): notas 0–100 de los estudiantes activos, solo el docente titular y con el lapso abierto; al cerrar el acta pierde la edición.
+- **Cierre de lapso estricto:** bloqueado si hay actas abiertas. **Cierre administrativo forzoso** del Administrador.
+- **Corrección auditada** (`grade_audit_logs`, justificación NOT NULL); si el lapso está cerrado recalcula el resultado con la nota mínima aplicada al cierre (`lapses.passing_grade_applied`).
+- **Kardex** (#20) por estudiante.
+- Permisos nuevos: `sections.manage` (Administrador, Coordinador), `grades.override` y `gradesheets.force_close` (Administrador).
+
+**Incidente corregido en esta fase:** las pruebas corrían contra la base de **desarrollo** (`gabook`) desde la Fase 0. `docker-compose.yml` define `DB_DATABASE=gabook` en el entorno del contenedor y Laravel lee `$_SERVER` antes que el `<env force>` de `phpunit.xml`, así que `RefreshDatabase` vaciaba `gabook` en cada ejecución (por eso estaba vacía en la Fase 0). Corrección: `phpunit.xml` fuerza también `$_SERVER` y `Tests\TestCase` aborta si la base no termina en `_testing`. Se comprobó con una tabla testigo en `gabook` que sobrevivió a la suite completa. La base de desarrollo se restauró con los seeders; los datos creados a mano en ella se perdieron.
+
+**Verificado además:** `DemoDataSeeder` (y su re-ejecución) con secciones y actas; flujo real en el navegador por HTTP (docente → acta, administrador → sección, estudiante → kardex); `route:cache`.
+
+**Requiere** `migrate` y volver a ejecutar `RolesTableSeeder` (permisos nuevos).
 
 ### Fase 3b: programas, pensum y usuario ↔ programas (completada)
 
@@ -151,7 +167,7 @@ arranque de Docker corregido, `*.sh` con LF.
 | Riesgo | Impacto | Mitigación prevista |
 |---|---|---|
 | Las 63 asignaturas sembradas son de un pensum de pregrado de ingeniería | No corresponden a los doctorados | Control de Estudios debe cargar las asignaturas reales; la migración no asigna ninguna a los programas |
-| Sin registro de notas por materia (#19) | Un lapso con inscripciones activas sin nota no se puede cerrar | Fase 3c |
+| Pruebas de frontend inexistentes | Las pantallas Blade/Vue solo se verifican por HTTP | Valorar pruebas de navegador (Dusk) en la Fase 6 |
 | Rollback de la migración académica | Elimina `program_id` de los lapsos (dato nuevo de la Fase 3a) | Es reversible en estructura; usar solo en desarrollo |
 | La restricción del Docente a "sus" alumnos depende de la asignación de jurados | Hoy un Docente con `grades.record` califica a cualquier estudiante | Fase 4: asignación de jurados |
 | `EstudiantesController` (~1.200 líneas) sigue siendo MVC heredado | Deuda de mantenimiento | Fases 3–5 |

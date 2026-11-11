@@ -4,7 +4,8 @@
 
 Las migraciones usan SQL específico de MySQL (`ALTER TABLE ... MODIFY`), así que
 las pruebas corren contra MySQL en una base **separada**, `gabook_testing`.
-La base de desarrollo `gabook` nunca se toca: `phpunit.xml` fuerza `DB_DATABASE`.
+La base de desarrollo `gabook` nunca se toca: `phpunit.xml` fuerza `DB_DATABASE` en `$_SERVER` y `$_ENV`
+(el contenedor define `DB_DATABASE=gabook`) y `Tests\TestCase` aborta si la base no termina en `_testing`.
 
 Primera vez:
 
@@ -16,12 +17,13 @@ docker compose exec db mysql -uroot -prootpassword \
 
 ## Ejecutar
 
-Dentro del contenedor (PHP 8.1, igual que el entorno de ejecución):
+Dentro del contenedor (PHP 8.1, igual que el entorno de ejecución) y **como `www-data`**: las pruebas
+compilan vistas en `storage/`, y si las escribe `root`, Apache falla después con *Permission denied*.
 
 ```bash
-docker compose exec app php vendor/bin/phpunit                 # todo
-docker compose exec app php vendor/bin/phpunit --testsuite Feature
-docker compose exec app php vendor/bin/phpunit --filter Security
+docker compose exec -u www-data -e HOME=/tmp app php vendor/bin/phpunit                 # todo
+docker compose exec -u www-data -e HOME=/tmp app php vendor/bin/phpunit --testsuite Feature
+docker compose exec -u www-data -e HOME=/tmp app php vendor/bin/phpunit --filter Security
 ```
 
 Cada prueba usa `RefreshDatabase`: migra una vez y revierte cada prueba en una transacción.
@@ -41,7 +43,7 @@ Cada prueba usa `RefreshDatabase`: migra una vez y revierte cada prueba en una t
 Las pruebas unitarias se ejecutan solas y en milisegundos:
 
 ```bash
-docker compose exec app php vendor/bin/phpunit --testsuite Unit
+docker compose exec -u www-data -e HOME=/tmp app php vendor/bin/phpunit --testsuite Unit
 ```
 
 ## Convenciones

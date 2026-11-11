@@ -19,6 +19,7 @@ final class Lapse
         private ?int $programId,
         private LapsePeriod $period,
         private LapseStatus $status,
+        private ?PassingGrade $passingGradeApplied = null,
     ) {
     }
 
@@ -32,9 +33,14 @@ final class Lapse
     }
 
     /** Solo para adaptadores de persistencia. */
-    public static function restore(int $id, ?int $programId, LapsePeriod $period, LapseStatus $status): self
-    {
-        return new self($id, $programId, $period, $status);
+    public static function restore(
+        int $id,
+        ?int $programId,
+        LapsePeriod $period,
+        LapseStatus $status,
+        ?PassingGrade $passingGradeApplied = null,
+    ): self {
+        return new self($id, $programId, $period, $status, $passingGradeApplied);
     }
 
     public function reschedule(LapsePeriod $period): void
@@ -59,7 +65,8 @@ final class Lapse
         $this->status = $target;
     }
 
-    public function close(): void
+    /** $applied es la nota mínima usada en el cierre; las correcciones posteriores la reutilizan. */
+    public function close(PassingGrade $applied): void
     {
         $this->assertNotClosed();
 
@@ -68,6 +75,7 @@ final class Lapse
         }
 
         $this->status = LapseStatus::Cerrado;
+        $this->passingGradeApplied = $applied;
     }
 
     /** Solo se elimina un lapso que nunca se abrió: después tiene historia académica. */
@@ -76,6 +84,11 @@ final class Lapse
         if ($this->status !== LapseStatus::Planificacion) {
             throw new LapseCannotBeDeleted($this->name());
         }
+    }
+
+    public function passingGradeApplied(): ?PassingGrade
+    {
+        return $this->passingGradeApplied;
     }
 
     public function isClosed(): bool

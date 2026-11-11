@@ -23,6 +23,7 @@ class Lapso extends Model
 
     protected $casts = [
         'status' => LapseStatus::class,
+        'passing_grade_applied' => 'float',
     ];
 
     public function program(): BelongsTo

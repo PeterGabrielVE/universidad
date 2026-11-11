@@ -14,7 +14,7 @@ class Lapso_Estudiante extends Model
     protected $table = 'lapses_students';
 
     protected $fillable = [
-       'student_id', 'lapse_id', 'course_id', 'note', 'status',
+       'student_id', 'lapse_id', 'section_id', 'course_id', 'note', 'status',
     ];
 
     protected $casts = [
@@ -25,6 +25,16 @@ class Lapso_Estudiante extends Model
     public function asignatura()
     {
         return $this->belongsTo('App\Asignatura', 'course_id');
+    }
+
+    public function section()
+    {
+        return $this->belongsTo(\App\Models\Section::class, 'section_id');
+    }
+
+    public function estudiante()
+    {
+        return $this->belongsTo(\App\Estudiante::class, 'student_id');
     }
 
     public function lapso()

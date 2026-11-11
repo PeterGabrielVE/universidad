@@ -60,6 +60,35 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('updateLapso/{id}', 'LapsoController@update')->name('updateLapso');
     });
 
+    // Secciones del lapso (Lapso → Asignatura → Sección → Docente) y supervisión del acta.
+    // El alcance por programa lo aplican el controlador y los casos de uso.
+    Route::middleware(P::middleware(P::SectionsManage, P::StudentsEnroll, P::GradesOverride, P::GradeSheetsForceClose))->group(function () {
+        Route::get('inscripcion', 'SectionController@lapses')->name('secciones.lapses');
+        Route::get('lapso/{lapso}/secciones', 'SectionController@index')->name('secciones.index');
+        Route::get('secciones/{section}', 'SectionController@show')->name('secciones.show');
+    });
+    Route::middleware(P::middleware(P::SectionsManage))->group(function () {
+        Route::post('lapso/{lapso}/secciones', 'SectionController@store')->name('secciones.store');
+        Route::put('secciones/{section}', 'SectionController@update')->name('secciones.update');
+        Route::delete('secciones/{section}', 'SectionController@destroy')->name('secciones.destroy');
+    });
+    Route::middleware(P::middleware(P::StudentsEnroll))->group(function () {
+        Route::post('secciones/{section}/inscripciones', 'SectionController@enroll')->name('secciones.enroll');
+        Route::post('inscripciones/{enrollment}/confirmar', 'SectionController@confirm')->name('inscripciones.confirm');
+    });
+    Route::post('secciones/{section}/cierre-forzoso', 'SectionController@forceClose')
+        ->middleware(P::middleware(P::GradeSheetsForceClose))->name('secciones.force_close');
+    Route::post('inscripciones/{enrollment}/correccion', 'SectionController@correct')
+        ->middleware(P::middleware(P::GradesOverride))->name('inscripciones.correct');
+
+    // Actas del docente titular.
+    Route::middleware(P::middleware(P::GradesRecord))->group(function () {
+        Route::get('mis-secciones', 'TeacherGradeSheetController@index')->name('docente.secciones');
+        Route::get('mis-secciones/{section}/acta', 'TeacherGradeSheetController@show')->name('docente.acta');
+        Route::post('mis-secciones/{section}/notas', 'TeacherGradeSheetController@record')->name('docente.acta.record');
+        Route::post('mis-secciones/{section}/cerrar', 'TeacherGradeSheetController@close')->name('docente.acta.close');
+    });
+
     // Programas y pensum: consultar (pensum.view, el Coordinador solo los suyos) y gestionar (programs.manage).
     Route::middleware(P::middleware(P::ProgramsManage, P::PensumView))->group(function () {
         Route::get('programas', 'ProgramController@index')->name('programas.index');
@@ -113,6 +142,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     // Expediente y entregas: el estudiante accede al suyo; el personal según permiso y programa.
     Route::middleware('student.access')->group(function () {
         Route::resource('estudiantes', 'EstudiantesController')->only(['create', 'store', 'show', 'edit', 'update']);
+        Route::get('estudiantes/{estudiante}/kardex', 'KardexController@show')->name('estudiantes.kardex');
 
         Route::get('documentEstudiante/{id}', 'EstudiantesController@document')->name('estudiante.document');
         Route::post('documentStore/{id}', 'EstudiantesController@documentStore')->name('estudiante.documentStore');

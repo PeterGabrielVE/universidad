@@ -10,6 +10,8 @@ interface PensumRepository
 {
     public function courseExists(int $courseId): bool;
 
+    public function contains(int $programId, int $courseId): bool;
+
     /** Idempotente: añadir una asignatura que ya está no hace nada. */
     public function attach(int $programId, int $courseId): void;
 

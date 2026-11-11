@@ -194,11 +194,40 @@ Confirmado el 11-11-2026.
   4. Una **corrección posterior al cierre** solo la hace Control de Estudios
      (Administrador), con **registro de auditoría**.
 
-## 16. Puntos abiertos (Fase 3c)
+## 16. Secciones, actas y correcciones
 
-1. **Docente titular por asignatura y lapso:** ¿cada asignatura tiene un único docente
-   titular por lapso, o puede haber varias secciones con docentes distintos?
-2. **Auditoría de correcciones:** además de quién, cuándo, nota anterior y nota nueva,
-   ¿el motivo es obligatorio?
-3. **Cierre de lapso con actas abiertas:** ¿el Coordinador puede cerrar el lapso si
-   algún docente no cerró su acta, o el cierre exige todas las actas cerradas?
+Confirmado el 11-11-2026.
+
+- **Lapso → Asignatura → Sección → Docente.** Una asignatura puede dictarse en varias
+  secciones simultáneas en un lapso; cada sección tiene un único docente titular.
+- **Corrección de notas:** la justificación es obligatoria (`grade_audit_logs.justification`
+  NOT NULL), p. ej. "Error de transcripción", "Resolución de apelación N° XXX".
+- **Cierre de lapso estricto:** no se cierra con actas abiertas; ese cierre consolida el
+  récord y habilita la inscripción del siguiente periodo.
+- **Cierre administrativo forzoso:** el Administrador cierra un acta pendiente bajo su
+  autoría para que el flujo continúe.
+
+## 17. Decisiones de implementación (Fase 3c)
+
+- **Quién abre secciones:** Administrador y Coordinador (en sus programas),
+  permiso `sections.manage`. La asignatura debe estar en el pensum del programa del lapso
+  y el docente debe ser un usuario activo con rol Docente.
+- **Inscripción en dos pasos:** el Asistente o el Coordinador inscribe al estudiante en
+  una sección (`pre_inscrito`) y la confirma (`activo`) cuando valida pago y documentos.
+  Solo las inscripciones activas aparecen en el acta y se evalúan. Un estudiante se
+  inscribe una sola vez por asignatura y lapso, y debe pertenecer al programa del lapso.
+- **Cerrar el acta (docente)** exige que todos los estudiantes activos tengan nota.
+- **El cierre forzoso no exige notas completas:** las que falten las registra Control de
+  Estudios como correcciones auditadas.
+- **Correcciones:** solo con el acta cerrada (con el acta abierta, la nota la pone el
+  docente). Si el lapso ya está cerrado, el resultado se recalcula con la **misma nota
+  mínima usada al cerrar** (`lapses.passing_grade_applied`), no con la actual del programa.
+- **La auditoría guarda** nota y resultado anterior y nuevo, justificación, quién y
+  cuándo, y una copia del nombre de quien corrigió (el registro sobrevive aunque se
+  elimine la cuenta).
+- **Inscripciones anteriores a la Fase 3c** (sin sección) se conservan y aparecen en el
+  kardex; no se pueden corregir por auditoría.
+
+## 18. Puntos abiertos
+
+Ninguno bloqueante a 11-11-2026.

@@ -13,6 +13,13 @@ final class EloquentPensumRepository implements PensumRepository
         return Asignatura::whereKey($courseId)->exists();
     }
 
+    public function contains(int $programId, int $courseId): bool
+    {
+        return Asignatura::whereKey($courseId)
+            ->whereHas('programs', fn ($q) => $q->whereKey($programId))
+            ->exists();
+    }
+
     public function attach(int $programId, int $courseId): void
     {
         Doctorado::findOrFail($programId)->courses()->syncWithoutDetaching([$courseId]);

@@ -8,7 +8,7 @@ en él (ver IMPLEMENTATION_PLAN.md). Hoy conviven dos estilos:
 
 | Zona | Estilo | Módulos |
 |---|---|---|
-| `app/Modules/*` | Hexagonal: dominio puro, casos de uso, puertos y adaptadores | Shared, IdentityAccess (Fase 2), Academic (Fases 3a–3b: lapsos, programas, facultades, pensum) |
+| `app/Modules/*` | Hexagonal: dominio puro, casos de uso, puertos y adaptadores | Shared, IdentityAccess (Fase 2), Academic (Fases 3a–3c: lapsos, programas, facultades, pensum, secciones, actas, kardex) |
 | `app/Http/Controllers`, `app/*.php` | MVC heredado: lógica en controladores y modelos Eloquent | Expediente, inscripción, entregas, reportes (Fases 3b–5) |
 
 ## Capas y regla de dependencias
@@ -128,7 +128,7 @@ log porque son errores esperados.
 - `Domain\DomainException` (→ 422), `NotFoundException` (→ 404), `AccessDeniedException` (→ 403).
 - `Application\Port\TransactionManager` + `Infrastructure\DatabaseTransactionManager`.
 
-## Módulo Academic (Fases 3a–3b)
+## Módulo Academic (Fases 3a–3c)
 
 ```
 app/Modules/Academic/
@@ -140,12 +140,17 @@ app/Modules/Academic/
 │   ├── EnrollmentResult.php   Enum: aprobado | reprobado (se guarda al cerrar)
 │   ├── Grade.php              VO: nota 0–100
 │   ├── PassingGrade.php       VO: nota mínima del programa (48 por defecto)
+│   ├── Section.php            Entidad: sección con docente titular y acta (abierta/cerrada)
+│   ├── GradeSheetStatus.php   Enum: abierta | cerrada
+│   ├── Justification.php      VO: justificación obligatoria de una corrección
 │   └── Exception/
 ├── Application/
 │   ├── Port/                  LapseRepository, ProgramRepository, FacultyRepository,
-│   │                          PensumRepository, EnrollmentRepository
+│   │                          PensumRepository, EnrollmentRepository, SectionRepository,
+│   │                          GradeAuditLog, AcademicPeople
 │   ├── Dto/                   ProgramData, ProgramInput, FacultyData, ActiveEnrollment
-│   └── UseCase/               ManageLapses, CloseLapse, ManagePrograms, ManageFaculties, ManagePensum
+│   └── UseCase/               ManageLapses, CloseLapse, ManagePrograms, ManageFaculties, ManagePensum,
+│                              ManageSections, ManageEnrollments, GradeSheets
 └── Infrastructure/            Adaptadores Eloquent, LapseDirectory y ProgramDirectory (lectura),
                                AcademicServiceProvider
 ```
@@ -169,6 +174,19 @@ POST /updateLapso/{id}  status=cerrado
        ¿alguna sin nota?                                → LapseHasUngradedEnrollments (422)
        PassingGrade del programa → aprobado/reprobado
        TransactionManager: cierra cada inscripción + guarda el lapso
+```
+
+### Flujo: acta de una sección
+
+```
+Coordinador  POST lapso/{id}/secciones          ManageSections::create   (pensum, docente activo, código único)
+Asistente    POST secciones/{id}/inscripciones  ManageEnrollments::enroll  → pre_inscrito
+Asistente    POST inscripciones/{id}/confirmar  ManageEnrollments::confirm → activo
+Docente      POST mis-secciones/{id}/notas      GradeSheets::record        (solo titular, acta y lapso abiertos)
+Docente      POST mis-secciones/{id}/cerrar     GradeSheets::closeByTeacher (todas con nota)
+Admin        POST secciones/{id}/cierre-forzoso GradeSheets::forceClose
+Admin        POST inscripciones/{id}/correccion GradeSheets::correct      (acta cerrada, justificación, auditoría)
+Coordinador  POST updateLapso/{id} cerrado      CloseLapse                 (sin actas abiertas)
 ```
 
 ## Pendiente de migrar a módulos

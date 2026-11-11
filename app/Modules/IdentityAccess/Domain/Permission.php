@@ -26,7 +26,14 @@ enum Permission: string
     case StudentsDelete = 'students.delete';
     case StudentsEnroll = 'students.enroll';
     case GradesView = 'grades.view';
+    /** Registrar notas en el acta de las secciones propias (docente titular). */
     case GradesRecord = 'grades.record';
+    /** Abrir secciones y asignar el docente titular (Coordinador: sus programas). */
+    case SectionsManage = 'sections.manage';
+    /** Corregir notas con el acta cerrada, con justificación y auditoría. */
+    case GradesOverride = 'grades.override';
+    /** Cierre administrativo forzoso de un acta. */
+    case GradeSheetsForceClose = 'gradesheets.force_close';
     case DocumentsDownload = 'documents.download';
 
     /** Valor para el middleware "permission" de Spatie; varios permisos = cualquiera de ellos. */

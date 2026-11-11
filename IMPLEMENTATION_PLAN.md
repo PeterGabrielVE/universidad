@@ -10,7 +10,8 @@ PROJECT_STATUS.md actualizado y riesgos revisados.
 | 2 | IdentityAccess: `User` único, roles en Spatie, matriz RBAC, estado de cuenta, registro de Aspirantes, CRUD de usuarios y roles | ✅ Completada |
 | 3a | Academic: facultades → programas, `min_passing_grade`, lapsos por programa, estados, cierre correcto; cédula única | ✅ Completada |
 | 3b | Academic: usuario ↔ programas, gestión de facultades y programas, pensum N:M | ✅ Completada |
-| 3c | Academic: oferta por lapso con docente titular, inscripción, acta de notas, corrección auditada, kardex, expediente | Siguiente |
+| 3c | Academic: secciones con docente titular, inscripción, acta de notas, cierre forzoso, corrección auditada, kardex | ✅ Completada |
+| 3d | Expediente del estudiante: corregir edición (#14) y alta (#15) | Siguiente |
 | 4 | DoctoralSubmissions: tablas de entregas, asignación de jurados, carga y reemplazo, estados de entrega, nota ponderada 0–100 | Pendiente |
 | 5 | Reporting: constancias, récord académico, actas y PDFs corregidos | Pendiente |
 | 6 | Modernización de dependencias con justificación individual | Pendiente |
@@ -21,19 +22,13 @@ se planificarán cuando tengan requisitos detallados: no se implementan sobre su
 
 La arquitectura y los módulos están documentados en ARCHITECTURE.md.
 
-## Fase 3c: Academic (tercera parte)
+## Fase 3d: expediente del estudiante
 
-Reglas confirmadas en FUNCTIONAL_SPECIFICATIONS.md §15.
+1. **Edición (#14):** hoy escribe columnas inexistentes (`first_name`, `cod_phone`,
+   `lapses_students.doctorado_id`) y falla siempre. Separar lo que edita el estudiante
+   (datos de contacto) de lo que asigna Control de Estudios (programa, cohorte).
+2. **Alta (#15):** `$doc` indefinido y llamada con firma incorrecta; depende de las tablas
+   de entregas de la Fase 4, así que se separa el alta del expediente de la carga de
+   documentos.
 
-1. **Oferta de asignaturas por lapso** con su **docente titular** (asignatura del pensum del
-   programa del lapso).
-2. **Inscripción** (#18): el Asistente o el Coordinador inscribe a un estudiante en
-   asignaturas ofertadas de un lapso abierto (`pre_inscrito` → `activo`).
-3. **Acta de notas** (#19): el docente titular registra notas 0–100 mientras el lapso esté
-   abierto y **cierra el acta**; después no puede editarla.
-4. **Cierre de lapso** por Coordinador o Control de Estudios (ya implementado en 3a; se
-   integra con las actas).
-5. **Corrección posterior** solo por el Administrador, con registro de auditoría.
-6. **Kardex** (#20) y **expediente** (#14, #15).
-
-Preguntas abiertas en FUNCTIONAL_SPECIFICATIONS.md §16.
+Pregunta para negocio: ¿qué datos del expediente puede editar el propio estudiante?

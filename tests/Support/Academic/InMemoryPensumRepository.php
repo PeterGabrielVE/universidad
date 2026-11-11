@@ -26,6 +26,11 @@ final class InMemoryPensumRepository implements PensumRepository
         return isset($this->courses[$courseId]);
     }
 
+    public function contains(int $programId, int $courseId): bool
+    {
+        return $this->has($programId, $courseId);
+    }
+
     public function attach(int $programId, int $courseId): void
     {
         $this->links["{$programId}:{$courseId}"] = true;

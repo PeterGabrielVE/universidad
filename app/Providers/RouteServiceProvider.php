@@ -48,6 +48,8 @@ class RouteServiceProvider extends ServiceProvider
             'program' => '[0-9]+',
             'course' => '[0-9]+',
             'faculty' => '[0-9]+',
+            'section' => '[0-9]+',
+            'enrollment' => '[0-9]+',
             'id' => '[0-9]+',
         ]);
 

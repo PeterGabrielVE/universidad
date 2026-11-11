@@ -18,6 +18,9 @@ class DemoDataSeeder extends Seeder
 {
     private const DOMAIN = '@gabook.test';
 
+    /** Docente titular de las secciones demo. */
+    private ?int $teacherId = null;
+
     public function run(): void
     {
         $this->call(RolesTableSeeder::class);
@@ -25,6 +28,9 @@ class DemoDataSeeder extends Seeder
         mt_srand(2026);
 
         DB::transaction(function () {
+            $demoStudents = DB::table('students')->join('users', 'users.id', '=', 'students.user_id')
+                ->where('users.email', 'like', '%' . self::DOMAIN)->pluck('students.id');
+            DB::table('grade_audit_logs')->whereIn('enrollment_id', DB::table('lapses_students')->whereIn('student_id', $demoStudents)->select('id'))->delete();
             User::where('email', 'like', '%' . self::DOMAIN)->get()->each->delete();
 
             $sedes = $this->seedSedes();
@@ -118,6 +124,11 @@ class DemoDataSeeder extends Seeder
                 $ids[$programId][] = DB::table('lapses')->where('name', $name)->where('program_id', $programId)->value('id');
             }
         }
+        foreach (DB::table('doctorados')->pluck('min_passing_grade', 'id') as $programId => $minGrade) {
+            DB::table('lapses')->where('program_id', $programId)->where('status', 'cerrado')
+                ->update(['passing_grade_applied' => $minGrade]);
+        }
+
         return $ids;
     }
 
@@ -141,6 +152,10 @@ class DemoDataSeeder extends Seeder
             ]);
             $user->assignRole($rol);
             $user->programs()->sync($programa === null ? [] : [$programa]);
+
+            if ($rol === 'Docente') {
+                $this->teacherId = $user->id;
+            }
         }
     }
 
@@ -188,18 +203,35 @@ class DemoDataSeeder extends Seeder
     }
 
     /**
-     * Con $minGrade (lapso cerrado): nota y resultado fijado, como hace CloseLapse.
-     * Sin $minGrade (lapso abierto): inscripción activa, aún sin nota.
+     * Inscribe en la sección "A" de cada asignatura del semestre (la crea con el docente demo).
+     * Con $minGrade (lapso cerrado): acta cerrada por el docente, nota y resultado fijado.
+     * Sin $minGrade (lapso abierto): acta abierta e inscripción activa, aún sin nota.
      */
     private function enroll(int $studentId, int $lapseId, int $semester, ?float $minGrade): void
     {
         $courses = DB::table('courses')->where('semester_id', $semester)->pluck('id');
+        $closed = $minGrade !== null;
 
-        $rows = $courses->map(function ($courseId) use ($studentId, $lapseId, $minGrade) {
-            $note = $minGrade !== null ? mt_rand(35, 100) : null;
+        $rows = $courses->map(function ($courseId) use ($studentId, $lapseId, $minGrade, $closed) {
+            DB::table('sections')->updateOrInsert(
+                ['lapse_id' => $lapseId, 'course_id' => $courseId, 'code' => 'A'],
+                [
+                    'teacher_id' => $this->teacherId,
+                    'status' => $closed ? 'cerrada' : 'abierta',
+                    'closed_at' => $closed ? now() : null,
+                    'closed_by' => $closed ? $this->teacherId : null,
+                    'closed_forcibly' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+            $sectionId = DB::table('sections')->where(['lapse_id' => $lapseId, 'course_id' => $courseId, 'code' => 'A'])->value('id');
+
+            $note = $closed ? mt_rand(35, 100) : null;
             return [
                 'student_id' => $studentId,
                 'lapse_id' => $lapseId,
+                'section_id' => $sectionId,
                 'course_id' => $courseId,
                 'note' => $note,
                 'status' => $minGrade !== null ? 'cerrado' : 'activo',

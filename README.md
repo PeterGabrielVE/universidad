@@ -64,10 +64,15 @@ Requisitos: Docker y Docker Compose.
 ```bash
 cp .env.example .env
 docker compose up -d --build
-docker compose exec app php artisan migrate --seed
-docker compose exec app php artisan db:seed --class='\DemoDataSeeder'
+docker compose exec -u www-data app php artisan migrate --seed
+docker compose exec -u www-data app php artisan db:seed --class='\DemoDataSeeder'
 docker compose exec app npm run dev
 ```
+
+> Ejecuta `artisan` como `www-data` (`-u www-data`): Apache corre con ese usuario y,
+> si un comando como `root` escribe en `storage/` (caché, logs), la aplicación falla con
+> *Permission denied*. Para repararlo:
+> `docker compose exec app chown -R www-data:www-data storage bootstrap/cache`
 
 Abrir http://localhost:8000
 

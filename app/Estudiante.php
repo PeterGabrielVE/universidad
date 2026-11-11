@@ -21,6 +21,12 @@ class Estudiante extends Model
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
+    /** Inscripciones del estudiante en asignaturas de los lapsos (kardex). */
+    public function enrollments()
+    {
+        return $this->hasMany('App\Lapso_Estudiante', 'student_id');
+    }
+
     public function lapso_estudiante()
     {
         return $this->belongsTo('App\Lapso_Estudiante','id','student_id');

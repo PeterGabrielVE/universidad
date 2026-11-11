@@ -20,6 +20,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\Support\Academic\InMemoryEnrollmentRepository;
 use Tests\Support\Academic\InMemoryLapseRepository;
 use Tests\Support\Academic\InMemoryProgramRepository;
+use Tests\Support\Academic\InMemorySectionRepository;
 use Tests\Support\IdentityAccess\ImmediateTransaction;
 
 class LapseUseCasesTest extends TestCase
@@ -38,7 +39,7 @@ class LapseUseCasesTest extends TestCase
         $this->lapses = new InMemoryLapseRepository();
         $this->programs = (new InMemoryProgramRepository())->add(self::GERENCIA, 75)->add(self::CIENCIAS, 48);
         $this->enrollments = new InMemoryEnrollmentRepository();
-        $close = new CloseLapse($this->lapses, $this->programs, $this->enrollments, new ImmediateTransaction());
+        $close = new CloseLapse($this->lapses, $this->programs, $this->enrollments, new InMemorySectionRepository($this->enrollments), new ImmediateTransaction());
         $this->manage = new ManageLapses($this->lapses, $this->programs, $close);
         $this->admin = ProgramScope::unrestricted();
     }

@@ -22,7 +22,7 @@
         ],
         'Admisiones e inscripciones' => [
             ['title' => 'Aspirantes', 'desc' => 'Requisitos de ingreso', 'icon' => 'fa-user-plus', 'tone' => 'red', 'route' => null],
-            ['title' => 'Inscripción', 'desc' => 'Matriculación por lapso', 'icon' => 'fa-clipboard-list', 'tone' => 'blue', 'route' => null],
+            ['title' => 'Secciones e inscripción', 'desc' => 'Secciones, docentes e inscripción por lapso', 'icon' => 'fa-clipboard-list', 'tone' => 'blue', 'route' => 'secciones.lapses', 'permission' => ['sections.manage', 'students.enroll']],
         ],
         'Control de estudios' => [
             ['title' => 'Estudiantes', 'desc' => 'Expedientes y datos', 'icon' => 'fa-user-graduate', 'tone' => 'red', 'route' => 'estudiantes.index', 'permission' => 'students.view'],
@@ -31,7 +31,7 @@
         ],
         'Entregas y calificaciones' => [
             ['title' => 'Entregas', 'desc' => 'Avances, tesis y defensa', 'icon' => 'fa-file-upload', 'tone' => 'red', 'route' => null],
-            ['title' => 'Calificaciones', 'desc' => 'Notas y récord académico', 'icon' => 'fa-star', 'tone' => 'amber', 'route' => null],
+            ['title' => 'Mis secciones', 'desc' => 'Actas y notas del docente', 'icon' => 'fa-star', 'tone' => 'amber', 'route' => 'docente.secciones', 'permission' => 'grades.record'],
         ],
         'Finanzas y reportes' => [
             ['title' => 'Pagos y aranceles', 'desc' => 'Matrícula y derechos de grado', 'icon' => 'fa-file-invoice-dollar', 'tone' => 'green', 'route' => null],

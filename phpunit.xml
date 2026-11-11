@@ -22,7 +22,11 @@
         <env name="BCRYPT_ROUNDS" value="4" force="true"/>
         <env name="CACHE_DRIVER" value="array" force="true"/>
         <!-- Las migraciones usan SQL específico de MySQL: las pruebas corren contra
-             una base MySQL separada (ver TESTING.md), nunca contra la de desarrollo. -->
+             una base MySQL separada (ver TESTING.md), nunca contra la de desarrollo.
+             docker-compose define DB_DATABASE=gabook en el entorno del contenedor y Laravel
+             lee $_SERVER antes que $_ENV: hay que forzar ambos. Tests\TestCase verifica
+             además que la base termine en "_testing". -->
+        <server name="DB_DATABASE" value="gabook_testing" force="true"/>
         <env name="DB_DATABASE" value="gabook_testing" force="true"/>
         <env name="MAIL_MAILER" value="array" force="true"/>
         <env name="QUEUE_CONNECTION" value="sync" force="true"/>

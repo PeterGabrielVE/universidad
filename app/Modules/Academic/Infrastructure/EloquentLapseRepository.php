@@ -6,6 +6,7 @@ use App\Lapso;
 use App\Modules\Academic\Application\Port\LapseRepository;
 use App\Modules\Academic\Domain\Lapse;
 use App\Modules\Academic\Domain\LapsePeriod;
+use App\Modules\Academic\Domain\PassingGrade;
 
 final class EloquentLapseRepository implements LapseRepository
 {
@@ -26,6 +27,7 @@ final class EloquentLapseRepository implements LapseRepository
             'start_lapse' => $lapse->period()->start->format('Y-m-d'),
             'end_lapse' => $lapse->period()->end->format('Y-m-d'),
             'status' => $lapse->status(),
+            'passing_grade_applied' => $lapse->passingGradeApplied()?->value(),
         ])->save();
 
         return $this->toDomain($model);
@@ -46,6 +48,7 @@ final class EloquentLapseRepository implements LapseRepository
                 substr((string) $model->getRawOriginal('end_lapse'), 0, 10),
             ),
             $model->status,
+            $model->passing_grade_applied === null ? null : PassingGrade::of($model->passing_grade_applied),
         );
     }
 }

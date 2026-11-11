@@ -67,7 +67,7 @@ class LapseAndGradesTest extends TestCase
         $lapse = $this->lapse(LapseStatus::Planificacion);
 
         $lapse->changeStatus(LapseStatus::Abierto);
-        $lapse->close();
+        $lapse->close(PassingGrade::default());
 
         $this->assertSame(LapseStatus::Cerrado, $lapse->status());
     }
@@ -76,7 +76,7 @@ class LapseAndGradesTest extends TestCase
     {
         $this->expectException(InvalidLapseTransition::class);
 
-        $this->lapse(LapseStatus::Planificacion)->close();
+        $this->lapse(LapseStatus::Planificacion)->close(PassingGrade::default());
     }
 
     public function test_an_open_lapse_cannot_go_back_to_planning(): void

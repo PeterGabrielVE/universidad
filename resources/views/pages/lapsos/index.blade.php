@@ -63,6 +63,7 @@
                                             <td>{{ $lapso->end_lapse }}</td>
                                             <td>{{ $lapso->status->label() }}</td>
                                             <td>
+                                                <a class="btn btn-uft" href="{{ route('secciones.index', $lapso->id) }}" title="Secciones"><i class="fas fa-chalkboard-teacher"></i></a>
                                                 {{-- Cerrado: inmutable. Solo se elimina un lapso que nunca se abrió. --}}
                                                 @if ($lapso->status !== \App\Modules\Academic\Domain\LapseStatus::Cerrado)
                                                 <a class="btn btn-uft" onclick="editLapso({{ $lapso->id }})" title="Editar"><i class="fas fa-edit"></i></a>

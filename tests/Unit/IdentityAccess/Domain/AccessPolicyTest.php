@@ -60,6 +60,18 @@ class AccessPolicyTest extends TestCase
         );
     }
 
+    /** §17: solo Control de Estudios corrige notas cerradas y fuerza el cierre de actas. */
+    public function test_only_administrators_override_grades_or_force_close_sheets(): void
+    {
+        foreach (RoleName::cases() as $role) {
+            $permissions = AccessPolicy::permissionsFor($role);
+            $expected = $role === RoleName::Administrador;
+
+            $this->assertSame($expected, in_array(Permission::GradesOverride, $permissions, true), $role->value);
+            $this->assertSame($expected, in_array(Permission::GradeSheetsForceClose, $permissions, true), $role->value);
+        }
+    }
+
     public function test_students_and_applicants_have_no_global_permissions(): void
     {
         $this->assertSame([], AccessPolicy::permissionsFor(RoleName::Estudiante));

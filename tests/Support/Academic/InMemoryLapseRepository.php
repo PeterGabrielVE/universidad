@@ -20,7 +20,7 @@ final class InMemoryLapseRepository implements LapseRepository
     public function save(Lapse $lapse): Lapse
     {
         $id = $lapse->id() ?? $this->nextId++;
-        $this->lapses[$id] = Lapse::restore($id, $lapse->programId(), $lapse->period(), $lapse->status());
+        $this->lapses[$id] = Lapse::restore($id, $lapse->programId(), $lapse->period(), $lapse->status(), $lapse->passingGradeApplied());
 
         return clone $this->lapses[$id];
     }
