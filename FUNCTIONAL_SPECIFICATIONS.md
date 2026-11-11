@@ -162,11 +162,43 @@ Confirmado el 11-11-2026.
   `php artisan users:duplicate-identification-cards` las lista. Fusionarlas o
   eliminarlas es una decisión de Control de Estudios; la migración no borra datos.
 
-## 14. Puntos abiertos
+## 14. Decisiones de implementación (Fase 3b)
 
-1. **Comodín `doctorado_id = 3` ("ambos programas") frente a facultades con N
-   programas.** El próximo programa que se cree recibiría el id 3 y chocaría con el
-   comodín. Propuesta: sustituirlo por una relación usuario ↔ programas (un estudiante
-   o coordinador puede pertenecer a varios), migrando cada 3 a {1, 2}. Hasta decidirlo
-   no se habilita la creación de programas desde la aplicación. Bloquea la gestión de
-   facultades y programas (Fase 3b).
+- **Programas en uso:** un programa con usuarios o lapsos no se elimina (son historia
+  académica). Su pensum se borra con él si no está en uso.
+- **Facultades con programas** no se eliminan: hay que mover o eliminar antes sus programas.
+- **Cambiar la nota mínima** de un programa solo afecta a los cierres futuros; los
+  resultados de lapsos cerrados ya están guardados (§8).
+- **Semestre de la asignatura:** sigue siendo un dato de la asignatura, común a todos
+  los pensums donde aparece. Si una materia transversal se dicta en semestres distintos
+  según el programa, habría que mover el semestre a la relación programa ↔ asignatura.
+- **Columnas obsoletas:** `users.doctorado_id` queda en NULL tras migrar al pivote, igual
+  que `users.rol_id`; se eliminarán cuando se confirme que nada externo las lee.
+
+## 15. Programas, pensum y calificaciones por materia
+
+Confirmado el 11-11-2026.
+
+- **Usuario ↔ programas (N:M)** mediante `program_user`. Sirve a estudiantes (doble
+  titulación) y coordinadores (varios programas). El comodín `doctorado_id = 3` se
+  eliminó: los usuarios con 3 pasaron a los programas 1 y 2. Con esto se habilita la
+  creación de programas desde la aplicación.
+- **Pensum (N:M)** mediante `program_course` (opción A): una asignatura transversal
+  (Epistemología, Metodología de la Investigación) existe una vez y pertenece a varios
+  programas.
+- **Registro de notas por materia** (se implementa en la Fase 3c):
+  1. **El docente titular** de la asignatura es el único que registra las notas de sus
+     alumnos mientras el lapso o la materia estén abiertos.
+  2. Cuando termina, **cierra el acta** y pierde el permiso de edición.
+  3. **El Coordinador o Control de Estudios** cierran formalmente el lapso completo.
+  4. Una **corrección posterior al cierre** solo la hace Control de Estudios
+     (Administrador), con **registro de auditoría**.
+
+## 16. Puntos abiertos (Fase 3c)
+
+1. **Docente titular por asignatura y lapso:** ¿cada asignatura tiene un único docente
+   titular por lapso, o puede haber varias secciones con docentes distintos?
+2. **Auditoría de correcciones:** además de quién, cuándo, nota anterior y nota nueva,
+   ¿el motivo es obligatorio?
+3. **Cierre de lapso con actas abiertas:** ¿el Coordinador puede cerrar el lapso si
+   algún docente no cerró su acta, o el cierre exige todas las actas cerradas?

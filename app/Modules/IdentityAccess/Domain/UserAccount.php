@@ -17,7 +17,8 @@ final class UserAccount
         private ?string $phone,
         private string $role,
         private AccountStatus $status,
-        private ?int $programId,
+        /** @var list<int> */
+        private array $programIds,
     ) {
     }
 
@@ -29,9 +30,9 @@ final class UserAccount
         ?string $phone,
         string $role,
         AccountStatus $status,
-        ?int $programId,
+        array $programIds,
     ): self {
-        return new self(null, $name, $lastName, $identificationCard, $email, $phone, $role, $status, $programId);
+        return new self(null, $name, $lastName, $identificationCard, $email, $phone, $role, $status, self::normalize($programIds));
     }
 
     /** Reconstruye una cuenta ya persistida. Solo para adaptadores de persistencia. */
@@ -44,9 +45,9 @@ final class UserAccount
         ?string $phone,
         string $role,
         AccountStatus $status,
-        ?int $programId,
+        array $programIds,
     ): self {
-        return new self($id, $name, $lastName, $identificationCard, $email, $phone, $role, $status, $programId);
+        return new self($id, $name, $lastName, $identificationCard, $email, $phone, $role, $status, self::normalize($programIds));
     }
 
     public function updateProfile(
@@ -55,14 +56,14 @@ final class UserAccount
         ?int $identificationCard,
         Email $email,
         ?string $phone,
-        ?int $programId,
+        array $programIds,
     ): void {
         $this->name = $name;
         $this->lastName = $lastName;
         $this->identificationCard = $identificationCard;
         $this->email = $email;
         $this->phone = $phone;
-        $this->programId = $programId;
+        $this->programIds = self::normalize($programIds);
     }
 
     public function changeRole(string $role): void
@@ -120,8 +121,18 @@ final class UserAccount
         return $this->status;
     }
 
-    public function programId(): ?int
+    /** @return list<int> programas del usuario (estudiante con doble titulación, coordinador de varios) */
+    public function programIds(): array
     {
-        return $this->programId;
+        return $this->programIds;
+    }
+
+    /** @return list<int> */
+    private static function normalize(array $programIds): array
+    {
+        $ids = array_values(array_unique(array_map('intval', $programIds)));
+        sort($ids);
+
+        return $ids;
     }
 }

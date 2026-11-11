@@ -61,7 +61,7 @@
                                         </thead>
 
                                         <tbody>
-                                            @if(Auth::user()->doctorado_id == 1)
+                                            @if(Auth::user()->belongsToProgram(1))
                                             <tr>
                                                 <td>@if(isset($post1->extenso))
                                                     <a class="btn btn-default btn-sm" title="Descargar" href="{{url('download/document/'.$post1->extenso.'')}}">

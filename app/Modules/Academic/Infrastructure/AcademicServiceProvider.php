@@ -3,6 +3,8 @@
 namespace App\Modules\Academic\Infrastructure;
 
 use App\Modules\Academic\Application\Port\EnrollmentRepository;
+use App\Modules\Academic\Application\Port\FacultyRepository;
+use App\Modules\Academic\Application\Port\PensumRepository;
 use App\Modules\Academic\Application\Port\LapseRepository;
 use App\Modules\Academic\Application\Port\ProgramRepository;
 use Illuminate\Support\ServiceProvider;
@@ -13,5 +15,7 @@ final class AcademicServiceProvider extends ServiceProvider
         LapseRepository::class => EloquentLapseRepository::class,
         ProgramRepository::class => EloquentProgramRepository::class,
         EnrollmentRepository::class => EloquentEnrollmentRepository::class,
+        FacultyRepository::class => EloquentFacultyRepository::class,
+        PensumRepository::class => EloquentPensumRepository::class,
     ];
 }

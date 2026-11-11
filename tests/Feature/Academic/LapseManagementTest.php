@@ -175,7 +175,7 @@ class LapseManagementTest extends TestCase
 
     public function test_coordinator_sees_and_manages_only_own_program_lapses(): void
     {
-        $coordinator = $this->createUser('Coordinador', ['doctorado_id' => $this->ciencias->id]);
+        $coordinator = $this->createUser('Coordinador', ['programs' => [$this->ciencias->id]]);
         $mine = Lapso::factory()->create(['program_id' => $this->ciencias->id, 'name' => 'Lapso de Ciencias']);
         $theirs = Lapso::factory()->create(['program_id' => $this->gerencia->id, 'name' => 'Lapso de Gerencia']);
 
@@ -194,7 +194,7 @@ class LapseManagementTest extends TestCase
 
     public function test_coordinator_cannot_create_lapses_in_other_programs(): void
     {
-        $coordinator = $this->createUser('Coordinador', ['doctorado_id' => $this->ciencias->id]);
+        $coordinator = $this->createUser('Coordinador', ['programs' => [$this->ciencias->id]]);
 
         $this->actingAs($coordinator)->post('/lapso', [
             'program_id' => $this->gerencia->id,

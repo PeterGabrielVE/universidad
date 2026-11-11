@@ -78,10 +78,10 @@ class AuthorizationTest extends TestCase
 
     public function test_coordinator_only_reaches_students_of_own_program(): void
     {
-        $coordinator = $this->createUser('Coordinador', ['doctorado_id' => 2]);
-        $mine = $this->createStudent(['last_name' => 'DeCiencias', 'doctorado_id' => 2]);
-        $both = $this->createStudent(['last_name' => 'DeAmbos', 'doctorado_id' => 3]);
-        $other = $this->createStudent(['last_name' => 'DeGerencia', 'doctorado_id' => 1]);
+        $coordinator = $this->createUser('Coordinador', ['programs' => [2]]);
+        $mine = $this->createStudent(['last_name' => 'DeCiencias', 'programs' => [2]]);
+        $both = $this->createStudent(['last_name' => 'DeAmbos', 'programs' => [1, 2]]);
+        $other = $this->createStudent(['last_name' => 'DeGerencia', 'programs' => [1]]);
 
         $this->actingAs($coordinator)->get('/estudiantes')
             ->assertOk()
@@ -96,8 +96,8 @@ class AuthorizationTest extends TestCase
 
     public function test_coordinator_cannot_edit_student_records(): void
     {
-        $coordinator = $this->createUser('Coordinador', ['doctorado_id' => 3]);
-        $student = $this->createStudent(['doctorado_id' => 1]);
+        $coordinator = $this->createUser('Coordinador', ['programs' => [1, 2]]);
+        $student = $this->createStudent(['programs' => [1]]);
 
         $this->actingAs($coordinator)->put("/estudiantes/{$student->id}", ['status' => '0'])->assertForbidden();
     }

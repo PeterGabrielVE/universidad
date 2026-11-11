@@ -17,7 +17,7 @@ const emptyForm = () => ({
   phone: "",
   password: "",
   role: "",
-  doctorado_id: "",
+  program_ids: [],
   status: "activo",
 });
 
@@ -31,7 +31,7 @@ const submitForm = async () => {
   errors.value = {};
   saved.value = "";
   try {
-    const payload = { ...form.value, doctorado_id: form.value.doctorado_id || null };
+    const payload = { ...form.value, program_ids: form.value.program_ids.map(Number) };
     const { data } = await api.post("/api/v1/users", payload);
     saved.value = `Usuario ${data.name} ${data.last_name} creado.`;
     form.value = emptyForm();
@@ -94,12 +94,12 @@ const fieldError = (field) => errors.value[field]?.[0];
         <div class="invalid-feedback">{{ fieldError('role') }}</div>
       </div>
       <div class="form-group col-md-4">
-        <label for="doctorado_id">Programa</label>
-        <select id="doctorado_id" v-model="form.doctorado_id" class="form-control" :class="{ 'is-invalid': fieldError('doctorado_id') }">
-          <option value="">Sin programa</option>
+        <label for="program_ids">Programas</label>
+        <select id="program_ids" v-model="form.program_ids" multiple class="form-control" :class="{ 'is-invalid': fieldError('program_ids') }">
           <option v-for="(name, id) in props.programs" :key="id" :value="id">{{ name }}</option>
         </select>
-        <div class="invalid-feedback">{{ fieldError('doctorado_id') }}</div>
+        <small class="form-text text-muted">Ctrl/Cmd para elegir varios (doble titulación o coordinación de varios programas).</small>
+        <div class="invalid-feedback">{{ fieldError('program_ids') }}</div>
       </div>
       <div class="form-group col-md-4">
         <label for="status">Estado</label>

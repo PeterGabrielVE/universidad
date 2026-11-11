@@ -98,7 +98,7 @@
                                                 </div>
                                                 <div class="col-sm-6">
                                                     {!! Form::label('lbl_Doctorado', 'Doctorado:', ['class'=>'col-form-label s-12']) !!}
-                                                   {!! Form::select('doctorado_id', $doctorados, $user->doctorado_id ?? null, ['class'=>'form-control', 'id'=>'doctorado']) !!}
+                                                   {!! Form::select('doctorado_id', $doctorados, $user->programs->first()?->id, ['class'=>'form-control', 'id'=>'doctorado']) !!}
                                                </div>
                                             </div>
                                             <div class="form-group row">

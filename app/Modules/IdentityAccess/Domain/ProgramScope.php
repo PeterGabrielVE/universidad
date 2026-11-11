@@ -3,18 +3,13 @@
 namespace App\Modules\IdentityAccess\Domain;
 
 /**
- * Programas de doctorado que un usuario puede ver (FUNCTIONAL_SPECIFICATIONS.md §2, §7).
+ * Programas que un usuario del personal puede ver (FUNCTIONAL_SPECIFICATIONS.md §7, §15).
  *
- * El Coordinador queda limitado a su programa; el resto del personal no tiene
- * límite. El programa 3 significa "ambos": un coordinador con 3 ve los dos, y un
- * estudiante con 3 pertenece a los dos.
+ * El Coordinador queda limitado a los programas que tiene asignados (uno o varios);
+ * el resto del personal no tiene límite.
  */
 final class ProgramScope
 {
-    public const GERENCIA = 1;
-    public const CIENCIAS = 2;
-    public const AMBOS = 3;
-
     /** @param list<int>|null $programIds null = sin límite */
     private function __construct(private readonly ?array $programIds)
     {
@@ -25,17 +20,14 @@ final class ProgramScope
         return new self(null);
     }
 
-    public static function forStaff(RoleName $role, ?int $programId): self
+    /** @param list<int> $programIds programas asignados al usuario */
+    public static function forStaff(RoleName $role, array $programIds): self
     {
         if ($role !== RoleName::Coordinador) {
             return self::unrestricted();
         }
 
-        return match ($programId) {
-            self::AMBOS => new self([self::GERENCIA, self::CIENCIAS, self::AMBOS]),
-            null => new self([]),
-            default => new self([$programId, self::AMBOS]),
-        };
+        return new self(array_values(array_unique(array_map('intval', $programIds))));
     }
 
     public function isUnrestricted(): bool
@@ -56,5 +48,20 @@ final class ProgramScope
         }
 
         return $programId !== null && in_array($programId, $this->programIds, true);
+    }
+
+    /**
+     * ¿Comparte algún programa? Un estudiante con doble titulación es visible para
+     * el coordinador de cualquiera de sus programas.
+     *
+     * @param list<int> $programIds
+     */
+    public function coversAny(array $programIds): bool
+    {
+        if ($this->programIds === null) {
+            return true;
+        }
+
+        return array_intersect($this->programIds, array_map('intval', $programIds)) !== [];
     }
 }

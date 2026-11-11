@@ -20,6 +20,7 @@ final class AccessPolicy
                 Permission::DashboardView,
                 Permission::UsersView,
                 Permission::ReportsView,
+                Permission::PensumView,
                 Permission::StudentsView,
                 Permission::GradesView,
                 Permission::DocumentsDownload,
@@ -29,6 +30,7 @@ final class AccessPolicy
             RoleName::Coordinador => [
                 Permission::DashboardView,
                 Permission::LapsesManageProgram,
+                Permission::PensumView,
                 Permission::StudentsView,
                 Permission::StudentsEnroll,
                 Permission::GradesView,

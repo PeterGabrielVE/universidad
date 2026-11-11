@@ -52,7 +52,7 @@ final class UpdateUser
             $data->identificationCard,
             $email,
             $data->phone,
-            $data->programId,
+            $data->programIds,
         );
         $account->changeRole($data->role);
         $account->changeStatus($data->status);

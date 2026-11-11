@@ -66,7 +66,7 @@
                                             <td>{{ $estudiante->user->identification_card ?? '' }}</td>
                                             <td>{{ $estudiante->user->prefijo->Prefijo ?? '' }}-{{ $estudiante->user->phone ?? '' }}</td>
                                             <td>{{ $estudiante->user->email ?? '' }}</td>
-                                            <td>{{ $estudiante->user->doctorado->name ?? '' }}</td>
+                                            <td>{{ $estudiante->user?->programs->pluck('name')->join(', ') }}</td>
                                             <td>{{ $estudiante->user->paises->name ?? '' }}</td>
                                             <td>{{ $estudiante->lapso_estudiante->lapso->name ?? '' }}</td>
                                             <td>

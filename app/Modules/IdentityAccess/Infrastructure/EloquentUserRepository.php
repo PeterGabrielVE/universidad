@@ -14,7 +14,7 @@ final class EloquentUserRepository implements UserRepository
 {
     public function find(int $id): ?UserAccount
     {
-        $user = User::with('roles')->find($id);
+        $user = User::with(['roles', 'programs'])->find($id);
 
         return $user === null ? null : $this->toDomain($user);
     }
@@ -46,7 +46,6 @@ final class EloquentUserRepository implements UserRepository
             'email' => $account->email()->value,
             'phone' => $account->phone(),
             'status' => $account->status(),
-            'doctorado_id' => $account->programId(),
         ]);
 
         if ($passwordHash !== null) {
@@ -55,8 +54,9 @@ final class EloquentUserRepository implements UserRepository
 
         $user->save();
         $user->syncRoles([$account->role()]);
+        $user->programs()->sync($account->programIds());
 
-        return $this->toDomain($user->load('roles'));
+        return $this->toDomain($user->load(['roles', 'programs']));
     }
 
     public function delete(int $id): void
@@ -75,7 +75,7 @@ final class EloquentUserRepository implements UserRepository
             $user->phone,
             (string) $user->roles->first()?->name,
             $user->status,
-            $user->doctorado_id !== null ? (int) $user->doctorado_id : null,
+            $user->programs->pluck('id')->all(),
         );
     }
 }

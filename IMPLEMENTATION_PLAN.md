@@ -9,7 +9,8 @@ PROJECT_STATUS.md actualizado y riesgos revisados.
 | 1 | Base de pruebas: factories de clase, pruebas de caracterización de lo que funciona | ✅ Completada |
 | 2 | IdentityAccess: `User` único, roles en Spatie, matriz RBAC, estado de cuenta, registro de Aspirantes, CRUD de usuarios y roles | ✅ Completada |
 | 3a | Academic: facultades → programas, `min_passing_grade`, lapsos por programa, estados, cierre correcto; cédula única | ✅ Completada |
-| 3b | Academic: usuario ↔ programas, gestión de facultades y programas, inscripción, notas, kardex, expediente, pensum | Siguiente |
+| 3b | Academic: usuario ↔ programas, gestión de facultades y programas, pensum N:M | ✅ Completada |
+| 3c | Academic: oferta por lapso con docente titular, inscripción, acta de notas, corrección auditada, kardex, expediente | Siguiente |
 | 4 | DoctoralSubmissions: tablas de entregas, asignación de jurados, carga y reemplazo, estados de entrega, nota ponderada 0–100 | Pendiente |
 | 5 | Reporting: constancias, récord académico, actas y PDFs corregidos | Pendiente |
 | 6 | Modernización de dependencias con justificación individual | Pendiente |
@@ -20,20 +21,19 @@ se planificarán cuando tengan requisitos detallados: no se implementan sobre su
 
 La arquitectura y los módulos están documentados en ARCHITECTURE.md.
 
-## Fase 3b: Academic (segunda parte)
+## Fase 3c: Academic (tercera parte)
 
-1. **Usuario ↔ programas** (pendiente de confirmar, FUNCTIONAL_SPECIFICATIONS.md §14):
-   tabla `program_user` en lugar del comodín `doctorado_id = 3`; `ProgramScope` pasa a
-   recibir la lista de programas del usuario. Desbloquea el punto 2.
-2. **Gestión de facultades y programas** (Administrador): alta, edición y nota mínima.
-3. **Inscripción** (#18): el Asistente o el Coordinador inscribe a un estudiante en las
-   asignaturas de un lapso abierto de su programa (`pre_inscrito` → `activo`).
-4. **Registro de notas por materia** (#19): 0–100, solo en lapsos abiertos. Sin esto no
-   se puede cerrar un lapso con inscripciones activas.
-5. **Kardex / récord académico** (#20): historial por lapso con nota y resultado fijado.
-6. **Expediente** (#14, #15): corregir la edición y el alta del expediente del estudiante.
-7. **Pensum** (#28): consulta de asignaturas por semestre.
+Reglas confirmadas en FUNCTIONAL_SPECIFICATIONS.md §15.
 
-Preguntas para negocio antes de los puntos 3 y 4: ¿quién registra las notas por
-materia (Docente de la asignatura, Coordinador, Control de Estudios)? ¿Las asignaturas
-(`courses`) pertenecen a un programa o son comunes?
+1. **Oferta de asignaturas por lapso** con su **docente titular** (asignatura del pensum del
+   programa del lapso).
+2. **Inscripción** (#18): el Asistente o el Coordinador inscribe a un estudiante en
+   asignaturas ofertadas de un lapso abierto (`pre_inscrito` → `activo`).
+3. **Acta de notas** (#19): el docente titular registra notas 0–100 mientras el lapso esté
+   abierto y **cierra el acta**; después no puede editarla.
+4. **Cierre de lapso** por Coordinador o Control de Estudios (ya implementado en 3a; se
+   integra con las actas).
+5. **Corrección posterior** solo por el Administrador, con registro de auditoría.
+6. **Kardex** (#20) y **expediente** (#14, #15).
+
+Preguntas abiertas en FUNCTIONAL_SPECIFICATIONS.md §16.

@@ -60,6 +60,24 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('updateLapso/{id}', 'LapsoController@update')->name('updateLapso');
     });
 
+    // Programas y pensum: consultar (pensum.view, el Coordinador solo los suyos) y gestionar (programs.manage).
+    Route::middleware(P::middleware(P::ProgramsManage, P::PensumView))->group(function () {
+        Route::get('programas', 'ProgramController@index')->name('programas.index');
+        Route::get('programas/{program}/pensum', 'ProgramController@pensum')->name('programas.pensum');
+    });
+    Route::middleware(P::middleware(P::ProgramsManage))->group(function () {
+        Route::post('programas', 'ProgramController@store')->name('programas.store');
+        Route::get('programas/{program}/edit', 'ProgramController@edit')->name('programas.edit');
+        Route::put('programas/{program}', 'ProgramController@update')->name('programas.update');
+        Route::delete('programas/{program}', 'ProgramController@destroy')->name('programas.destroy');
+        Route::post('programas/{program}/pensum', 'ProgramController@attachCourse')->name('programas.pensum.attach');
+        Route::delete('programas/{program}/pensum/{course}', 'ProgramController@detachCourse')->name('programas.pensum.detach');
+
+        Route::resource('facultades', 'FacultyController')
+            ->only(['index', 'store', 'update', 'destroy'])
+            ->parameters(['facultades' => 'faculty']);
+    });
+
     Route::middleware(P::middleware(P::ReportsView))->group(function () {
         Route::get('reports', 'EstudiantesController@reports')->name('reports');
         Route::get('download/sede/{id}', 'EstudiantesController@downloadSedePdf');

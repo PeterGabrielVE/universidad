@@ -8,7 +8,7 @@ en él (ver IMPLEMENTATION_PLAN.md). Hoy conviven dos estilos:
 
 | Zona | Estilo | Módulos |
 |---|---|---|
-| `app/Modules/*` | Hexagonal: dominio puro, casos de uso, puertos y adaptadores | Shared, IdentityAccess (Fase 2), Academic (Fase 3a: lapsos) |
+| `app/Modules/*` | Hexagonal: dominio puro, casos de uso, puertos y adaptadores | Shared, IdentityAccess (Fase 2), Academic (Fases 3a–3b: lapsos, programas, facultades, pensum) |
 | `app/Http/Controllers`, `app/*.php` | MVC heredado: lógica en controladores y modelos Eloquent | Expediente, inscripción, entregas, reportes (Fases 3b–5) |
 
 ## Capas y regla de dependencias
@@ -54,7 +54,7 @@ app/Modules/IdentityAccess/
 │   ├── RoleName.php             Enum: los 7 roles del sistema
 │   ├── Permission.php           Enum: permisos de las funcionalidades existentes
 │   ├── AccessPolicy.php         Matriz RBAC: permisos de cada rol (única fuente de verdad)
-│   ├── ProgramScope.php         Alcance por programa del Coordinador (3 = ambos)
+│   ├── ProgramScope.php         Alcance por programa del Coordinador (lista de programas del usuario)
 │   └── Exception/               Errores de negocio (con el campo de formulario afectado)
 ├── Application/
 │   ├── Port/                    UserRepository, RoleRepository, PasswordHasher,
@@ -112,6 +112,9 @@ log porque son errores esperados.
 | `ManageRoles` agrupa las operaciones de roles | Reemplaza `RoleService` + 5 UseCases que solo reenviaban llamadas |
 | `UserDirectory` sin puerto | Es un lado de lectura sin reglas; un puerto sería una abstracción sin uso alternativo |
 | Un solo modelo `App\Models\User` | `App\User` y `App\Models\User` coexistían sobre la misma tabla con `$fillable` distintos |
+| Usuario ↔ programas N:M (`program_user`) | El comodín `doctorado_id = 3` ("ambos") chocaba con tener N programas |
+| Pensum N:M (`program_course`) | Asignaturas transversales sin duplicar datos (opción A confirmada) |
+| Tabla `doctorados` conservada como tabla de programas | Renombrarla tocaría todo el código heredado sin aportar comportamiento |
 | Roles solo en Spatie | `users.rol_id` duplicaba el dato y se desincronizaba; la columna queda sin uso |
 | Matriz RBAC en código | Una sola fuente versionada y probada; Spatie es el mecanismo, no la definición |
 | Roles del sistema protegidos | Renombrar o borrar uno rompería la matriz de permisos |
@@ -125,7 +128,7 @@ log porque son errores esperados.
 - `Domain\DomainException` (→ 422), `NotFoundException` (→ 404), `AccessDeniedException` (→ 403).
 - `Application\Port\TransactionManager` + `Infrastructure\DatabaseTransactionManager`.
 
-## Módulo Academic (Fase 3a)
+## Módulo Academic (Fases 3a–3b)
 
 ```
 app/Modules/Academic/
@@ -139,10 +142,12 @@ app/Modules/Academic/
 │   ├── PassingGrade.php       VO: nota mínima del programa (48 por defecto)
 │   └── Exception/
 ├── Application/
-│   ├── Port/                  LapseRepository, ProgramRepository, EnrollmentRepository
-│   ├── Dto/                   ProgramData, ActiveEnrollment
-│   └── UseCase/               ManageLapses (alta, edición, baja), CloseLapse
-└── Infrastructure/            Adaptadores Eloquent, LapseDirectory (lectura), AcademicServiceProvider
+│   ├── Port/                  LapseRepository, ProgramRepository, FacultyRepository,
+│   │                          PensumRepository, EnrollmentRepository
+│   ├── Dto/                   ProgramData, ProgramInput, FacultyData, ActiveEnrollment
+│   └── UseCase/               ManageLapses, CloseLapse, ManagePrograms, ManageFaculties, ManagePensum
+└── Infrastructure/            Adaptadores Eloquent, LapseDirectory y ProgramDirectory (lectura),
+                               AcademicServiceProvider
 ```
 
 Academic depende de `IdentityAccess\Domain\ProgramScope` para el alcance por

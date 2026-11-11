@@ -45,6 +45,9 @@ class RouteServiceProvider extends ServiceProvider
             'role' => '[0-9]+',
             'estudiante' => '[0-9]+',
             'lapso' => '[0-9]+',
+            'program' => '[0-9]+',
+            'course' => '[0-9]+',
+            'faculty' => '[0-9]+',
             'id' => '[0-9]+',
         ]);
 

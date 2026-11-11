@@ -32,7 +32,7 @@ final class RegisterApplicant
             phone: null,
             role: RoleName::Aspirante->value,
             status: AccountStatus::Activo,
-            programId: null,
+            programIds: [],
             password: $password,
         ));
     }

@@ -112,7 +112,7 @@ class LapseUseCasesTest extends TestCase
 
     public function test_coordinator_creates_lapses_only_in_own_program(): void
     {
-        $coordinator = ProgramScope::forStaff(RoleName::Coordinador, self::CIENCIAS);
+        $coordinator = ProgramScope::forStaff(RoleName::Coordinador, [self::CIENCIAS]);
 
         $created = $this->manage->create(self::CIENCIAS, '2027-01-11', '2027-06-25', LapseStatus::Planificacion, $coordinator);
         $this->assertSame('Lapso Enero 2027-Junio 2027', $created->name());
@@ -123,7 +123,7 @@ class LapseUseCasesTest extends TestCase
 
     public function test_coordinator_cannot_touch_lapses_of_other_programs_or_legacy_ones(): void
     {
-        $coordinator = ProgramScope::forStaff(RoleName::Coordinador, self::CIENCIAS);
+        $coordinator = ProgramScope::forStaff(RoleName::Coordinador, [self::CIENCIAS]);
         $gerencia = $this->openLapse(self::GERENCIA);
 
         $this->expectException(LapseOutOfScope::class);

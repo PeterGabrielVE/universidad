@@ -79,6 +79,17 @@ class DemoDataSeeder extends Seeder
                 ]
             );
         }
+        // Pensum demo: ambos programas comparten las asignaturas sembradas (N:M).
+        $courseIds = DB::table('courses')->pluck('id');
+        foreach (array_keys($doctorados) as $programId) {
+            DB::table('program_course')->insertOrIgnore($courseIds->map(fn ($courseId) => [
+                'program_id' => $programId,
+                'course_id' => $courseId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ])->all());
+        }
+
         return array_keys($doctorados);
     }
 
@@ -127,9 +138,9 @@ class DemoDataSeeder extends Seeder
         foreach ($staff as $i => [$name, $lastName, $ci, $rol, $programa]) {
             $user = $this->makeUser($name, $lastName, $ci, [
                 'sede_id' => $sedes[$i % count($sedes)],
-                'doctorado_id' => $programa,
             ]);
             $user->assignRole($rol);
+            $user->programs()->sync($programa === null ? [] : [$programa]);
         }
     }
 
@@ -154,9 +165,9 @@ class DemoDataSeeder extends Seeder
             $user = $this->makeUser($name, $lastName, 20000000 + $i * 731, [
                 'sede_id' => $sedes[$i % count($sedes)],
                 'country_id' => $paises[$pais] ?? null,
-                'doctorado_id' => $programa,
             ]);
             $user->assignRole('Estudiante');
+            $user->programs()->sync([$programa]);
 
             $student = Estudiante::create([
                 'user_id' => $user->id,

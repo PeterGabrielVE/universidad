@@ -55,7 +55,7 @@ final class InMemoryUserRepository implements UserRepository
             $account->phone(),
             $account->role(),
             $account->status(),
-            $account->programId(),
+            $account->programIds(),
         );
         $this->accounts[$id] = $stored;
 

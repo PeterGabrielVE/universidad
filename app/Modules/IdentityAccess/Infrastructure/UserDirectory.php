@@ -14,12 +14,12 @@ use Illuminate\Contracts\Auth\Authenticatable;
 final class UserDirectory
 {
     /**
-     * @return list<array{id: int, name: string, last_name: ?string, email: string, role: ?string, status: string, program_id: ?int}>
+     * @return list<array{id: int, name: string, last_name: ?string, email: string, role: ?string, status: string, program_ids: list<int>}>
      */
     public function search(?string $role, ?string $term): array
     {
         return User::query()
-            ->with('roles')
+            ->with(['roles', 'programs'])
             ->when($role, fn ($q) => $q->role($role))
             ->when($term, function ($q) use ($term) {
                 $like = '%' . $term . '%';
@@ -33,7 +33,7 @@ final class UserDirectory
             ->all();
     }
 
-    /** @return array{id: int, name: string, last_name: ?string, email: string, role: ?string, status: string, program_id: ?int} */
+    /** @return array{id: int, name: string, last_name: ?string, email: string, role: ?string, status: string, program_ids: list<int>} */
     public function summary(User $user): array
     {
         return [
@@ -43,7 +43,7 @@ final class UserDirectory
             'email' => $user->email,
             'role' => $user->roles->first()?->name,
             'status' => $user->status->value,
-            'program_id' => $user->doctorado_id,
+            'program_ids' => $user->programs->pluck('id')->all(),
         ];
     }
 
@@ -59,7 +59,7 @@ final class UserDirectory
         $role = RoleName::tryFrom((string) $user->roles->first()?->name);
 
         return $role === null
-            ? ProgramScope::forStaff(RoleName::Coordinador, null)
-            : ProgramScope::forStaff($role, $user->doctorado_id !== null ? (int) $user->doctorado_id : null);
+            ? ProgramScope::forStaff(RoleName::Coordinador, [])
+            : ProgramScope::forStaff($role, $user->programs()->pluck('doctorados.id')->all());
     }
 }

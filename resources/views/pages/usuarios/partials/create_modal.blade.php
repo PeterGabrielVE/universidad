@@ -34,8 +34,8 @@
                     {!! Form::hidden('role', 'Estudiante', ['id'=>'role']) !!}
 					<div class="col-md-4">
 						<div class="form-group m-0" id="modulo_group">
-							{!! Form::label('doctorado_id', 'Programa', ['class'=>'col-form-label s-12']) !!}
-							{!! Form::select('doctorado_id', $programs ?? [], null, ['class'=>'form-control r-0 light s-12', 'id'=>'doctorado_id', 'placeholder'=>'Seleccione']) !!}
+							{!! Form::label('program_ids', 'Programa', ['class'=>'col-form-label s-12']) !!}
+							{!! Form::select('program_ids[]', $programs ?? [], null, ['class'=>'form-control r-0 light s-12', 'id'=>'program_ids', 'placeholder'=>'Seleccione']) !!}
 						</div>
 					</div>
 					<div class="col-md-6">

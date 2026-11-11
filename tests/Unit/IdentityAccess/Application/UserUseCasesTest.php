@@ -153,7 +153,7 @@ class UserUseCasesTest extends TestCase
 
         $this->assertSame('Aspirante', $account->role());
         $this->assertSame(AccountStatus::Activo, $account->status());
-        $this->assertNull($account->programId());
+        $this->assertSame([], $account->programIds());
         $this->assertSame([], $this->studentRecords->ensuredFor);
     }
 
@@ -193,7 +193,7 @@ class UserUseCasesTest extends TestCase
             phone: null,
             role: $role,
             status: $status,
-            programId: null,
+            programIds: [],
             password: $password,
         );
     }

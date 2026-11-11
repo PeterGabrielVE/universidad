@@ -42,9 +42,9 @@ class EstudiantesController extends Controller
         $title = "Estudiante";
         $programIds = $directory->programScopeOf(Auth::user())->programIds();
 
-        // El Coordinador solo ve los estudiantes de su programa (ProgramScope).
+        // El Coordinador solo ve los estudiantes de sus programas (ProgramScope).
         $estudiantes = Estudiante::query()
-            ->when($programIds !== null, fn ($q) => $q->whereHas('user', fn ($u) => $u->whereIn('doctorado_id', $programIds)))
+            ->when($programIds !== null, fn ($q) => $q->whereHas('user.programs', fn ($p) => $p->whereIn('doctorados.id', $programIds)))
             ->latest()
             ->paginate(5);
         $programs = Doctorado::orderBy('id')->pluck('name', 'id')->all();
@@ -97,7 +97,7 @@ class EstudiantesController extends Controller
         $user->name = $req->first_name;
         $user->last_name = $req->last_name;
         $user->sede_id = $req->sede_id;
-        $user->doctorado_id = $req->doctorado_id;
+        $this->syncStudentProgram($user, $req->doctorado_id);
         $user->identification_card = $req->identification_card;
         $user->save();
 
@@ -186,7 +186,7 @@ class EstudiantesController extends Controller
         $user->first_name = $req->first_name;
         $user->last_name = $req->last_name;
         $user->sede_id = $req->sede_id;
-        $user->doctorado_id = $req->doctorado_id;
+        $this->syncStudentProgram($user, $req->doctorado_id);
         $user->country_id = $req->country_id;
         $user->cod_phone = $req->cod_phone;
         $user->phone = $req->phone;
@@ -371,7 +371,7 @@ class EstudiantesController extends Controller
     {
         $estudiantes = User::leftjoin('students','users.id','students.user_id')
                             ->select('students.id','users.identification_card')
-                            ->where('users.doctorado_id',1)
+                            ->whereIn('users.id', DB::table('program_user')->where('program_id', 1)->select('user_id'))
                             ->get();
         $sedes = Sede::all();
         return view('pages.estudiantes.report',compact('estudiantes','sedes'));
@@ -493,7 +493,8 @@ class EstudiantesController extends Controller
 
         $calificacion = ['0'=>'Seleccione calificación','1'=>'Aprobado','2'=>'No Aprobado'];
 
-        if($estudiante->user->doctorado_id == 3){
+        // Doble titulación (antes doctorado_id = 3): inscrito en Gerencia (1) y Ciencias (2).
+        if($estudiante->user->belongsToProgram(1) && $estudiante->user->belongsToProgram(2)){
             $post1_gerencia = Post1::where('student_id',$id)->where('doctorado_id',1)->first();
             $post2_gerencia = Post2::where('student_id',$id)->where('doctorado_id',1)->first();
             $pre_gerencia = Presentation::where('student_id',$id)->where('doctorado_id',1)->first();
@@ -1103,7 +1104,7 @@ class EstudiantesController extends Controller
             $fileName2 = $this->storeDocument($file2);
 
             $post1 = Post1::where('student_id',$id)
-            ->where('doctorado_id',Auth::user()->doctorado_id)
+            ->where('doctorado_id', 2)
             ->first();
             $post1->extenso = $fileName;
             $post1->carta_aceptacion = $fileName2;
@@ -1117,7 +1118,7 @@ class EstudiantesController extends Controller
 
 
             $post2 = Post2::where('student_id',$id)
-            ->where('doctorado_id',Auth::user()->doctorado_id)
+            ->where('doctorado_id', 2)
             ->first();
             $post1->extenso = $fileName3;
             $post1->carta_aceptacion = $fileName4;
@@ -1134,7 +1135,7 @@ class EstudiantesController extends Controller
             $fileName8 = $this->storeDocument($file8);
 
             $pre = Presentation::where('student_id',$id)
-            ->where('doctorado_id',Auth::user()->doctorado_id)
+            ->where('doctorado_id', 2)
             ->first();
             $pre->extenso = $fileName5;
             $pre->carta_aceptacion = $fileName6;
@@ -1162,4 +1163,14 @@ class EstudiantesController extends Controller
 
 
 
+    /**
+     * El formulario del expediente envía un solo programa (doctorado_id). Se guarda en
+     * program_user. Gestión completa del expediente: Fase 3c.
+     */
+    private function syncStudentProgram(User $user, mixed $programId): void
+    {
+        if ($programId !== null && $programId !== '') {
+            $user->programs()->sync([(int) $programId]);
+        }
+    }
 }

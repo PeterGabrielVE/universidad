@@ -1,6 +1,6 @@
 # Estado del proyecto
 
-Última actualización: 11-11-2026 · Fases completadas: **0 (seguridad)**, **1 (base de pruebas)**, **2 (IdentityAccess)** y **3a (estructura académica y lapsos)**
+Última actualización: 11-11-2026 · Fases completadas: **0 (seguridad)**, **1 (base de pruebas)**, **2 (IdentityAccess)**, **3a (estructura académica y lapsos)** y **3b (programas, pensum y usuario ↔ programas)**
 
 ## Avance real
 
@@ -10,10 +10,10 @@ que pasan. El avance no se mide por archivos creados.
 | Métrica | Valor |
 |---|---|
 | Funcionalidades del inventario | 28 |
-| Verificadas con pruebas | **15 de 28 (54 %)**: #1, #2, #4–#13, #16, #17, #27 |
-| Funcionalidades nuevas (fuera del inventario original) | Fase 2: estado de cuenta, inicio de Aspirante y Docente, alcance por programa. Fase 3a: facultades, nota mínima por programa, lapsos por programa gestionados por el Coordinador, cédula única |
+| Verificadas con pruebas | **16 de 28 (57 %)**: #1, #2, #4–#13, #16, #17, #27, #28 |
+| Funcionalidades nuevas (fuera del inventario original) | Fase 2: estado de cuenta, inicio de Aspirante y Docente, alcance por programa. Fase 3a: facultades, nota mínima por programa, lapsos por programa gestionados por el Coordinador, cédula única. Fase 3b: usuario ↔ programas (N:M), gestión de facultades y programas, pensum N:M |
 | Hallazgos críticos de seguridad cerrados y con prueba | 8 de 8 |
-| Pruebas | **169 pasan** (423 aserciones): 60 unitarias, 109 de Feature |
+| Pruebas | **190 pasan** (495 aserciones): 71 unitarias, 119 de Feature |
 
 Pendiente de **validación manual en el navegador**: las pantallas Vue de usuarios
 (#6, #7). Su API y las vistas Blade que las montan están cubiertas por pruebas; el
@@ -36,13 +36,13 @@ render de Vue no (no hay pruebas de frontend).
 | 11 | Roles CRUD | ✅ Verificada (un solo camino; roles del sistema protegidos) | 2 |
 | 12 | Permisos | ✅ Verificada como matriz en código (`AccessPolicy`); sin pantalla de edición, ver decisión en ARCHITECTURE.md | 2 |
 | 13 | Estudiantes: listar, ver, eliminar | ✅ Verificada (con alcance por programa) | 3 |
-| 14 | Estudiantes: editar | Con errores (columnas `first_name`, `cod_phone` inexistentes) | 3b |
-| 15 | Estudiantes: completar expediente | Con errores (`$doc` indefinido, firma incorrecta) | 3b |
+| 14 | Estudiantes: editar | Con errores (columnas `first_name`, `cod_phone` inexistentes) | 3c |
+| 15 | Estudiantes: completar expediente | Con errores (`$doc` indefinido, firma incorrecta) | 3c |
 | 16 | Lapsos: CRUD | ✅ Verificada (por programa, estados `planificacion/abierto/cerrado`, fechas validadas) | 3a |
 | 17 | Cierre de lapso | ✅ Verificada (corregido: solo inscripciones activas de ese lapso, nota mínima del programa, inmutable) | 3a |
-| 18 | Inscripción por materias | Pendiente | 3b |
-| 19 | Registro de notas por materia | Pendiente (necesario para cerrar lapsos con inscripciones activas) | 3b |
-| 20 | Kardex / récord académico | Pendiente | 3b |
+| 18 | Inscripción por materias | Pendiente | 3c |
+| 19 | Registro de notas por materia | Pendiente (acta del docente titular; necesario para cerrar lapsos) | 3c |
+| 20 | Kardex / récord académico | Pendiente | 3c |
 | 21 | Carga de entregas doctorales | Pendiente (faltan tablas `posts_1`, `posts_2`, `presentations`) | 4 |
 | 22 | Edición de entregas | Con errores | 4 |
 | 23 | Calificación de entregas | Con errores (sin tablas; pasará a escala 0–100) | 4 |
@@ -50,12 +50,26 @@ render de Vue no (no hay pruebas de frontend).
 | 25 | PDF por estudiante | Con errores (total siempre 8; debe usar la fórmula ponderada) | 5 |
 | 26 | Descarga de documentos | Implementada con `documents.download`, desde disco privado | 4 |
 | 27 | API v1 de usuarios | ✅ Verificada | 2 |
-| 28 | Pensum | Pendiente (se retiró el método muerto `getPensum`) | 3b |
+| 28 | Pensum | ✅ Verificada: pensum N:M por programa, asignaturas transversales compartidas | 3b |
 
 Módulos en alcance aún sin requisitos detallados: Admisiones (carga de requisitos del
 Aspirante), Finanzas y Aranceles, Constancias y Actas.
 
 ## Registro de fases
+
+### Fase 3b: programas, pensum y usuario ↔ programas (completada)
+
+- **Fin del comodín `doctorado_id = 3`:** relación N:M `program_user`. La migración pasa cada 3 a los programas 1 y 2, cualquier otro valor a su programa, y deja `users.doctorado_id` en NULL. Reversible.
+- `ProgramScope` trabaja con la lista de programas del usuario: un coordinador puede tener varios; un estudiante con doble titulación es visible para el coordinador de cualquiera de sus programas.
+- Formularios de usuarios (Blade y Vue) con **selección múltiple de programas**.
+- **Gestión de facultades y programas** (Administrador, `programs.manage`): alta, edición, nota mínima; no se eliminan programas con usuarios o lapsos ni facultades con programas.
+- **Pensum N:M** (`program_course`, opción A): una asignatura transversal existe una vez y está en varios programas. Consulta para Director y Coordinador (`pensum.view`, el Coordinador solo los suyos). Corrige #28.
+- Se corrigieron las lecturas del comodín en código heredado (sidebar del estudiante, reportes, calificación de doble titulación, actualización de entregas de Ciencias).
+- Layout común `layouts/panel` para las pantallas nuevas.
+
+**Verificado además:** migración del comodín con datos demo (usuario con 3 → programas [1, 2]); `route:cache`; build del frontend.
+
+**Requiere** `migrate` y volver a ejecutar `RolesTableSeeder` (permisos `programs.manage` y `pensum.view`).
 
 ### Fase 3a: estructura académica y lapsos (completada)
 
@@ -136,8 +150,8 @@ arranque de Docker corregido, `*.sh` con LF.
 
 | Riesgo | Impacto | Mitigación prevista |
 |---|---|---|
-| Comodín `doctorado_id = 3` incompatible con facultades de N programas | Un tercer programa recibiría el id 3 | No hay pantalla de alta de programas hasta decidir (FUNCTIONAL_SPECIFICATIONS.md §14) |
-| Sin registro de notas por materia (#19) | Un lapso con inscripciones activas sin nota no se puede cerrar | Fase 3b |
+| Las 63 asignaturas sembradas son de un pensum de pregrado de ingeniería | No corresponden a los doctorados | Control de Estudios debe cargar las asignaturas reales; la migración no asigna ninguna a los programas |
+| Sin registro de notas por materia (#19) | Un lapso con inscripciones activas sin nota no se puede cerrar | Fase 3c |
 | Rollback de la migración académica | Elimina `program_id` de los lapsos (dato nuevo de la Fase 3a) | Es reversible en estructura; usar solo en desarrollo |
 | La restricción del Docente a "sus" alumnos depende de la asignación de jurados | Hoy un Docente con `grades.record` califica a cualquier estudiante | Fase 4: asignación de jurados |
 | `EstudiantesController` (~1.200 líneas) sigue siendo MVC heredado | Deuda de mantenimiento | Fases 3–5 |

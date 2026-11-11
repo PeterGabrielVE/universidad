@@ -58,7 +58,7 @@ final class CreateUser
             $data->phone,
             $data->role,
             $data->status,
-            $data->programId,
+            $data->programIds,
         );
         $hash = $this->hasher->hash($data->password);
 

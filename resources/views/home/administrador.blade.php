@@ -27,8 +27,7 @@
         'Control de estudios' => [
             ['title' => 'Estudiantes', 'desc' => 'Expedientes y datos', 'icon' => 'fa-user-graduate', 'tone' => 'red', 'route' => 'estudiantes.index', 'permission' => 'students.view'],
             ['title' => 'Lapsos y cohortes', 'desc' => 'Periodos académicos', 'icon' => 'fa-calendar-alt', 'tone' => 'green', 'route' => 'lapso.index', 'permission' => ['lapses.manage', 'lapses.manage_program']],
-            ['title' => 'Facultades y programas', 'desc' => 'Programas de doctorado', 'icon' => 'fa-university', 'tone' => 'amber', 'route' => null],
-            ['title' => 'Pensum', 'desc' => 'Asignaturas por semestre', 'icon' => 'fa-book-open', 'tone' => 'blue', 'route' => null],
+            ['title' => 'Facultades y programas', 'desc' => 'Programas, nota mínima y pensum', 'icon' => 'fa-university', 'tone' => 'amber', 'route' => 'programas.index', 'permission' => ['programs.manage', 'pensum.view']],
         ],
         'Entregas y calificaciones' => [
             ['title' => 'Entregas', 'desc' => 'Avances, tesis y defensa', 'icon' => 'fa-file-upload', 'tone' => 'red', 'route' => null],

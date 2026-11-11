@@ -48,14 +48,11 @@ class AuthorizeStudentRecord
         }
 
         if ($studentId !== null) {
-            $record = Estudiante::with('user')->find($studentId);
+            $record = Estudiante::with('user.programs')->find($studentId);
             abort_if($record === null, Response::HTTP_NOT_FOUND);
 
-            $program = $record->user?->doctorado_id;
-            abort_unless(
-                $this->directory->programScopeOf($user)->covers($program !== null ? (int) $program : null),
-                Response::HTTP_FORBIDDEN
-            );
+            $programs = $record->user?->programs->pluck('id')->all() ?? [];
+            abort_unless($this->directory->programScopeOf($user)->coversAny($programs), Response::HTTP_FORBIDDEN);
         }
 
         return $next($request);

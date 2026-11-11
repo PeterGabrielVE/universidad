@@ -19,6 +19,19 @@ class UserRequest extends FormRequest
         return true;
     }
 
+    /** Un <select> sin elegir envía un valor vacío: no es un programa. */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('program_ids')) {
+            $this->merge([
+                'program_ids' => array_values(array_filter(
+                    (array) $this->input('program_ids'),
+                    fn ($id) => $id !== null && $id !== ''
+                )),
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         $creating = $this->isMethod('POST');
@@ -31,7 +44,8 @@ class UserRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:30'],
             'role' => ['required', 'string', 'max:125'],
             'status' => ['nullable', Rule::in(AccountStatus::values())],
-            'doctorado_id' => ['nullable', 'integer', 'exists:doctorados,id'],
+            'program_ids' => ['nullable', 'array'],
+            'program_ids.*' => ['integer', 'distinct', 'exists:doctorados,id'],
             'password' => [$creating ? 'required' : 'nullable', 'string', 'min:8'],
         ];
     }
@@ -46,7 +60,7 @@ class UserRequest extends FormRequest
             phone: $this->filled('phone') ? $this->string('phone')->trim()->value() : null,
             role: $this->string('role')->value(),
             status: AccountStatus::tryFrom((string) $this->input('status')) ?? AccountStatus::Activo,
-            programId: $this->filled('doctorado_id') ? $this->integer('doctorado_id') : null,
+            programIds: array_map('intval', (array) $this->input('program_ids', [])),
             password: $this->filled('password') ? (string) $this->input('password') : null,
         );
     }

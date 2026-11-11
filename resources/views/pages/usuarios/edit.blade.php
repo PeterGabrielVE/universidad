@@ -62,8 +62,8 @@
                                         {!! Form::select('role', array_combine($roles, $roles), old('role', $user->role()), ['class'=>'form-control r-0 light s-12', 'id'=>'role', 'required']) !!}
                                     </div>
                                     <div class="col-md-6">
-                                        {!! Form::label('doctorado_id', 'Programa', ['class'=>'col-form-label s-12']) !!}
-                                        {!! Form::select('doctorado_id', $programs, old('doctorado_id', $user->programId()), ['class'=>'form-control r-0 light s-12', 'id'=>'doctorado_id', 'placeholder'=>'Sin programa']) !!}
+                                        {!! Form::label('program_ids', 'Programas (Ctrl/Cmd para elegir varios)', ['class'=>'col-form-label s-12']) !!}
+                                        {!! Form::select('program_ids[]', $programs, old('program_ids', $user->programIds()), ['class'=>'form-control r-0 light s-12', 'id'=>'program_ids', 'multiple', 'size'=>min(max(count($programs), 2), 6)]) !!}
                                     </div>
                                     <div class="col-md-6">
                                         {!! Form::label('status', 'Estado de la cuenta', ['class'=>'col-form-label s-12']) !!}

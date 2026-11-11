@@ -17,6 +17,10 @@ enum Permission: string
     /** Lapsos/cohortes solo del programa propio (ProgramScope). */
     case LapsesManageProgram = 'lapses.manage_program';
     case ReportsView = 'reports.view';
+    /** Facultades, programas y su pensum. */
+    case ProgramsManage = 'programs.manage';
+    /** Consultar programas y pensum (el Coordinador, solo los suyos). */
+    case PensumView = 'pensum.view';
     case StudentsView = 'students.view';
     case StudentsManage = 'students.manage';
     case StudentsDelete = 'students.delete';

@@ -9,7 +9,7 @@ use App\Modules\IdentityAccess\Domain\UserAccount;
  */
 final class UserAccountPresenter
 {
-    /** @return array{id: int, name: string, last_name: string, email: string, role: string, status: string, program_id: ?int} */
+    /** @return array{id: int, name: string, last_name: string, email: string, role: string, status: string, program_ids: list<int>} */
     public static function toArray(UserAccount $account): array
     {
         return [
@@ -19,7 +19,7 @@ final class UserAccountPresenter
             'email' => $account->email()->value,
             'role' => $account->role(),
             'status' => $account->status()->value,
-            'program_id' => $account->programId(),
+            'program_ids' => $account->programIds(),
         ];
     }
 }

@@ -18,7 +18,8 @@ final class UserData
         public readonly ?string $phone,
         public readonly string $role,
         public readonly AccountStatus $status,
-        public readonly ?int $programId,
+        /** @var list<int> */
+        public readonly array $programIds,
         public readonly ?string $password,
     ) {
     }

@@ -33,4 +33,10 @@ class UserFactory extends Factory
     {
         return $this->afterCreating(fn (User $user) => $user->assignRole($role));
     }
+
+    /** @param list<int> $programIds programas del usuario (tabla program_user) */
+    public function inPrograms(array $programIds): static
+    {
+        return $this->afterCreating(fn (User $user) => $user->programs()->sync($programIds));
+    }
 }

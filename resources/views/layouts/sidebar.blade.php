@@ -52,6 +52,16 @@
             <hr class="sidebar-divider">
             @endcan
 
+            @canany(['programs.manage', 'pensum.view'])
+            <li class="nav-item">
+                <a class="nav-link text-uft" href="{{ route('programas.index') }}">
+                    <i class="fas fa-fw fa-university"></i>
+                    <span>Programas y pensum</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            @endcanany
+
             @can('reports.view')
             <li class="nav-item">
                 <a class="nav-link collapsed text-uft" href="{{ route('reports') }}">
@@ -87,7 +97,10 @@
             </li>
             <hr class="sidebar-divider">
 
-                @if ($authUser->doctorado_id == 3)
+                {{-- Las pantallas de entregas existen para Gerencia (1) y Ciencias (2); se rehacen en la Fase 4. --}}
+                @php($inGerencia = $authUser->belongsToProgram(1))
+                @php($inCiencias = $authUser->belongsToProgram(2))
+                @if ($inGerencia && $inCiencias)
                     <li class="nav-item">
                         <a class="nav-link collapsed text-uft" href="#" data-toggle="collapse" data-target="#collapseFour"
                         aria-expanded="true" aria-controls="collapseFour">
@@ -103,12 +116,12 @@
                     </li>
                 @else
                 <li class="nav-item">
-                    @if ($authUser->doctorado_id == 1)
+                    @if ($inGerencia)
                     <a class="nav-link collapsed text-uft" href="{{ route('estudiantes/documentos/gerencia', $ownRecordId) }}">
                         <span>Mis Documentos</span>
                     </a>
                     @endif
-                    @if ($authUser->doctorado_id == 2)
+                    @if ($inCiencias)
                     <a class="nav-link collapsed text-uft" href="{{ route('estudiantes/documentos/ciencias', $ownRecordId) }}">
                         <span>Mis Documentos</span>
                     </a>

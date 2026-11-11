@@ -8,6 +8,7 @@ use App\Modules\IdentityAccess\Domain\AccountStatus;
 use App\Pais;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -18,7 +19,8 @@ use Spatie\Permission\Traits\HasRoles;
  * Único modelo de usuario (autenticación web, Sanctum y Spatie). Sustituye a
  * App\User, que coexistía sobre la misma tabla con otro $fillable.
  *
- * Los roles viven solo en Spatie; la columna users.rol_id quedó obsoleta.
+ * Los roles viven solo en Spatie y los programas en program_user; las columnas
+ * users.rol_id y users.doctorado_id quedaron obsoletas.
  */
 class User extends Authenticatable
 {
@@ -34,7 +36,6 @@ class User extends Authenticatable
         'status',
         'sede_id',
         'country_id',
-        'doctorado_id',
     ];
 
     protected $hidden = [
@@ -54,9 +55,18 @@ class User extends Authenticatable
         'status' => 'activo',
     ];
 
-    public function doctorado(): BelongsTo
+    /**
+     * Programas del usuario (N:M). Sustituye a la columna users.doctorado_id y a su
+     * comodín 3 = "ambos" (FUNCTIONAL_SPECIFICATIONS.md §15).
+     */
+    public function programs(): BelongsToMany
     {
-        return $this->belongsTo(Doctorado::class, 'doctorado_id');
+        return $this->belongsToMany(Doctorado::class, 'program_user', 'user_id', 'program_id')->withTimestamps();
+    }
+
+    public function belongsToProgram(int $programId): bool
+    {
+        return $this->programs->contains('id', $programId);
     }
 
     public function paises(): BelongsTo
